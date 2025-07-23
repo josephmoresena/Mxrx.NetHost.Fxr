@@ -70,7 +70,7 @@ jobs:
       - name: Pack assembly
         working-directory: ./src/Package/Mxrx.NetHost.Fxr
         run: |
-          dotnet pack -c Release -o ../Nuget /p:Version=9999.99.99.99-tmp
+          dotnet pack -c Release /p:Version=9999.99.99.99-tmp
           for package in .bin/Release/Mxrx.NetHost.Fxr*.*nupkg; do
             echo "-----------------------------------"
             TEMP_DIR=$(mktemp -d)
