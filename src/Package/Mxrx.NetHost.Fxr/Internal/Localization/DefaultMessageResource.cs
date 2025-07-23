@@ -10,6 +10,11 @@ internal sealed class DefaultMessageResource : IMessageResource
 
 	static IMessageResource IMessageResource.Instance => DefaultMessageResource.instance;
 
+	/// <summary>
+	/// Private constructor.
+	/// </summary>
+	private DefaultMessageResource() { }
+
 	String IMessageResource.AotRequired => "This operation requires a Native AOT runtime.";
 	String IMessageResource.WindowsRequired => "This operation requires the Microsoft Windows operating system.";
 	String IMessageResource.UnixRequired => "This operation requires a Unix-like operating system.";

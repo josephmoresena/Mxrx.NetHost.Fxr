@@ -6,6 +6,9 @@ internal partial interface IMessageResource
 	/// Retrieves internal resource objects.
 	/// </summary>
 	/// <returns>Resource resource object.</returns>
+#if !PACKAGE
+	[ExcludeFromCodeCoverage]
+#endif
 	public static IMessageResource GetInstance()
 	{
 		IMessageResource result = IMessageResource.GetInstance<DefaultMessageResource>();
@@ -13,15 +16,15 @@ internal partial interface IMessageResource
 
 		return NativeUtilities.UserInterfaceIso639P1 switch
 		{
-			// Iso639P1.Es => IMessageResource.GetInstance<SpanishMessageResource>(),
-			// Iso639P1.Fr => IMessageResource.GetInstance<FrenchMessageResource>(),
-			// Iso639P1.De => IMessageResource.GetInstance<GermanMessageResource>(),
-			// Iso639P1.Zh => IMessageResource.GetInstance<ChineseMessageResource>(),
-			// Iso639P1.Ja => IMessageResource.GetInstance<JapaneseMessageResource>(),
-			// Iso639P1.Ru => IMessageResource.GetInstance<RussianMessageResource>(),
-			// Iso639P1.Ar => IMessageResource.GetInstance<ArabicMessageResource>(),
-			// Iso639P1.Pt => IMessageResource.GetInstance<PortugueseMessageResource>(),
-			// Iso639P1.It => IMessageResource.GetInstance<ItalianMessageResource>(),
+			Iso639P1.Es => IMessageResource.GetInstance<SpanishMessageResource>(),
+			Iso639P1.Fr => IMessageResource.GetInstance<FrenchMessageResource>(),
+			Iso639P1.De => IMessageResource.GetInstance<GermanMessageResource>(),
+			Iso639P1.Zh => IMessageResource.GetInstance<ChineseMessageResource>(),
+			Iso639P1.Ja => IMessageResource.GetInstance<JapaneseMessageResource>(),
+			Iso639P1.Ru => IMessageResource.GetInstance<RussianMessageResource>(),
+			Iso639P1.Ar => IMessageResource.GetInstance<ArabicMessageResource>(),
+			Iso639P1.Pt => IMessageResource.GetInstance<PortugueseMessageResource>(),
+			Iso639P1.It => IMessageResource.GetInstance<ItalianMessageResource>(),
 			_ => result,
 		};
 	}
@@ -31,5 +34,8 @@ internal partial interface IMessageResource
 	/// </summary>
 	/// <typeparam name="TResource">A <see cref="IMessageResource"/> type.</typeparam>
 	/// <returns>Resource resource object.</returns>
+#if !PACKAGE
+	[ExcludeFromCodeCoverage]
+#endif
 	private static IMessageResource GetInstance<TResource>() where TResource : IMessageResource => TResource.Instance;
 }
