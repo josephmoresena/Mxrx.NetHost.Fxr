@@ -402,3 +402,4 @@ FodyWeavers.xsd
 .DS_Store
 **/.idea
 **/Mxrx.NetHost.*.xml
+**/Mxrx.NetHost.snk
