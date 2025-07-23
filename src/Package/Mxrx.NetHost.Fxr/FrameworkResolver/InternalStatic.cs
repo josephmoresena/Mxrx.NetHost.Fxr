@@ -8,11 +8,11 @@ public abstract partial class FrameworkResolver
 	/// <param name="hostContext">A <see cref="HostHandle"/> instance.</param>
 	/// <param name="clear">Indicates whether current error writer should be cleared.</param>
 	[UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Aot safe method.")]
-	internal static void SetErrorWriter(HostContext hostContext, Boolean clear)
+	internal static void ConfigureErrorWriter(HostContext hostContext, Boolean clear)
 	{
 		IntPtr writeErrorPtr =
 			clear ? IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(hostContext.WriteErrorDelegate);
-		hostContext.Resolver.SetErrorWriter(hostContext, writeErrorPtr);
+		hostContext.Resolver.ConfigureErrorWriter(hostContext, writeErrorPtr);
 	}
 	/// <summary>
 	/// Runs application from <paramref name="hostContext"/> instance.

@@ -70,7 +70,7 @@ public abstract partial class HostContext
 	{
 		this._writeError = default;
 		this._writeUtfError = default;
-		this.Resolver.SetErrorWriter(this, writeErrorPtr);
+		this.Resolver.ConfigureErrorWriter(this, writeErrorPtr);
 	}
 	/// <summary>
 	/// Error writer function.

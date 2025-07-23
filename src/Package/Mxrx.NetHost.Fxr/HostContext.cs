@@ -51,7 +51,7 @@ public abstract partial class HostContext : IDisposable
 		this.ThrowIfDisposed();
 		this._writeError = default;
 		this._writeUtfError = default;
-		FrameworkResolver.SetErrorWriter(this, true);
+		FrameworkResolver.ConfigureErrorWriter(this, true);
 	}
 	/// <summary>
 	/// Sets error writer function.
@@ -62,7 +62,7 @@ public abstract partial class HostContext : IDisposable
 		this.ThrowIfDisposed();
 		this._writeError = writeError;
 		this._writeUtfError = default;
-		FrameworkResolver.SetErrorWriter(this, false);
+		FrameworkResolver.ConfigureErrorWriter(this, false);
 	}
 	/// <summary>
 	/// Sets UTF-8 error writer function.
@@ -73,7 +73,7 @@ public abstract partial class HostContext : IDisposable
 		this.ThrowIfDisposed();
 		this._writeError = default;
 		this._writeUtfError = writeUtfError;
-		FrameworkResolver.SetErrorWriter(this, false);
+		FrameworkResolver.ConfigureErrorWriter(this, false);
 	}
 	/// <summary>
 	/// Sets error writer function from pointer.

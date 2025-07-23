@@ -11,13 +11,13 @@ public partial class FrameworkResolver
 	/// Closes given host.
 	/// </summary>
 	/// <param name="hostContext">A <see cref="HostHandle"/> instance.</param>
-	protected internal abstract void CloseHandle(HostContext hostContext);
+	protected abstract void CloseHandle(HostContext hostContext);
 	/// <summary>
-	/// Tries to set error writer pointer for <paramref name="hostContext"/>.
+	/// Configures the error writer pointer for <paramref name="hostContext"/>.
 	/// </summary>
 	/// <param name="hostContext">A <see cref="HostHandle"/> instance.</param>
 	/// <param name="writeErrorPtr">Pointer to error writer function.</param>
-	protected internal abstract void SetErrorWriter(HostContext hostContext, IntPtr writeErrorPtr);
+	protected internal abstract void ConfigureErrorWriter(HostContext hostContext, IntPtr writeErrorPtr);
 	/// <summary>
 	/// Retrieves function pointer delegate for <paramref name="info"/>.
 	/// </summary>
