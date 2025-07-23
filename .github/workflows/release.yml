@@ -24,6 +24,6 @@ jobs:
         run: echo "${SNK_BASE64}" | base64 -d > Mxrx.NetHost.snk
       - name: Create NuGet Package
         working-directory: ./src/Package/Mxrx.NetHost.Fxr
-        run: dotnet pack -c Release /p:Version=${{ github.event.release.tag_name }} /p:PackageReleaseNotes="See https://github.com/josephmoresena/Mxrx.NetHost.Fxr/releases/tag/${{ github.event.release.tag_name }}"
+        run: dotnet pack -c Release /p:Package=true /p:Version=${{ github.event.release.tag_name }} /p:PackageReleaseNotes="See https://github.com/josephmoresena/Mxrx.NetHost.Fxr/releases/tag/${{ github.event.release.tag_name }}"
       - name: Push NuGet Package
         run: dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json

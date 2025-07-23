@@ -6,7 +6,7 @@ namespace Mxrx.NetHost.Internal;
 #if !PACKAGE
 [ExcludeFromCodeCoverage]
 #endif
-public readonly ref struct ArgumentsParameter
+internal readonly ref struct ArgumentsParameter
 {
 	/// <summary>
 	/// Arguments span.
