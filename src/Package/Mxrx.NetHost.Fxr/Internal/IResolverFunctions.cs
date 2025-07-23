@@ -4,7 +4,8 @@ namespace Mxrx.NetHost.Internal;
 /// <c>Hostfxr</c> library exported interface.
 /// </summary>
 #if !PACKAGE
-[SuppressMessage("csharpsquid", "S6640")]
+[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS6640,
+                 Justification = Constants.SecureUnsafeCodeJustification)]
 #endif
 internal interface IResolverFunctions
 {

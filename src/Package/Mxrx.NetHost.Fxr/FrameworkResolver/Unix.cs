@@ -6,7 +6,8 @@ public partial class FrameworkResolver
 	/// Unix-like OS <see cref="FrameworkResolver"/> class.
 	/// </summary>
 #if !PACKAGE
-	[SuppressMessage("csharpsquid", "S6640")]
+	[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS6640,
+	                 Justification = Constants.SecureUnsafeCodeJustification)]
 #endif
 	private sealed class Unix(IntPtr handle) : Generic<UnixFunctions>(handle)
 	{
@@ -266,7 +267,8 @@ public partial class FrameworkResolver
 		/// <param name="addr">Destination addresses span.</param>
 		/// <param name="handles">Destination handles span.</param>
 #if !PACKAGE
-		[SuppressMessage("csharpsquid", "S3776")]
+		[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3776,
+		                 Justification = Constants.OptimizedJustification)]
 #endif
 		private static Int32 LoadFromSpan(ReadOnlySpan<Object?> args, Span<ReadOnlyValPtr<Byte>> addr,
 			Span<ArgHandle> handles)

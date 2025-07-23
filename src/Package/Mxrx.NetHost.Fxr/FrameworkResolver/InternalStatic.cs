@@ -23,7 +23,7 @@ public abstract partial class FrameworkResolver
 	/// <see langword="true"/> if <paramref name="hostContext"/> was executed as application; otherwise,
 	/// <see langword="false"/>.
 	/// </returns>
-	internal static Boolean RunAsApplication(HostContext hostContext, out Int32 exitCode)
+	internal static Boolean Run(HostContext hostContext, out Int32 exitCode)
 	{
 		if (FrameworkResolver.applicationStarted)
 		{

@@ -3,6 +3,11 @@ namespace Mxrx.NetHost;
 /// <summary>
 /// CLR host context.
 /// </summary>
+#if !PACKAGE
+[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS6640,
+                 Justification = Constants.SecureUnsafeCodeJustification)]
+[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3881, Justification = Constants.OptimizedJustification)]
+#endif
 public abstract partial class HostContext : IDisposable
 {
 	/// <summary>
@@ -150,7 +155,7 @@ public abstract partial class HostContext : IDisposable
 		this.ThrowIfDisposed();
 
 		exitCode = -1;
-		return this.IsCommandLine && FrameworkResolver.RunAsApplication(this, out exitCode);
+		return this.IsCommandLine && FrameworkResolver.Run(this, out exitCode);
 	}
 	/// <summary>
 	/// Retrieves function pointer to <paramref name="info"/> function.

@@ -7,7 +7,8 @@ public partial class FrameworkResolver
 	/// </summary>
 	/// <typeparam name="TFunction">A <see cref="IResolverFunctions"/> type.</typeparam>
 #if !PACKAGE
-	[SuppressMessage("csharpsquid", "S6640")]
+	[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS6640,
+	                 Justification = Constants.SecureUnsafeCodeJustification)]
 #endif
 	private abstract class Generic<TFunction> : FrameworkResolver where TFunction : unmanaged, IResolverFunctions
 	{
@@ -50,7 +51,7 @@ public partial class FrameworkResolver
 		}
 
 		/// <inheritdoc/>
-		protected override void Dispose(Boolean disposing)
+		protected sealed override void Dispose(Boolean disposing)
 		{
 			if (disposing)
 				NativeLibrary.Free(this._handle);
@@ -60,16 +61,16 @@ public partial class FrameworkResolver
 		protected internal sealed override void SetErrorWriter(HostContext hostContext, IntPtr writeErrorPtr)
 			=> this.Functions.SetError(hostContext.Handle, writeErrorPtr);
 		/// <inheritdoc/>
-		protected internal override void CloseHandle(HostContext hostContext)
+		protected internal sealed override void CloseHandle(HostContext hostContext)
 			=> this.Functions.CloseContext(hostContext.Handle);
 		/// <inheritdoc/>
-		protected override Int32 RunAsApplication(HostContext hostContext)
+		protected sealed override Int32 RunAsApplication(HostContext hostContext)
 		{
 			this._clrInitialized = true;
 			return this.Functions.RunApp(hostContext.Handle);
 		}
 		/// <inheritdoc/>
-		protected internal override unsafe IntPtr GetFunctionPointer(HostContext hostContext,
+		protected internal sealed override unsafe IntPtr GetFunctionPointer(HostContext hostContext,
 			RuntimeDelegateType delegateType)
 		{
 			this._clrInitialized = true;

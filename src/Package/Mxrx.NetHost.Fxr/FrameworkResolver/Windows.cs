@@ -6,7 +6,8 @@ public partial class FrameworkResolver
 	/// Windows OS <see cref="FrameworkResolver"/> class.
 	/// </summary>
 #if !PACKAGE
-	[SuppressMessage("csharpsquid", "S6640")]
+	[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS6640,
+	                 Justification = Constants.SecureUnsafeCodeJustification)]
 #endif
 	private sealed class Windows(IntPtr handle) : Generic<WindowsFunctions>(handle)
 	{
@@ -196,6 +197,10 @@ public partial class FrameworkResolver
 		/// <param name="text">A <see cref="TextParameter"/> instance.</param>
 		/// <param name="chars">Output. Created <see cref="Char"/> array.</param>
 		/// <returns>A managed <see cref="Char"/> reference from <paramref name="text"/>.</returns>
+#if !PACKAGE
+		[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3358,
+		                 Justification = Constants.OptimizedJustification)]
+#endif
 		private static ref readonly Char GetRef(TextParameter text, out Char[]? chars)
 		{
 			chars = null;

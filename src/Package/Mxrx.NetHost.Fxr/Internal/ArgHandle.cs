@@ -47,7 +47,10 @@ internal struct ArgHandle
 	/// Struct to map <see cref="MemoryHandle"/> value.
 	/// </summary>
 #if !PACKAGE
-	[SuppressMessage("csharpsquid", "S1144")]
+	[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3459,
+	                 Justification = Constants.BinaryStructJustification)]
+	[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS1144,
+	                 Justification = Constants.BinaryStructJustification)]
 #endif
 	private unsafe struct MemHandle
 	{
