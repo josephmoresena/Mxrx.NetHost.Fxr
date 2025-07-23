@@ -20,7 +20,7 @@ jobs:
         with:
           dotnet-version: 9.0.x
       - name: Extract public key
-        working-directory: ./package
+        working-directory: src/Package
         run: echo "${SNK_BASE64}" | base64 -d > Mxrx.NetHost.snk
       - name: Create NuGet Package
         working-directory: ./src/Package/Mxrx.NetHost.Fxr
