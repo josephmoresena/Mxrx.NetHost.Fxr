@@ -47,11 +47,11 @@ jobs:
           New-Item -Path ./.sonar/scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path ./.sonar/scanner
 
-      - name: Remove ApplicationTest
+      - name: Remove Sample
         shell: bash
         run: |
-          find src/ApplicationTest -name "*.*proj" -exec dotnet sln src remove {} \;
-          rm -rf src/ApplicationTest
+          find src/Sample -name "*.*proj" -exec dotnet sln src remove {} \;
+          rm -rf src/Sample
 
       - name: Clean test results
         run: rm -rf TestResults/
