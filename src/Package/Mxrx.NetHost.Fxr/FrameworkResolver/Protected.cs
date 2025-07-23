@@ -60,4 +60,6 @@ public partial class FrameworkResolver
 	/// </summary>
 	/// <param name="hostContext">A <see cref="HostHandle"/> instance.</param>
 	protected abstract Int32 RunAsApplication(HostContext hostContext);
+	/// <inheritdoc cref="IDisposable.Dispose()"/>
+	protected abstract void Dispose(Boolean disposing);
 }

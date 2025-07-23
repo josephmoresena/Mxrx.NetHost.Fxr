@@ -5,6 +5,9 @@ public partial class FrameworkResolver
 	/// <summary>
 	/// Windows OS <see cref="FrameworkResolver"/> class.
 	/// </summary>
+#if !PACKAGE
+	[SuppressMessage("csharpsquid", "S6640")]
+#endif
 	private sealed class Windows(IntPtr handle) : Generic<WindowsFunctions>(handle)
 	{
 		/// <inheritdoc/>
@@ -28,11 +31,11 @@ public partial class FrameworkResolver
 						Size = (UIntPtr)sizeof(WindowsFunctions.InitialParameters),
 					};
 					RuntimeCallResult callResult;
-					HostHandle handle;
+					HostHandle hostHandle;
 					if (!parameters.InitializeCommand)
 					{
 						isCommandLine = false;
-						callResult = this.Functions.InitializeForConfig(configPathPtr, in param, out handle);
+						callResult = this.Functions.InitializeForConfig(configPathPtr, in param, out hostHandle);
 					}
 					else
 					{
@@ -40,11 +43,11 @@ public partial class FrameworkResolver
 							stackalloc ReadOnlyValPtr<Char>[parameters.Arguments.Count];
 						Int32 argCount = Windows.LoadArgsAddr(parameters.Arguments, addresses, handles);
 						callResult = this.Functions.InitializeForCommand(argCount, addresses.GetUnsafeValPtr(),
-						                                                 in param, out handle);
+						                                                 in param, out hostHandle);
 					}
 
 					FrameworkResolver.ThrowIfInvalidResult(callResult);
-					return new(this, handle, isCommandLine);
+					return new(this, hostHandle, isCommandLine);
 				}
 				finally
 				{

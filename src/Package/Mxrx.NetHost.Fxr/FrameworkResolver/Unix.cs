@@ -5,6 +5,9 @@ public partial class FrameworkResolver
 	/// <summary>
 	/// Unix-like OS <see cref="FrameworkResolver"/> class.
 	/// </summary>
+#if !PACKAGE
+	[SuppressMessage("csharpsquid", "S6640")]
+#endif
 	private sealed class Unix(IntPtr handle) : Generic<UnixFunctions>(handle)
 	{
 		/// <inheritdoc/>
@@ -28,11 +31,11 @@ public partial class FrameworkResolver
 						Size = (UIntPtr)sizeof(UnixFunctions.InitialParameters),
 					};
 					RuntimeCallResult callResult;
-					HostHandle handle;
+					HostHandle hostHandle;
 					if (!parameters.InitializeCommand)
 					{
 						isCommandLine = false;
-						callResult = this.Functions.InitializeForConfig(configPathPtr, in param, out handle);
+						callResult = this.Functions.InitializeForConfig(configPathPtr, in param, out hostHandle);
 					}
 					else
 					{
@@ -40,11 +43,11 @@ public partial class FrameworkResolver
 							stackalloc ReadOnlyValPtr<Byte>[parameters.Arguments.Count];
 						Int32 argCount = Unix.LoadArgsAddr(parameters.Arguments, addresses, handles);
 						callResult = this.Functions.InitializeForCommand(argCount, addresses.GetUnsafeValPtr(),
-						                                                 in param, out handle);
+						                                                 in param, out hostHandle);
 					}
 
 					FrameworkResolver.ThrowIfInvalidResult(callResult);
-					return new(this, handle, isCommandLine);
+					return new(this, hostHandle, isCommandLine);
 				}
 				finally
 				{
@@ -262,6 +265,9 @@ public partial class FrameworkResolver
 		/// <param name="args">A <see cref="CStringSequence"/> instance.</param>
 		/// <param name="addr">Destination addresses span.</param>
 		/// <param name="handles">Destination handles span.</param>
+#if !PACKAGE
+		[SuppressMessage("csharpsquid", "S3776")]
+#endif
 		private static Int32 LoadFromSpan(ReadOnlySpan<Object?> args, Span<ReadOnlyValPtr<Byte>> addr,
 			Span<ArgHandle> handles)
 		{

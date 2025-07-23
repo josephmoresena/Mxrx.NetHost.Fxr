@@ -3,6 +3,9 @@ namespace Mxrx.NetHost.Internal;
 /// <summary>
 /// <c>Hostfxr</c> library exported interface.
 /// </summary>
+#if !PACKAGE
+[SuppressMessage("csharpsquid", "S6640")]
+#endif
 internal interface IResolverFunctions
 {
 	/// <summary>

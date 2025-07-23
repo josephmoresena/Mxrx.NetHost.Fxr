@@ -5,7 +5,10 @@ public partial class FrameworkResolver
 	/// <summary>
 	/// Generic <see cref="FrameworkResolver"/> class.
 	/// </summary>
-	/// <typeparam name="TFunction"></typeparam>
+	/// <typeparam name="TFunction">A <see cref="IResolverFunctions"/> type.</typeparam>
+#if !PACKAGE
+	[SuppressMessage("csharpsquid", "S6640")]
+#endif
 	private abstract class Generic<TFunction> : FrameworkResolver where TFunction : unmanaged, IResolverFunctions
 	{
 		/// <summary>
@@ -44,6 +47,13 @@ public partial class FrameworkResolver
 			RuntimeCallResult value = this.Functions.Initialize(out HostHandle handle);
 			FrameworkResolver.ThrowIfInvalidResult(value);
 			return new(this, handle, true);
+		}
+
+		/// <inheritdoc/>
+		protected override void Dispose(Boolean disposing)
+		{
+			if (disposing)
+				NativeLibrary.Free(this._handle);
 		}
 
 		/// <inheritdoc/>

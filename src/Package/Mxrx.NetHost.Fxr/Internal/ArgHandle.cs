@@ -46,6 +46,9 @@ internal struct ArgHandle
 	/// <summary>
 	/// Struct to map <see cref="MemoryHandle"/> value.
 	/// </summary>
+#if !PACKAGE
+	[SuppressMessage("csharpsquid", "S1144")]
+#endif
 	private unsafe struct MemHandle
 	{
 #pragma warning disable CS0649

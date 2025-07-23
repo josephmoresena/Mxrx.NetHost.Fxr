@@ -16,5 +16,12 @@ public partial class FrameworkResolver
 		public ContextImpl(FrameworkResolver resolver, HostHandle handle, Boolean isCommandLine) : base(
 			resolver, handle, isCommandLine)
 			=> resolver._contexts.Add(this);
+
+		/// <inheritdoc/>
+		protected override void Dispose(Boolean disposing)
+		{
+			if (disposing)
+				this.Resolver.CloseHandle(this);
+		}
 	}
 }

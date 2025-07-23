@@ -76,9 +76,9 @@ public ref struct VolatileText
 		if (this._sValue is not null)
 			return this._sValue;
 		if (this.Value.IsEmpty)
-			return this._sValue ??= String.Empty;
+			return this._sValue = String.Empty;
 
-		return this._sValue ??= this.Text.IsUtf8 ?
+		return this._sValue = this.Text.IsUtf8 ?
 			Encoding.UTF8.GetString(this.Text.Value) :
 			new(this.Value.AsValues<Byte, Char>());
 	}
@@ -91,16 +91,16 @@ public ref struct VolatileText
 		if (this._cValue is not null)
 			return this._cValue;
 		if (this.Value.IsEmpty)
-			return this._cValue ??= CString.Empty;
+			return this._cValue = CString.Empty;
 
 		if (this.Text.IsUtf8)
-			return this._cValue ??= new(this.Value);
+			return this._cValue = new(this.Value);
 
 		ReadOnlySpan<Char> chars = this.Value.AsValues<Byte, Char>();
 		Int32 length = Encoding.UTF8.GetByteCount(chars);
 		Byte[] bytes = new Byte[length + 1];
 		Encoding.UTF8.GetBytes(chars, bytes);
-		return this._cValue ??= bytes;
+		return this._cValue = bytes;
 	}
 	/// <summary>
 	/// Returns a raw managed reference that can be used for pinning.
