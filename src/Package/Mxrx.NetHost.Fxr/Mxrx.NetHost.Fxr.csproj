@@ -17,7 +17,7 @@
         <TrimmerSingleWarn>false</TrimmerSingleWarn>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(PACKAGE)' == 'true'">
+    <PropertyGroup Condition="'$(Package)' == 'true'">
         <IsPackable>true</IsPackable>
         <DefineConstants>$(DefineConstants);PACKAGE</DefineConstants>
         <IncludeSymbols>true</IncludeSymbols>
@@ -31,7 +31,7 @@
         <ApiCompatRespectInternals>true</ApiCompatRespectInternals>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(PACKAGE)' == 'true' And Exists('$(MSBuildProjectDirectory)\$(SigningKeyFile)')">
+    <PropertyGroup Condition="'$(Package)' == 'true' And Exists('$(MSBuildProjectDirectory)\$(SigningKeyFile)')">
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>$(SigningKeyFile)</AssemblyOriginatorKeyFile>
     </PropertyGroup>
