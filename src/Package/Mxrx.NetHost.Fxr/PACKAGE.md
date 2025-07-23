@@ -1,8 +1,18 @@
-# Mxrx.NetHost.Fxr
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=josephmoresena_Mxrx.NetHost.Fxr&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=josephmoresena_Mxrx.NetHost.Fxr)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=josephmoresena_Mxrx.NetHost.Fxr&metric=bugs)](https://sonarcloud.io/summary/new_code?id=josephmoresena_Mxrx.NetHost.Fxr)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=josephmoresena_Mxrx.NetHost.Fxr&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=josephmoresena_Mxrx.NetHost.Fxr)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=josephmoresena_Mxrx.NetHost.Fxr&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=josephmoresena_Mxrx.NetHost.Fxr)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=josephmoresena_Mxrx.NetHost.Fxr&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=josephmoresena_Mxrx.NetHost.Fxr)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=josephmoresena_Mxrx.NetHost.Fxr&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=josephmoresena_Mxrx.NetHost.Fxr)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/josephmoresena/Mxrx.NetHost.Fxr)
+
+---
+
+# Description
 
 `Mxrx.NetHost.Fxr` provides a flexible and powerful API for building custom .NET hosts using Native AOT technology.
 
-## Key Features
+## Features
 
 * Custom .NET host creation
 * Assembly loading and runtime management
