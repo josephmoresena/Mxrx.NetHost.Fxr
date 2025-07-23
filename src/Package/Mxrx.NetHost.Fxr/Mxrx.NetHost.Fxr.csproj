@@ -54,10 +54,6 @@
         <PackageReference Include="Rxmxnx.PInvoke.Extensions" Version="2.6.0"/>
     </ItemGroup>
 
-    <ItemGroup Condition="'$(PACKAGE)' != 'true'">
-        <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage"/>
-    </ItemGroup>
-
     <ItemGroup Condition="'$(PACKAGE)' == 'true'">
         <None Include="PACKAGE.md" Pack="true" PackagePath="/"/>
         <None Include="..\..\..\LICENSE" Pack="true" PackagePath="LICENSE.md"/>

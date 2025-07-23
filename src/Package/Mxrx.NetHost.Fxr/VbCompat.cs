@@ -1,3 +1,7 @@
+#if !PACKAGE
+[assembly: ExcludeFromCodeCoverage]
+#endif
+
 namespace Mxrx.NetHost;
 
 /// <summary>

@@ -3,6 +3,10 @@ namespace Mxrx.NetHost.Internal;
 /// <summary>
 /// Stores a text parameter.
 /// </summary>
+#if !PACKAGE
+[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS6640,
+                 Justification = Constants.SecureUnsafeCodeJustification)]
+#endif
 internal readonly ref struct TextParameter
 {
 	/// <summary>
