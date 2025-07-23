@@ -54,7 +54,22 @@
         <PackageReference Include="Rxmxnx.PInvoke.Extensions" Version="2.6.0"/>
     </ItemGroup>
 
-    <ItemGroup Condition="'$(PACKAGE)' == 'true'">
+    <!-- Package properties -->
+    <PropertyGroup Condition="'$(Package)' == 'true'">
+        <Authors>Joseph Moreno</Authors>
+        <Product>Mxrx.NetHost.Fxr</Product>
+        <Description>Mxrx.NetHost.Fxr provides a flexible and powerful API for building custom .NET hosts using Native AOT technology.</Description>
+        <Copyright>Copyright © Joseph Moreno 2025</Copyright>
+        <Summary>Mxrx.NetHost.Fxr provides a flexible and powerful API for building custom .NET hosts using Native AOT technology.</Summary>
+        <NeutralLanguage>en-US</NeutralLanguage>
+        <Title>Mxrx.NetHost.Fxr</Title>
+        <PackageId>Mxrx.NetHost.Fxr</PackageId>
+        <PackageTags>CustomHost;HostFxr;NativeAOT;</PackageTags>
+        <PackageReadmeFile>PACKAGE.md</PackageReadmeFile>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(Package)' == 'true'">
         <None Include="PACKAGE.md" Pack="true" PackagePath="/"/>
         <None Include="..\..\..\LICENSE" Pack="true" PackagePath="LICENSE.md"/>
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="*" PrivateAssets="All"/>
