@@ -3,6 +3,9 @@ namespace Mxrx.NetHost.Internal;
 /// <summary>
 /// Handle of argument.
 /// </summary>
+#if !PACKAGE
+[ExcludeFromCodeCoverage]
+#endif
 internal struct ArgHandle
 {
 	/// <summary>

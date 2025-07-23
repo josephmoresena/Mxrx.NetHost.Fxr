@@ -1,12 +1,11 @@
-#if !PACKAGE
-[assembly: ExcludeFromCodeCoverage]
-#endif
-
 namespace Mxrx.NetHost;
 
 /// <summary>
 /// Visual Basic .NET compatibility class.
 /// </summary>
+#if !PACKAGE
+[ExcludeFromCodeCoverage]
+#endif
 public static class VbCompat
 {
 	/// <inheritdoc cref="LoadAssemblyParameters.CreateBuilder()"/>

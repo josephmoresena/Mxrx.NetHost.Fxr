@@ -6,6 +6,7 @@ namespace Mxrx.NetHost.Internal;
 /// <remarks>This struct is only for Windows OS</remarks>
 [StructLayout(LayoutKind.Sequential)]
 #if !PACKAGE
+[ExcludeFromCodeCoverage]
 [SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS6640,
                  Justification = Constants.SecureUnsafeCodeJustification)]
 #endif

@@ -1,5 +1,8 @@
 namespace Mxrx.NetHost.Internal;
 
+#if !PACKAGE
+[ExcludeFromCodeCoverage]
+#endif
 [StructLayout(LayoutKind.Sequential)]
 internal readonly struct HostHandle
 {

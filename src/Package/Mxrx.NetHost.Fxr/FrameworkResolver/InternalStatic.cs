@@ -12,7 +12,7 @@ public abstract partial class FrameworkResolver
 	{
 		IntPtr writeErrorPtr =
 			clear ? IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(hostContext.WriteErrorDelegate);
-		hostContext.Resolver.ConfigureErrorWriter(hostContext, writeErrorPtr);
+		hostContext.Resolver.SetErrorWriter(hostContext, writeErrorPtr);
 	}
 	/// <summary>
 	/// Runs application from <paramref name="hostContext"/> instance.

@@ -3,6 +3,9 @@ namespace Mxrx.NetHost;
 /// <summary>
 /// Parameters for managed function retrieving.
 /// </summary>
+#if !PACKAGE
+[ExcludeFromCodeCoverage]
+#endif
 public ref partial struct NetFunctionInfo
 {
 	/// <summary>

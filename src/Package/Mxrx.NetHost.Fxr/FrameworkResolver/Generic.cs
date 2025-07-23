@@ -58,7 +58,7 @@ public partial class FrameworkResolver
 		}
 
 		/// <inheritdoc/>
-		protected internal sealed override void ConfigureErrorWriter(HostContext hostContext, IntPtr writeErrorPtr)
+		protected internal sealed override void SetErrorWriter(HostContext hostContext, IntPtr writeErrorPtr)
 			=> this.Functions.SetError(hostContext.Handle, writeErrorPtr);
 		/// <inheritdoc/>
 		protected sealed override void CloseHandle(HostContext hostContext)

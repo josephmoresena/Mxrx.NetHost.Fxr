@@ -4,6 +4,7 @@ namespace Mxrx.NetHost;
 /// CLR host context.
 /// </summary>
 #if !PACKAGE
+[ExcludeFromCodeCoverage]
 [SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS6640,
                  Justification = Constants.SecureUnsafeCodeJustification)]
 [SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3881, Justification = Constants.OptimizedJustification)]

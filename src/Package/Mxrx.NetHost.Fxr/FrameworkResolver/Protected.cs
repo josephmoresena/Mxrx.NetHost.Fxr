@@ -17,7 +17,7 @@ public partial class FrameworkResolver
 	/// </summary>
 	/// <param name="hostContext">A <see cref="HostHandle"/> instance.</param>
 	/// <param name="writeErrorPtr">Pointer to error writer function.</param>
-	protected internal abstract void ConfigureErrorWriter(HostContext hostContext, IntPtr writeErrorPtr);
+	protected internal abstract void SetErrorWriter(HostContext hostContext, IntPtr writeErrorPtr);
 	/// <summary>
 	/// Retrieves function pointer delegate for <paramref name="info"/>.
 	/// </summary>

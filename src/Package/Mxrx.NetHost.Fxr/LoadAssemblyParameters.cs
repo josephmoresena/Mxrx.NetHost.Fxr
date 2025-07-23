@@ -3,6 +3,9 @@ namespace Mxrx.NetHost;
 /// <summary>
 /// Parameters for assembly loading.
 /// </summary>
+#if !PACKAGE
+[ExcludeFromCodeCoverage]
+#endif
 public ref partial struct LoadAssemblyParameters
 {
 	/// <summary>

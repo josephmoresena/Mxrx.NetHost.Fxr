@@ -4,6 +4,7 @@ namespace Mxrx.NetHost;
 /// This class exposes the <c>hostfxr</c> library.
 /// </summary>
 #if !PACKAGE
+[ExcludeFromCodeCoverage]
 [SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3881, Justification = Constants.OptimizedJustification)]
 #endif
 public abstract partial class FrameworkResolver : IDisposable
