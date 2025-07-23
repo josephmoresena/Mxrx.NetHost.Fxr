@@ -1,0 +1,67 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net9.0;net8.0</TargetFrameworks>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>Mxrx.NetHost</RootNamespace>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Deterministic>true</Deterministic>
+        <IsTrimmable>true</IsTrimmable>
+        <IsAotCompatible>true</IsAotCompatible>
+        <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+        <DocumentationFile>./$(AssemblyName).xml</DocumentationFile>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <ExcludeXmlAssemblyFiles>false</ExcludeXmlAssemblyFiles>
+        <LangVersion>latest</LangVersion>
+        <TrimmerSingleWarn>false</TrimmerSingleWarn>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(PACKAGE)' == 'true'">
+        <IsPackable>true</IsPackable>
+        <DefineConstants>$(DefineConstants);PACKAGE</DefineConstants>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EnablePackageValidation>true</EnablePackageValidation>
+        <SigningKeyFile>..\Mxrx.NetHost.snk</SigningKeyFile>
+        <ApiCompatPreserveUnnecessarySuppressions>true</ApiCompatPreserveUnnecessarySuppressions>
+        <ApiCompatRespectInternals>true</ApiCompatRespectInternals>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(PACKAGE)' == 'true' And Exists('$(MSBuildProjectDirectory)\$(SigningKeyFile)')">
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>$(SigningKeyFile)</AssemblyOriginatorKeyFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Using Include="System.Buffers"/>
+        <Using Include="System.Collections.Concurrent"/>
+        <Using Include="System.Diagnostics.CodeAnalysis"/>
+        <Using Include="System.Reflection"/>
+        <Using Include="System.Runtime.InteropServices"/>
+        <Using Include="System.Runtime.CompilerServices"/>
+        <Using Include="System.Text"/>
+        <Using Include="Rxmxnx.PInvoke"/>
+        <Using Include="Rxmxnx.PInvoke.Localization"/>
+        <Using Include="Mxrx.NetHost.Internal"/>
+        <Using Include="Mxrx.NetHost.Internal.Localization"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Rxmxnx.PInvoke.Extensions" Version="2.6.0"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(PACKAGE)' != 'true'">
+        <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(PACKAGE)' == 'true'">
+        <None Include="PACKAGE.md" Pack="true" PackagePath="/"/>
+        <None Include="..\..\..\LICENSE" Pack="true" PackagePath="LICENSE.md"/>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="*" PrivateAssets="All"/>
+    </ItemGroup>
+
+</Project>

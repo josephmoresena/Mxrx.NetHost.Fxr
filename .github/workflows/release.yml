@@ -1,0 +1,29 @@
+name: Release to Nuget
+
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    env:
+      SNK_BASE64: ${{ secrets.SN_KEY }}
+      PUBLIC_KEY: ${{ secrets.SN_PK }}
+    
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+      - name: Extract public key
+        working-directory: ./package
+        run: echo "${SNK_BASE64}" | base64 -d > Mxrx.NetHost.snk
+      - name: Create NuGet Package
+        working-directory: ./src/Package/Mxrx.NetHost.Fxr
+        run: dotnet pack -c Release /p:Version=${{ github.event.release.tag_name }} /p:PackageReleaseNotes="See https://github.com/josephmoresena/Mxrx.NetHost.Fxr/releases/tag/${{ github.event.release.tag_name }}"
+      - name: Push NuGet Package
+        run: dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
