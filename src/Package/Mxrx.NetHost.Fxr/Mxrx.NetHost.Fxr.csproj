@@ -51,7 +51,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Rxmxnx.PInvoke.Extensions" Version="2.6.0"/>
+        <PackageReference Include="Rxmxnx.PInvoke.Extensions" Version="2.6.1"/>
     </ItemGroup>
 
     <!-- Package properties -->
