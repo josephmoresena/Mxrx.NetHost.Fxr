@@ -24,13 +24,13 @@ public static class Utilities
 
 #if NET5_0_OR_GREATER
 	[UnmanagedCallersOnly]
+#endif
 	public static void CustomEntryPointUnmanagedCallersOnly(LibArgs libArgs)
 	{
 		Console.WriteLine(
 			$"Hello, world! from {nameof(Utilities.CustomEntryPointUnmanagedCallersOnly)} in {nameof(Utilities)}");
 		Utilities.PrintLibArgs(libArgs);
 	}
-#endif
 
 	private static void PrintLibArgs(LibArgs libArgs)
 	{

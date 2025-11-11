@@ -1,20 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+    <Import Project="..\..\Frameworks.targets"/>
+
     <PropertyGroup>
-        <TargetFrameworks>net9.0;net8.0</TargetFrameworks>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
         <RootNamespace>Mxrx.NetHost</RootNamespace>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Deterministic>true</Deterministic>
         <IsTrimmable>true</IsTrimmable>
         <IsAotCompatible>true</IsAotCompatible>
         <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+        <LangVersion>latest</LangVersion>
+        <TrimmerSingleWarn>false</TrimmerSingleWarn>
         <DocumentationFile>./$(AssemblyName).xml</DocumentationFile>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <ExcludeXmlAssemblyFiles>false</ExcludeXmlAssemblyFiles>
-        <LangVersion>latest</LangVersion>
-        <TrimmerSingleWarn>false</TrimmerSingleWarn>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Package)' == 'true'">

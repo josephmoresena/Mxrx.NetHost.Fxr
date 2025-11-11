@@ -16,10 +16,14 @@ public static class Program
 		Program.mre.WaitOne();
 	}
 
+#if NET5_0_OR_GREATER
 	[UnmanagedCallersOnly]
+#endif
 	public static Byte IsWaiting() => Program.isWaiting;
 
+#if NET5_0_OR_GREATER
 	[UnmanagedCallersOnly]
+#endif
 	public static void Hello(IntPtr message, Byte utf8)
 	{
 		Console.WriteLine($"Hello, world! from {nameof(Program)} utf16: {utf8 == 0} [count: {++Program.callCount}]");
