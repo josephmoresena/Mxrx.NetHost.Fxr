@@ -5,11 +5,11 @@
     <PropertyGroup>
         <TargetFrameworks Condition="'$(IsLauncher)' != 'true'">$(TargetFrameworks);net5.0;net6.0;net7.0</TargetFrameworks>
         <EnableDynamicLoading Condition="'$(IsLauncher)' != 'true'">true</EnableDynamicLoading>
-        <Platform Condition="'$(IsLauncher)' != 'true'">Any CPU</Platform>
         <CheckEolTargetFramework>false</CheckEolTargetFramework>
         <AssemblyName>$(AssemblyName).$(TargetFramework)</AssemblyName>
         <AssemblyName Condition="'$(IsLauncher)' == 'true'">$(AssemblyName).$(RuntimeIdentifier)</AssemblyName>
-        <PublishDir Condition="'$(PublishDir)' == ''">..\..\..\Artifacts\</PublishDir>
+        <PublishDir Condition="'$(IsLauncher)' == 'true' And '$(PublishDir)' == ''">..\..\..\Artifacts\</PublishDir>
+        <OutputPath Condition="'$(IsLauncher)' != 'true' And '$(OutputPath)' == ''">..\..\..\Artifacts\</OutputPath>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(IlcDisableReflection)' == 'true'">

@@ -89,19 +89,84 @@ jobs:
         os: [ windows-latest, ubuntu-latest, macos-latest ]
     
     steps:
-      - name: Setup NativeAOT pre-requisites
+      - name: APT deb822 sources
         if: runner.os == 'Linux'
         run: |
-          sudo apt update 
-          sudo apt upgrade --assume-yes
-          sudo apt-get install coreutils clang llvm zlib1g-dev libkrb5-dev libssl-dev \
-            --assume-yes
+          if [[ $ImageOS == "ubuntu24" ]]; then
+          sudo bash -c 'cat > /etc/apt/sources.list.d/ubuntu.sources <<EOF
+          Types: deb
+          URIs: https://archive.ubuntu.com/ubuntu/
+          Suites: noble
+          Components: main restricted universe
+          Architectures: amd64
           
-          sudo apt-get clean
-          sudo apt-get autoclean
-          sudo apt-get autoremove -y
-          sudo rm -rf /tmp/*
-          sudo rm -rf /var/tmp/*
+          Types: deb
+          URIs: https://security.ubuntu.com/ubuntu/
+          Suites: noble-security
+          Components: main restricted universe
+          Architectures: amd64
+          
+          Types: deb
+          URIs: https://archive.ubuntu.com/ubuntu/
+          Suites: noble-updates
+          Components: main restricted universe
+          Architectures: amd64
+          
+          Types: deb
+          URIs: https://azure.ports.ubuntu.com/ubuntu-ports/
+          Suites: noble
+          Components: main restricted multiverse universe
+          Architectures: arm64
+          
+          Types: deb
+          URIs: https://azure.ports.ubuntu.com/ubuntu-ports/
+          Suites: noble-updates
+          Components: main restricted multiverse universe
+          Architectures: arm64
+          
+          Types: deb
+          URIs: https://azure.ports.ubuntu.com/ubuntu-ports/
+          Suites: noble-updates
+          Components: main restricted multiverse universe
+          Architectures: armhf
+          EOF'
+          fi
+
+          - name: Setup NativeAOT pre-requisites
+            if: runner.os == 'Linux'
+            run: |
+              sudo dpkg --add-architecture arm64
+              sudo dpkg --add-architecture armhf
+          
+              sudo bash -c 'cat > /etc/apt/sources.list.d/arm64.list <<EOF
+              deb [arch=arm64] https://ports.ubuntu.com/ubuntu-ports/ noble main restricted
+              deb [arch=arm64] https://ports.ubuntu.com/ubuntu-ports/ noble-updates main restricted
+              deb [arch=arm64] https://ports.ubuntu.com/ubuntu-ports/ noble-backports main restricted universe multiverse
+              EOF'
+          
+              sudo bash -c 'cat > /etc/apt/sources.list.d/armhf.list <<EOF
+              deb [arch=armhf] https://ports.ubuntu.com/ubuntu-ports/ noble main restricted
+              deb [arch=armhf] https://ports.ubuntu.com/ubuntu-ports/ noble-updates main restricted
+              deb [arch=armhf] https://ports.ubuntu.com/ubuntu-ports/ noble-backports main restricted universe multiverse
+              EOF'
+          
+              sudo sed -i -e 's/deb http/deb [arch=amd64] http/g' /etc/apt/sources.list
+              sudo sed -i -e 's/deb mirror/deb [arch=amd64] mirror/g' /etc/apt/sources.list
+          
+              sudo apt update 
+              sudo apt upgrade --assume-yes
+              sudo apt-get install coreutils clang llvm zlib1g-dev libkrb5-dev libssl-dev \
+                qemu-user qemu-user-static binfmt-support libicu74:arm64 libicu74:armhf \
+                libstdc++-14-dev:arm64 libstdc++-14-dev:arm64 \
+                binutils-aarch64-linux-gnu gcc-aarch64-linux-gnu zlib1g-dev:arm64 libssl-dev:arm64 \
+                binutils-arm-linux-gnueabihf gcc-arm-linux-gnueabihf zlib1g-dev:armhf libssl-dev:armhf \
+                --assume-yes
+          
+              sudo apt-get clean
+              sudo apt-get autoclean
+              sudo apt-get autoremove -y
+              sudo rm -rf /tmp/*
+              sudo rm -rf /var/tmp/*
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
@@ -117,25 +182,33 @@ jobs:
         working-directory: ./src/Sample/Mxrx.NetHost.Sample.Launcher
         shell: pwsh
         run: |
-          dotnet publish /p:TargetFramework=net8.0 /p:IlcDisableReflection=true
-          dotnet publish /p:TargetFramework=net8.0
-          dotnet publish /p:TargetFramework=net9.0
-          dotnet publish /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
           if ($IsWindows) {
+            dotnet publish -r win-x64 /p:TargetFramework=net8.0
+            dotnet publish -r win-x64 /p:TargetFramework=net8.0 /p:IlcDisableReflection=true
             dotnet publish -r win-arm64 /p:TargetFramework=net8.0
             dotnet publish -r win-arm64 /p:TargetFramework=net8.0 /p:IlcDisableReflection=true
+            dotnet publish -r win-x64 /p:TargetFramework=net9.0
+            dotnet publish -r win-x64 /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
             dotnet publish -r win-arm64 /p:TargetFramework=net9.0
             dotnet publish -r win-arm64 /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
             dotnet publish -r win-x86 /p:TargetFramework=net9.0
             dotnet publish -r win-x86 /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
           } elseif ($IsMacOS) {
+            dotnet publish -r osx-arm64 /p:TargetFramework=net8.0
+            dotnet publish -r osx-arm64 /p:TargetFramework=net8.0 /p:IlcDisableReflection=true
             dotnet publish -r osx-x64 /p:TargetFramework=net8.0
             dotnet publish -r osx-x64 /p:TargetFramework=net8.0 /p:IlcDisableReflection=true
+            dotnet publish -r osx-arm64 /p:TargetFramework=net9.0
+            dotnet publish -r osx-arm64 /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
             dotnet publish -r osx-x64 /p:TargetFramework=net9.0
             dotnet publish -r osx-x64 /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
           } else {
+            dotnet publish -r linux-x64 /p:TargetFramework=net8.0
+            dotnet publish -r linux-x64 /p:TargetFramework=net8.0 /p:IlcDisableReflection=true
             dotnet publish -r linux-arm64 /p:TargetFramework=net8.0
             dotnet publish -r linux-arm64 /p:TargetFramework=net8.0 /p:IlcDisableReflection=true
+            dotnet publish -r linux-x64 /p:TargetFramework=net9.0
+            dotnet publish -r linux-x64 /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
             dotnet publish -r linux-arm64 /p:TargetFramework=net9.0
             dotnet publish -r linux-arm64 /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
             dotnet publish -r linux-arm /p:TargetFramework=net9.0
@@ -157,21 +230,13 @@ jobs:
         working-directory: ./src/Sample/Mxrx.NetHost.Sample.Application
         shell: pwsh
         run: |
-          dotnet publish /p:TargetFramework=net5.0 
-          dotnet publish /p:TargetFramework=net6.0 
-          dotnet publish /p:TargetFramework=net7.0 
-          dotnet publish /p:TargetFramework=net8.0 
-          dotnet publish /p:TargetFramework=net9.0 
+          dotnet build -c Release
 
       - name: Publish Sample library
         working-directory: ./src/Sample/Mxrx.NetHost.Sample.Library
         shell: pwsh
         run: |
-          dotnet publish /p:TargetFramework=net5.0 
-          dotnet publish /p:TargetFramework=net6.0 
-          dotnet publish /p:TargetFramework=net7.0 
-          dotnet publish /p:TargetFramework=net8.0 
-          dotnet publish /p:TargetFramework=net9.0
+          dotnet build -c Release
 
       - name: Create Artifact
         uses: actions/upload-artifact@v5

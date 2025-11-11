@@ -22,4 +22,9 @@
         <ProjectReference Include="..\..\Package\Mxrx.NetHost.Fxr\Mxrx.NetHost.Fxr.csproj"/>
     </ItemGroup>
 
+    <PropertyGroup Condition="'$(RuntimeIdentifier)' == 'linux-arm' And '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'X64'">
+        <LinkerFlavor>lld</LinkerFlavor>
+        <ObjCopyName>/usr/arm-linux-gnueabihf/bin/objcopy</ObjCopyName>
+    </PropertyGroup>
+
 </Project>
