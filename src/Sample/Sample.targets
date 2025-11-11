@@ -5,6 +5,7 @@
     <PropertyGroup>
         <TargetFrameworks Condition="'$(IsLauncher)' != 'true'">$(TargetFrameworks);net5.0;net6.0;net7.0</TargetFrameworks>
         <EnableDynamicLoading Condition="'$(IsLauncher)' != 'true'">true</EnableDynamicLoading>
+        <GenerateRuntimeConfigDevFile Condition="'$(IsLauncher)' != 'true'">false</GenerateRuntimeConfigDevFile>
         <CheckEolTargetFramework>false</CheckEolTargetFramework>
         <PublishDir Condition="'$(IsLauncher)' == 'true' And '$(PublishDir)' == ''">..\..\..\Artifacts\</PublishDir>
         <OutputPath Condition="'$(IsLauncher)' != 'true' And '$(OutputPath)' == ''">..\..\..\Artifacts\</OutputPath>
