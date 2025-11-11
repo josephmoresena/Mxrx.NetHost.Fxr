@@ -18,6 +18,14 @@
         <TargetFramework>net9.0</TargetFramework>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <AssemblyName>$(AssemblyName).$(TargetFramework).$(RuntimeIdentifier)</AssemblyName>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(IlcDisableReflection)' == 'true'">
+        <AssemblyName>$(AssemblyName).RFM</AssemblyName>
+    </PropertyGroup>
+
     <ItemGroup>
         <ProjectReference Include="..\..\Package\Mxrx.NetHost.Fxr\Mxrx.NetHost.Fxr.csproj"/>
     </ItemGroup>

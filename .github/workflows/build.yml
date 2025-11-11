@@ -137,22 +137,22 @@ jobs:
         run: |
           sudo dpkg --add-architecture arm64
           sudo dpkg --add-architecture armhf
-      
+          
           sudo bash -c 'cat > /etc/apt/sources.list.d/arm64.list <<EOF
           deb [arch=arm64] https://ports.ubuntu.com/ubuntu-ports/ noble main restricted
           deb [arch=arm64] https://ports.ubuntu.com/ubuntu-ports/ noble-updates main restricted
           deb [arch=arm64] https://ports.ubuntu.com/ubuntu-ports/ noble-backports main restricted universe multiverse
           EOF'
-      
+          
           sudo bash -c 'cat > /etc/apt/sources.list.d/armhf.list <<EOF
           deb [arch=armhf] https://ports.ubuntu.com/ubuntu-ports/ noble main restricted
           deb [arch=armhf] https://ports.ubuntu.com/ubuntu-ports/ noble-updates main restricted
           deb [arch=armhf] https://ports.ubuntu.com/ubuntu-ports/ noble-backports main restricted universe multiverse
           EOF'
-      
+          
           sudo sed -i -e 's/deb http/deb [arch=amd64] http/g' /etc/apt/sources.list
           sudo sed -i -e 's/deb mirror/deb [arch=amd64] mirror/g' /etc/apt/sources.list
-      
+          
           sudo apt update 
           sudo apt upgrade --assume-yes
           sudo apt-get install coreutils clang llvm zlib1g-dev libkrb5-dev libssl-dev \
@@ -161,7 +161,7 @@ jobs:
             binutils-aarch64-linux-gnu gcc-aarch64-linux-gnu zlib1g-dev:arm64 libssl-dev:arm64 \
             binutils-arm-linux-gnueabihf gcc-arm-linux-gnueabihf zlib1g-dev:armhf libssl-dev:armhf \
             --assume-yes
-      
+          
           sudo apt-get clean
           sudo apt-get autoclean
           sudo apt-get autoremove -y
@@ -184,34 +184,44 @@ jobs:
         run: |
           if ($IsWindows) {
             dotnet publish -r win-x64 /p:TargetFramework=net8.0
-            dotnet publish -r win-x64 /p:TargetFramework=net8.0 /p:IlcDisableReflection=true
             dotnet publish -r win-arm64 /p:TargetFramework=net8.0
-            dotnet publish -r win-arm64 /p:TargetFramework=net8.0 /p:IlcDisableReflection=true
             dotnet publish -r win-x64 /p:TargetFramework=net9.0
-            dotnet publish -r win-x64 /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
             dotnet publish -r win-arm64 /p:TargetFramework=net9.0
-            dotnet publish -r win-arm64 /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
             dotnet publish -r win-x86 /p:TargetFramework=net9.0
+          
+            Remove-Item bin, obj -Recurse -Force
+          
+            dotnet publish -r win-x64 /p:TargetFramework=net8.0 /p:IlcDisableReflection=true
+            dotnet publish -r win-arm64 /p:TargetFramework=net8.0 /p:IlcDisableReflection=true
+            dotnet publish -r win-x64 /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
+            dotnet publish -r win-arm64 /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
             dotnet publish -r win-x86 /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
           } elseif ($IsMacOS) {
+          
             dotnet publish -r osx-arm64 /p:TargetFramework=net8.0
-            dotnet publish -r osx-arm64 /p:TargetFramework=net8.0 /p:IlcDisableReflection=true
             dotnet publish -r osx-x64 /p:TargetFramework=net8.0
-            dotnet publish -r osx-x64 /p:TargetFramework=net8.0 /p:IlcDisableReflection=true
-            dotnet publish -r osx-arm64 /p:TargetFramework=net9.0
-            dotnet publish -r osx-arm64 /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
             dotnet publish -r osx-x64 /p:TargetFramework=net9.0
+            dotnet publish -r osx-arm64 /p:TargetFramework=net9.0
+          
+            Remove-Item bin, obj -Recurse -Force
+          
+            dotnet publish -r osx-arm64 /p:TargetFramework=net8.0 /p:IlcDisableReflection=true
+            dotnet publish -r osx-x64 /p:TargetFramework=net8.0 /p:IlcDisableReflection=true
+            dotnet publish -r osx-arm64 /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
             dotnet publish -r osx-x64 /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
           } else {
             dotnet publish -r linux-x64 /p:TargetFramework=net8.0
-            dotnet publish -r linux-x64 /p:TargetFramework=net8.0 /p:IlcDisableReflection=true
             dotnet publish -r linux-arm64 /p:TargetFramework=net8.0
-            dotnet publish -r linux-arm64 /p:TargetFramework=net8.0 /p:IlcDisableReflection=true
             dotnet publish -r linux-x64 /p:TargetFramework=net9.0
-            dotnet publish -r linux-x64 /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
             dotnet publish -r linux-arm64 /p:TargetFramework=net9.0
-            dotnet publish -r linux-arm64 /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
             dotnet publish -r linux-arm /p:TargetFramework=net9.0
+          
+            Remove-Item bin, obj -Recurse -Force
+          
+            dotnet publish -r linux-x64 /p:TargetFramework=net8.0 /p:IlcDisableReflection=true
+            dotnet publish -r linux-arm64 /p:TargetFramework=net8.0 /p:IlcDisableReflection=true
+            dotnet publish -r linux-x64 /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
+            dotnet publish -r linux-arm64 /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
             dotnet publish -r linux-arm /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
           }
 
