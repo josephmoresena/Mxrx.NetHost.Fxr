@@ -8,6 +8,7 @@
         <Platform Condition="'$(IsLauncher)' != 'true'">Any CPU</Platform>
         <CheckEolTargetFramework>false</CheckEolTargetFramework>
         <AssemblyName>$(AssemblyName).$(TargetFramework)</AssemblyName>
+        <AssemblyName Condition="'$(IsLauncher)' == 'true'">$(AssemblyName).$(RuntimeIdentifier)</AssemblyName>
         <PublishDir Condition="'$(PublishDir)' == ''">..\..\..\Artifacts\</PublishDir>
     </PropertyGroup>
 
