@@ -3,7 +3,7 @@
     <Import Project="..\Frameworks.targets"/>
 
     <PropertyGroup>
-        <TargetFrameworks Condition="'$(IsLauncher)' != 'true'">net5.0;net6.0;net7.0</TargetFrameworks>
+        <TargetFrameworks Condition="'$(IsLauncher)' != 'true'">$(TargetFrameworks);net5.0;net6.0;net7.0</TargetFrameworks>
         <EnableDynamicLoading Condition="'$(IsLauncher)' != 'true'">true</EnableDynamicLoading>
         <Platform Condition="'$(IsLauncher)' != 'true'">Any CPU</Platform>
         <CheckEolTargetFramework>false</CheckEolTargetFramework>
