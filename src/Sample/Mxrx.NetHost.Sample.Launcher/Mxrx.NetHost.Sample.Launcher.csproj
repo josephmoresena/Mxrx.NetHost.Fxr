@@ -64,7 +64,7 @@
             <NativeFiles Condition="$(NativeIntermediateOutputPath) != ''" Remove="$(NativeIntermediateOutputPath)*$(AssemblyName).ilc.rsp"/>
         </ItemGroup>
 
-        <Copy Condition="'$(CopyTargetTo)' != '' And $(NativeIntermediateOutputPath) != ''" SourceFiles="@(NativeFiles)" DestinationFolder="$(PublishDir)\Native" SkipUnchangedFiles="false"/>
+        <Copy Condition="$(NativeIntermediateOutputPath) != ''" SourceFiles="@(NativeFiles)" DestinationFolder="$(PublishDir)\Native" SkipUnchangedFiles="false"/>
 
         <!-- Remove NativeIntermediateOutput files -->
         <Delete Condition="$(NativeIntermediateOutputPath) != ''" Files="$(NativeIntermediateOutputPath)*$(AssemblyName)*"/>
