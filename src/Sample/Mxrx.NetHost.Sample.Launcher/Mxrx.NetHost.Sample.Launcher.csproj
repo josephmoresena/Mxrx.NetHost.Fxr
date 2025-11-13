@@ -13,9 +13,8 @@
 
     <Import Project="..\Sample.targets"/>
 
-    <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('FREEBSD')) Or '$(RuntimeIdentifier)' == 'linux-arm' Or '$(RuntimeIdentifier)' == 'win-x86'">
-        <TargetFrameworks>$(Null)</TargetFrameworks>
-        <TargetFramework>net9.0</TargetFramework>
+    <PropertyGroup Condition="'$(RuntimeIdentifier)' == 'linux-arm' Or '$(RuntimeIdentifier)' == 'win-x86'">
+        <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
     </PropertyGroup>
 
     <PropertyGroup>
