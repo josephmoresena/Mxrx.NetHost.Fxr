@@ -20,7 +20,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 9.0.x
+          dotnet-version: 10.x
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
@@ -172,58 +172,17 @@ jobs:
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: |
-            9.0.x
+            10.0.x
 
       - uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
       - name: Publish Sample launcher
-        working-directory: ./src/Sample/Mxrx.NetHost.Sample.Launcher
+        working-directory: ./src/Sample
         shell: pwsh
         run: |
-          if ($IsWindows) {
-            dotnet publish -r win-x64 /p:TargetFramework=net8.0
-            dotnet publish -r win-arm64 /p:TargetFramework=net8.0
-            dotnet publish -r win-x64 /p:TargetFramework=net9.0
-            dotnet publish -r win-arm64 /p:TargetFramework=net9.0
-            dotnet publish -r win-x86 /p:TargetFramework=net9.0
-          
-            Remove-Item bin, obj -Recurse -Force
-          
-            dotnet publish -r win-x64 /p:TargetFramework=net8.0 /p:IlcDisableReflection=true
-            dotnet publish -r win-arm64 /p:TargetFramework=net8.0 /p:IlcDisableReflection=true
-            dotnet publish -r win-x64 /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
-            dotnet publish -r win-arm64 /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
-            dotnet publish -r win-x86 /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
-          } elseif ($IsMacOS) {
-          
-            dotnet publish -r osx-arm64 /p:TargetFramework=net8.0
-            dotnet publish -r osx-x64 /p:TargetFramework=net8.0
-            dotnet publish -r osx-x64 /p:TargetFramework=net9.0
-            dotnet publish -r osx-arm64 /p:TargetFramework=net9.0
-          
-            Remove-Item bin, obj -Recurse -Force
-          
-            dotnet publish -r osx-arm64 /p:TargetFramework=net8.0 /p:IlcDisableReflection=true
-            dotnet publish -r osx-x64 /p:TargetFramework=net8.0 /p:IlcDisableReflection=true
-            dotnet publish -r osx-arm64 /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
-            dotnet publish -r osx-x64 /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
-          } else {
-            dotnet publish -r linux-x64 /p:TargetFramework=net8.0
-            dotnet publish -r linux-arm64 /p:TargetFramework=net8.0
-            dotnet publish -r linux-x64 /p:TargetFramework=net9.0
-            dotnet publish -r linux-arm64 /p:TargetFramework=net9.0
-            dotnet publish -r linux-arm /p:TargetFramework=net9.0
-          
-            Remove-Item bin, obj -Recurse -Force
-          
-            dotnet publish -r linux-x64 /p:TargetFramework=net8.0 /p:IlcDisableReflection=true
-            dotnet publish -r linux-arm64 /p:TargetFramework=net8.0 /p:IlcDisableReflection=true
-            dotnet publish -r linux-x64 /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
-            dotnet publish -r linux-arm64 /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
-            dotnet publish -r linux-arm /p:TargetFramework=net9.0 /p:IlcDisableReflection=true
-          }
+          dotnet run --file CompileLauncher.csfile
 
       - name: Clean up
         working-directory: ./Artifacts
