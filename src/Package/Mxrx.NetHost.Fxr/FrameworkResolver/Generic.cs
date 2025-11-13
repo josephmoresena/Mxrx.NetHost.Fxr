@@ -82,9 +82,10 @@ public partial class FrameworkResolver
 		/// <inheritdoc/>
 		protected internal override unsafe void LoadAssembly(HostContext hostContext, LoadAssemblyParameters parameters)
 		{
-			delegate* <Byte*, UIntPtr, Byte*, UIntPtr, void*, void*, RuntimeCallResult> loadAssemblyBytes =
-				(delegate* <Byte*, UIntPtr, Byte*, UIntPtr, void*, void*, RuntimeCallResult>)hostContext
-					.LoadAssemblyFromBytesPtr.ToPointer();
+			delegate* unmanaged[Stdcall]<Byte*, UIntPtr, Byte*, UIntPtr, void*, void*, RuntimeCallResult>
+				loadAssemblyBytes =
+					(delegate* unmanaged[Stdcall]<Byte*, UIntPtr, Byte*, UIntPtr, void*, void*, RuntimeCallResult>)
+					hostContext.LoadAssemblyFromBytesPtr.ToPointer();
 			this._clrInitialized = true;
 
 			fixed (Byte* assemblyPtr = &MemoryMarshal.GetReference(parameters.AssemblyBytes))

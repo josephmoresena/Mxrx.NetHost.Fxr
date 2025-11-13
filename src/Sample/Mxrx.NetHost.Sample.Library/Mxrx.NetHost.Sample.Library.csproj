@@ -1,11 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+    <Import Project="..\Sample.targets"/>
+
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <EnableDynamicLoading>true</EnableDynamicLoading>
+        <OutputType>Library</OutputType>
     </PropertyGroup>
 
 </Project>

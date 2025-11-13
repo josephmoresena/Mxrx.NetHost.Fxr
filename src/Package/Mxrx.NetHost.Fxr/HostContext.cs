@@ -86,7 +86,7 @@ public abstract partial class HostContext : IDisposable
 	public void SetErrorWriter(FuncPtr<WriteErrorFromPointerDelegate> writeErrorPtr)
 	{
 		this.ThrowIfDisposed();
-		if (OperatingSystem.IsWindows())
+		if (SystemInfo.IsWindows)
 		{
 			this.SetErrorWriter(writeErrorPtr.Pointer);
 			return;
@@ -104,7 +104,7 @@ public abstract partial class HostContext : IDisposable
 	public void SetErrorWriter(FuncPtr<WriteUtfErrorFromPointerDelegate> writeErrorPtr)
 	{
 		this.ThrowIfDisposed();
-		if (!OperatingSystem.IsWindows())
+		if (!SystemInfo.IsWindows)
 		{
 			this.SetErrorWriter(writeErrorPtr.Pointer);
 			return;
@@ -122,7 +122,7 @@ public abstract partial class HostContext : IDisposable
 	public unsafe void SetErrorWriter(delegate* unmanaged[Cdecl]<ReadOnlyValPtr<Char>> writeErrorPtr)
 	{
 		this.ThrowIfDisposed();
-		if (OperatingSystem.IsWindows())
+		if (SystemInfo.IsWindows)
 		{
 			this.SetErrorWriter((IntPtr)writeErrorPtr);
 			return;
@@ -140,7 +140,7 @@ public abstract partial class HostContext : IDisposable
 	public unsafe void SetErrorWriter(delegate* unmanaged<ReadOnlyValPtr<Byte>> writeErrorPtr)
 	{
 		this.ThrowIfDisposed();
-		if (!OperatingSystem.IsWindows()) this.SetErrorWriter((IntPtr)writeErrorPtr);
+		if (!SystemInfo.IsWindows) this.SetErrorWriter((IntPtr)writeErrorPtr);
 		IMessageResource resource = IMessageResource.GetInstance();
 		throw new PlatformNotSupportedException(resource.UnixRequired);
 	}

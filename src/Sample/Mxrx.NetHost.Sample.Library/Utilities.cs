@@ -12,21 +12,25 @@ public static class Utilities
 			return 1;
 
 		LibArgs libArgs = Marshal.PtrToStructure<LibArgs>(arg);
-		Console.WriteLine($"Hello, world! from {nameof(Utilities)} [count: {Utilities.callCount++}]");
+		Console.WriteLine(
+			$"Hello, world! from {nameof(Utilities)} ({RuntimeInformation.FrameworkDescription}) [count: {Utilities.callCount++}]");
 		Utilities.PrintLibArgs(libArgs);
 		return 0;
 	}
 	public static void CustomEntryPoint(LibArgs libArgs)
 	{
-		Console.WriteLine($"Hello, world! from {nameof(Utilities.CustomEntryPoint)} in {nameof(Utilities)}");
+		Console.WriteLine(
+			$"Hello, world! from {nameof(Utilities.CustomEntryPoint)} in {nameof(Utilities)} ({RuntimeInformation.FrameworkDescription})");
 		Utilities.PrintLibArgs(libArgs);
 	}
 
+#if NET5_0_OR_GREATER
 	[UnmanagedCallersOnly]
+#endif
 	public static void CustomEntryPointUnmanagedCallersOnly(LibArgs libArgs)
 	{
 		Console.WriteLine(
-			$"Hello, world! from {nameof(Utilities.CustomEntryPointUnmanagedCallersOnly)} in {nameof(Utilities)}");
+			$"Hello, world! from {nameof(Utilities.CustomEntryPointUnmanagedCallersOnly)} in {nameof(Utilities)} ({RuntimeInformation.FrameworkDescription})");
 		Utilities.PrintLibArgs(libArgs);
 	}
 

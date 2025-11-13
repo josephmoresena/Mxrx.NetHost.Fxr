@@ -100,8 +100,9 @@ public partial class FrameworkResolver
 			{
 				try
 				{
-					delegate* <Char*, void*, void*, RuntimeCallResult> loadAssembly =
-						(delegate* <Char*, void*, void*, RuntimeCallResult>)hostContext.LoadAssemblyPtr;
+					delegate* unmanaged[Stdcall]<Char*, void*, void*, RuntimeCallResult> loadAssembly =
+						(delegate* unmanaged[Stdcall]<Char*, void*, void*, RuntimeCallResult>)hostContext
+							.LoadAssemblyPtr;
 
 					RuntimeCallResult value = loadAssembly(assemblyPathPtr, default, default);
 					FrameworkResolver.ThrowIfInvalidResult(value);
@@ -168,8 +169,10 @@ public partial class FrameworkResolver
 		private static unsafe RuntimeCallResult LoadAssemblyAnGetFunctionPointer(void* funcPtr, Char* assemblyPathPtr,
 			Char* typeNamePtr, Char* methodNamePtr, Char* delegateTypePtr, out IntPtr resultPtr)
 		{
-			delegate* <Char*, Char*, Char*, Char*, void*, out IntPtr, RuntimeCallResult> loadAndGetFunctionPtr =
-				(delegate* <Char*, Char*, Char*, Char*, void*, out IntPtr, RuntimeCallResult>)funcPtr;
+			delegate* unmanaged[Stdcall]<Char*, Char*, Char*, Char*, void*, out IntPtr, RuntimeCallResult>
+				loadAndGetFunctionPtr =
+					(delegate* unmanaged[Stdcall]<Char*, Char*, Char*, Char*, void*, out IntPtr, RuntimeCallResult>)
+					funcPtr;
 
 			return loadAndGetFunctionPtr(assemblyPathPtr, typeNamePtr, methodNamePtr, delegateTypePtr, default,
 			                             out resultPtr);
@@ -186,8 +189,10 @@ public partial class FrameworkResolver
 		private static unsafe RuntimeCallResult GetFunctionPointer(void* funcPtr, Char* typeNamePtr,
 			Char* methodNamePtr, Char* delegateTypePtr, out IntPtr resultPtr)
 		{
-			delegate*<Char*, Char*, Char*, void*, void*, out IntPtr, RuntimeCallResult> getFunctionPointerPtr =
-				(delegate* <Char*, Char*, Char*, void*, void*, out IntPtr, RuntimeCallResult>)funcPtr;
+			delegate* unmanaged[Stdcall]<Char*, Char*, Char*, void*, void*, out IntPtr, RuntimeCallResult>
+				getFunctionPointerPtr =
+					(delegate* unmanaged[Stdcall]<Char*, Char*, Char*, void*, void*, out IntPtr, RuntimeCallResult>)
+					funcPtr;
 
 			return getFunctionPointerPtr(typeNamePtr, methodNamePtr, delegateTypePtr, default, default, out resultPtr);
 		}

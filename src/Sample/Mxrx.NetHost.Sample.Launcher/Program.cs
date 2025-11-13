@@ -77,7 +77,7 @@ static void UseLibrary(FrameworkResolver fxr, String assemblyPath, Boolean useUf
 static InitializationParameters CreateApplicationInitParams(String assemblyPath)
 {
 	InitializationParameters.Builder builder = InitializationParameters.CreateBuilder();
-	if (OperatingSystem.IsWindows())
+	if (SystemInfo.IsWindows)
 		builder.WithArguments(assemblyPath, "app_arg_1", "app_arg_2");
 	else
 		builder.WithArguments((CString)assemblyPath, new(() => "app_arg_1"u8), new(() => "app_arg_2"u8));
@@ -86,7 +86,7 @@ static InitializationParameters CreateApplicationInitParams(String assemblyPath)
 static NetFunctionInfo GetHelloAppFunctionInfo()
 {
 	NetFunctionInfo.Builder builder = NetFunctionInfo.CreateBuilder().WithUnmanagedCallerOnly(true);
-	builder = OperatingSystem.IsWindows() ?
+	builder = SystemInfo.IsWindows ?
 		builder.WithTypeName("Mxrx.NetHost.Sample.Application.Program, Mxrx.NetHost.Sample.Application\0")
 		       .WithMethodName("Hello\0") :
 		builder.WithTypeName("Mxrx.NetHost.Sample.Application.Program, Mxrx.NetHost.Sample.Application"u8)
@@ -96,7 +96,7 @@ static NetFunctionInfo GetHelloAppFunctionInfo()
 static NetFunctionInfo GetIsWaitingFunctionInfo()
 {
 	NetFunctionInfo.Builder builder = NetFunctionInfo.CreateBuilder().WithUnmanagedCallerOnly(true);
-	builder = OperatingSystem.IsWindows() ?
+	builder = SystemInfo.IsWindows ?
 		builder.WithTypeName("Mxrx.NetHost.Sample.Application.Program, Mxrx.NetHost.Sample.Application\0")
 		       .WithMethodName("IsWaiting\0") :
 		builder.WithTypeName("Mxrx.NetHost.Sample.Application.Program, Mxrx.NetHost.Sample.Application"u8)
@@ -106,7 +106,7 @@ static NetFunctionInfo GetIsWaitingFunctionInfo()
 static NetFunctionInfo GetHelloLibFunctionInfo(String assemblyPath)
 {
 	NetFunctionInfo.Builder builder = NetFunctionInfo.CreateBuilder().WithAssemblyPathPath(assemblyPath);
-	builder = OperatingSystem.IsWindows() ?
+	builder = SystemInfo.IsWindows ?
 		builder.WithTypeName("Mxrx.NetHost.Sample.Library.Utilities, Mxrx.NetHost.Sample.Library\0")
 		       .WithMethodName("Hello\0") :
 		builder.WithTypeName("Mxrx.NetHost.Sample.Library.Utilities, Mxrx.NetHost.Sample.Library"u8)
@@ -117,7 +117,7 @@ static NetFunctionInfo GetCustomHelloLibUnmanagedFunctionInfo(String assemblyPat
 {
 	NetFunctionInfo.Builder builder = NetFunctionInfo.CreateBuilder().WithAssemblyPathPath(assemblyPath)
 	                                                 .WithUnmanagedCallerOnly(true);
-	builder = OperatingSystem.IsWindows() ?
+	builder = SystemInfo.IsWindows ?
 		builder.WithTypeName("Mxrx.NetHost.Sample.Library.Utilities, Mxrx.NetHost.Sample.Library\0")
 		       .WithMethodName("CustomEntryPointUnmanagedCallersOnly\0") :
 		builder.WithTypeName("Mxrx.NetHost.Sample.Library.Utilities, Mxrx.NetHost.Sample.Library"u8)
@@ -127,7 +127,7 @@ static NetFunctionInfo GetCustomHelloLibUnmanagedFunctionInfo(String assemblyPat
 static NetFunctionInfo GetCustomHelloLibFunctionInfo(String assemblyPath)
 {
 	NetFunctionInfo.Builder builder = NetFunctionInfo.CreateBuilder().WithAssemblyPathPath(assemblyPath);
-	builder = OperatingSystem.IsWindows() ?
+	builder = SystemInfo.IsWindows ?
 		builder.WithTypeName("Mxrx.NetHost.Sample.Library.Utilities, Mxrx.NetHost.Sample.Library\0")
 		       .WithMethodName("CustomEntryPoint\0")
 		       .WithDelegateTypeName(
