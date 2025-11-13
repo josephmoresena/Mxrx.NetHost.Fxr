@@ -53,7 +53,7 @@ public abstract partial class FrameworkResolver
 	/// <returns>A <see cref="FrameworkResolver"/> instance for <paramref name="libHandle"/>.</returns>
 	private static FrameworkResolver CreateResolver(IntPtr libHandle)
 	{
-		FrameworkResolver.loadedResolver = OperatingSystem.IsWindows() ? new Windows(libHandle) : new Unix(libHandle);
+		FrameworkResolver.loadedResolver = SystemInfo.IsWindows ? new Windows(libHandle) : new Unix(libHandle);
 		return FrameworkResolver.loadedResolver;
 	}
 	/// <summary>

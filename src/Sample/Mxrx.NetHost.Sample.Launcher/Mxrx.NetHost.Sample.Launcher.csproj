@@ -17,12 +17,26 @@
         <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
     </PropertyGroup>
 
-    <PropertyGroup>
+    <PropertyGroup Condition="'$(RuntimeIdentifier)' != ''">
         <AssemblyName>$(AssemblyName).$(TargetFramework).$(RuntimeIdentifier)</AssemblyName>
+        <DefineConstants>$(DefineConstants);NATIVE_AOT</DefineConstants>
+        <StripSymbols>true</StripSymbols>
+        <IlcGenerateMetadataLog>true</IlcGenerateMetadataLog>
+        <IlcGenerateMstatFile>true</IlcGenerateMstatFile>
+        <IlcGenerateDgmlFile>true</IlcGenerateDgmlFile>
+        <RootAllApplicationAssemblies>false</RootAllApplicationAssemblies>
+        <TrimUnusedDependencies>true</TrimUnusedDependencies>
+        <IlcOptimizationPreference>Size</IlcOptimizationPreference>
+        <IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
+        <IlcTrimMetadata>true</IlcTrimMetadata>
+        <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
+        <IlcGenerateCompleteTypeMetadata>false</IlcGenerateCompleteTypeMetadata>
+        <CopyOutputSymbolsToPublishDirectory>false</CopyOutputSymbolsToPublishDirectory>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(IlcDisableReflection)' == 'true'">
+    <PropertyGroup Condition="'$(RuntimeIdentifier)' != '' And '$(IlcDisableReflection)' == 'true'">
         <AssemblyName>$(AssemblyName).RFM</AssemblyName>
+        <DefineConstants Condition="'$(IlcDisableReflection)' == 'true'">$(DefineConstants);REFLECTION_FREE</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>
@@ -37,5 +51,23 @@
         <LinkerFlavor>lld</LinkerFlavor>
         <ObjCopyName>/usr/aarch64-linux-gnu/bin/objcopy</ObjCopyName>
     </PropertyGroup>
+
+    <Target Name="CopyTarget" Condition="'$(RuntimeIdentifier)' != ''" AfterTargets="Publish">
+        <ItemGroup>
+            <NativeFiles Condition="$(NativeIntermediateOutputPath) != ''" Include="$(NativeIntermediateOutputPath)*$(AssemblyName)*"/>
+            <NativeFiles Condition="$(NativeIntermediateOutputPath) != ''" Remove="$(NativeIntermediateOutputPath)*$(AssemblyName).o"/>
+            <NativeFiles Condition="$(NativeIntermediateOutputPath) != ''" Remove="$(NativeIntermediateOutputPath)*$(AssemblyName).*.o"/>
+            <NativeFiles Condition="$(NativeIntermediateOutputPath) != ''" Remove="$(NativeIntermediateOutputPath)*$(AssemblyName).*.bc"/>
+            <NativeFiles Condition="$(NativeIntermediateOutputPath) != ''" Remove="$(NativeIntermediateOutputPath)*$(AssemblyName).obj"/>
+            <NativeFiles Condition="$(NativeIntermediateOutputPath) != ''" Remove="$(NativeIntermediateOutputPath)*$(AssemblyName).exports"/>
+            <NativeFiles Condition="$(NativeIntermediateOutputPath) != ''" Remove="$(NativeIntermediateOutputPath)*$(AssemblyName).def"/>
+            <NativeFiles Condition="$(NativeIntermediateOutputPath) != ''" Remove="$(NativeIntermediateOutputPath)*$(AssemblyName).ilc.rsp"/>
+        </ItemGroup>
+
+        <Copy Condition="'$(CopyTargetTo)' != '' And $(NativeIntermediateOutputPath) != ''" SourceFiles="@(NativeFiles)" DestinationFolder="$(PublishDir)\Native" SkipUnchangedFiles="false"/>
+
+        <!-- Remove NativeIntermediateOutput files -->
+        <Delete Condition="$(NativeIntermediateOutputPath) != ''" Files="$(NativeIntermediateOutputPath)*$(AssemblyName)*"/>
+    </Target>
 
 </Project>

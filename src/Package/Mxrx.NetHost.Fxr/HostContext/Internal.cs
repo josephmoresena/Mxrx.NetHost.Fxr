@@ -108,7 +108,7 @@ public abstract partial class HostContext
 		this.Resolver = resolver;
 		this.IsCommandLine = isCommandLine;
 		this.Handle = handle;
-		this.WriteErrorDelegate = OperatingSystem.IsWindows() ?
+		this.WriteErrorDelegate = SystemInfo.IsWindows ?
 			(WriteErrorFromPointerDelegate)this.WriteError :
 			(WriteUtfErrorFromPointerDelegate)this.WriteUtfError;
 	}

@@ -195,6 +195,20 @@ jobs:
             Remove-Item *.xml -Force 
           }
 
+      - name: Create Native Artifact Logs
+        uses: actions/upload-artifact@v5
+        with:
+          name: ${{ runner.os }}-Artifact-Logs
+          path: |
+            ./Artifacts/Native/*
+
+      - name: Remove Native Logs
+        shell: pwsh
+        run: |
+          if (Test-Path ./artifacts/native) {
+              Remove-Item -Recurse -Force ./artifacts/native/*
+          }
+
       - name: Publish Sample application
         working-directory: ./src/Sample/Mxrx.NetHost.Sample.Application
         shell: pwsh
