@@ -23,17 +23,29 @@ public partial class FrameworkResolver
 			Span<IntPtr> functions = MemoryMarshal.CreateSpan(ref this.Functions, 1).AsValues<TFunction, IntPtr>();
 			try
 			{
-				FrameworkResolver.GetAddress(handle, functions, Constants.CloseHandle, 0);
-				FrameworkResolver.GetAddress(handle, functions, Constants.GetDelegate, 1);
-				FrameworkResolver.GetAddress(handle, functions, Constants.GetRuntimeProperties, 2);
-				FrameworkResolver.GetAddress(handle, functions, Constants.GetRuntimePropertyValue, 3);
-				FrameworkResolver.GetAddress(handle, functions, Constants.SetRuntimePropertyValue, 4);
-				FrameworkResolver.GetAddress(handle, functions, Constants.InitializeForCommand, 5);
-				FrameworkResolver.GetAddress(handle, functions, Constants.InitializeForConfig, 6);
-				FrameworkResolver.GetAddress(handle, functions, Constants.Main, 7);
-				FrameworkResolver.GetAddress(handle, functions, Constants.MainStartupInfo, 8);
-				FrameworkResolver.GetAddress(handle, functions, Constants.RunApp, 9);
-				FrameworkResolver.GetAddress(handle, functions, Constants.SetErrorWriter, 10);
+				Int32 index = 0;
+				FrameworkResolver.GetAddress(handle, functions, IFrameworkResolverLibrary.CloseHandleSymbol, index++);
+				FrameworkResolver.GetAddress(handle, functions, IFrameworkResolverLibrary.GetDelegateSymbol, index++);
+				FrameworkResolver.GetAddress(handle, functions, IFrameworkResolverLibrary.GetRuntimePropertiesSymbol,
+				                             index++);
+				FrameworkResolver.GetAddress(handle, functions, IFrameworkResolverLibrary.GetRuntimePropertyValueSymbol,
+				                             index++);
+				FrameworkResolver.GetAddress(handle, functions, IFrameworkResolverLibrary.SetRuntimePropertyValueSymbol,
+				                             index++);
+				FrameworkResolver.GetAddress(handle, functions, IFrameworkResolverLibrary.InitializeForCommandSymbol,
+				                             index++);
+				FrameworkResolver.GetAddress(handle, functions, IFrameworkResolverLibrary.InitializeForConfigSymbol,
+				                             index++);
+#if !DISABLE_MAIN_CALLS
+				FrameworkResolver.GetAddress(handle, functions, IFrameworkResolverLibrary.MainSymbol, index++);
+				FrameworkResolver.GetAddress(handle, functions, IFrameworkResolverLibrary.MainStartupInfoSymbol, index++);
+#endif
+				FrameworkResolver.GetAddress(handle, functions, IFrameworkResolverLibrary.RunAppSymbol, index++);
+				FrameworkResolver.GetAddress(handle, functions, IFrameworkResolverLibrary.SetErrorWriterSymbol,
+				                             index++);
+				if (index * IntPtr.Size == TFunction.SizeOf) return;
+				// This will never execute.
+				throw new TypeInitializationException($"{typeof(TFunction)}", default);
 			}
 			catch (Exception)
 			{
@@ -60,6 +72,13 @@ public partial class FrameworkResolver
 		/// <inheritdoc/>
 		protected internal sealed override void SetErrorWriter(HostContext hostContext, IntPtr writeErrorPtr)
 			=> this.Functions.SetError(hostContext.Handle, writeErrorPtr);
+		/// <inheritdoc/>
+		protected internal sealed override Int32 CountProperties(HostContext hostContext)
+		{
+			FrameworkResolver.ThrowIfInvalidResult(
+				this.Functions.CountProperties(hostContext.Handle, out UIntPtr count));
+			return (Int32)count;
+		}
 		/// <inheritdoc/>
 		protected sealed override void CloseHandle(HostContext hostContext)
 			=> this.Functions.CloseContext(hostContext.Handle);

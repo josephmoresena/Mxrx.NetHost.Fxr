@@ -7,13 +7,13 @@
         <File Path="Frameworks.targets"/>
     </Folder>
     <Folder Name="/Package/">
-        <Project Path="Package\Mxrx.NetHost.Fxr\Mxrx.NetHost.Fxr.csproj" Type="Classic C#"/>
+        <Project Path="Package\Mxrx.NetHost.Fxr\Mxrx.NetHost.Fxr.csproj" Type="C#"/>
     </Folder>
     <Folder Name="/Sample/">
-        <Project Path="Sample\Mxrx.NetHost.Sample.Application\Mxrx.NetHost.Sample.Application.csproj"
-                 Type="Classic C#"/>
-        <Project Path="Sample\Mxrx.NetHost.Sample.Launcher\Mxrx.NetHost.Sample.Launcher.csproj" Type="Classic C#"/>
-        <Project Path="Sample\Mxrx.NetHost.Sample.Library\Mxrx.NetHost.Sample.Library.csproj" Type="Classic C#"/>
+        <Project Path="Sample\Mxrx.NetHost.Sample.Application\Mxrx.NetHost.Sample.Application.csproj" Type="C#"/>
+        <Project Path="Sample\Mxrx.NetHost.Sample.Launcher\Mxrx.NetHost.Sample.Launcher.csproj" Type="C#"/>
+        <Project Path="Sample\Mxrx.NetHost.Sample.Library\Mxrx.NetHost.Sample.Library.csproj" Type="C#"/>
+        <File Path="Sample\CompileLauncher.csfile"/>
         <File Path="Sample\Sample.targets"/>
     </Folder>
 </Solution>

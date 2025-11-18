@@ -138,4 +138,42 @@ public partial class FrameworkResolver
 		}
 		return ixAddress;
 	}
+	/// <summary>
+	/// Invokes load_assembly_and_get_function_pointer_fn.
+	/// </summary>
+	/// <param name="funcPtr">A pointer to get_function_pointer_fn.</param>
+	/// <param name="assemblyPathPtr">Assembly path pointer.</param>
+	/// <param name="typeNamePtr">Type name pointer.</param>
+	/// <param name="methodNamePtr">Method name pointer.</param>
+	/// <param name="delegateTypePtr">Delegate type name pointer.</param>
+	/// <param name="resultPtr">Output. Resulting function pointer.</param>
+	/// <returns>A <see cref="RuntimeCallResult"/> value.</returns>
+	private static unsafe RuntimeCallResult LoadAssemblyAnGetFunctionPointer(void* funcPtr, Byte* assemblyPathPtr,
+		Byte* typeNamePtr, Byte* methodNamePtr, Byte* delegateTypePtr, out IntPtr resultPtr)
+	{
+		delegate* unmanaged[Stdcall]<Byte*, Byte*, Byte*, Byte*, void*, out IntPtr, RuntimeCallResult>
+			loadAndGetFunctionPtr =
+				(delegate* unmanaged[Stdcall]<Byte*, Byte*, Byte*, Byte*, void*, out IntPtr, RuntimeCallResult>)funcPtr;
+
+		return loadAndGetFunctionPtr(assemblyPathPtr, typeNamePtr, methodNamePtr, delegateTypePtr, default,
+		                             out resultPtr);
+	}
+	/// <summary>
+	/// Invokes get_function_pointer_fn.
+	/// </summary>
+	/// <param name="funcPtr">A pointer to get_function_pointer_fn.</param>
+	/// <param name="typeNamePtr">Type name pointer.</param>
+	/// <param name="methodNamePtr">Method name pointer.</param>
+	/// <param name="delegateTypePtr">Delegate type name pointer.</param>
+	/// <param name="resultPtr">Output. Resulting function pointer.</param>
+	/// <returns>A <see cref="RuntimeCallResult"/> value.</returns>
+	private static unsafe RuntimeCallResult GetFunctionPointer(void* funcPtr, Byte* typeNamePtr, Byte* methodNamePtr,
+		Byte* delegateTypePtr, out IntPtr resultPtr)
+	{
+		delegate* unmanaged[Stdcall]<Byte*, Byte*, Byte*, void*, void*, out IntPtr, RuntimeCallResult>
+			getFunctionPointerPtr =
+				(delegate* unmanaged[Stdcall]<Byte*, Byte*, Byte*, void*, void*, out IntPtr, RuntimeCallResult>)funcPtr;
+
+		return getFunctionPointerPtr(typeNamePtr, methodNamePtr, delegateTypePtr, default, default, out resultPtr);
+	}
 }

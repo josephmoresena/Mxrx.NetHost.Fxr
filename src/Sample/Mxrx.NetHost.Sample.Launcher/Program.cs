@@ -4,31 +4,50 @@ using Mxrx.NetHost;
 
 using Rxmxnx.PInvoke;
 
-if (args.Length < 2)
+#if STATIC_HOST
+if (args.Length < 1)
 {
-	Console.WriteLine("Missing arguments.");
-	Console.WriteLine("0: Native hostfxr library path.");
-	Console.WriteLine("1: .NET assembly path. (Library or Application)");
-	Console.WriteLine("2 (Optional): Use UTF-8 encoding.");
+	PrintMissingArguments();
 	return;
 }
 
-using FrameworkResolver fxr = FrameworkResolver.LoadResolver(args[0]);
-Boolean useUftString = args.Length > 2 && args[2].ToLower() switch
-{
-	"1" => true,
-	"true" => true,
-	_ => false,
-};
+using FrameworkResolver fxr = FrameworkResolver.LoadResolver();
+#elif STATIC_LINK
+using Mxrxm.NetHost.Sample.Launcher;
 
-if (args[1].Contains("Application"))
+if (args.Length < 1)
 {
-	await RunApplication(fxr, args[1], useUftString);
+	PrintMissingArguments();
+	return;
+}
+
+using FrameworkResolver fxr = FrameworkResolver.LoadResolver<HostFxrLibrary>();
+#else
+if (args.Length < 2)
+{
+	PrintMissingArguments();
+	return;
+}
+
+using FrameworkResolver fxr = FrameworkResolver.LoadResolver(args[1]);
+#endif
+
+Boolean useUtf8 = Environment.GetEnvironmentVariable("USE_UTF8_ENCODING") is { } useUftString &&
+	useUftString.ToLower() switch
+	{
+		"1" => true,
+		"true" => true,
+		_ => false,
+	};
+
+if (args[0].Contains("Application"))
+{
+	await RunApplication(fxr, args[0], useUtf8);
 }
 else
 {
 	await Task.Yield();
-	UseLibrary(fxr, args[1], useUftString);
+	UseLibrary(fxr, args[0], useUtf8);
 }
 
 return;
@@ -164,6 +183,15 @@ static void CustomLibHello<TChar>(Action<LibArgs<TChar>> hello, ref LibArgs<TCha
 {
 	libArgs.Number = -1;
 	hello(libArgs);
+}
+static void PrintMissingArguments()
+{
+	Console.WriteLine("Missing arguments.");
+	Console.WriteLine("Environment USE_UTF8_ENCODING: Use UTF-8 encoding.");
+	Console.WriteLine("1: .NET assembly path. (Library or Application)");
+#if !STATIC_HOST && !STATIC_LINK
+	Console.WriteLine("2: Native hostfxr library path.");
+#endif
 }
 
 internal delegate void HelloDelegate(ReadOnlyValPtr<Char> message, Byte utf8);

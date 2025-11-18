@@ -11,6 +11,19 @@
         <RootNamespace>Mxrxm.NetHost.Sample.Launcher</RootNamespace>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(StaticHostLib)' == 'True'">
+        <DefineConstants>$(DefineConstants);STATIC_HOST</DefineConstants>
+        <AssemblyName>$(AssemblyName).StaticHost</AssemblyName>
+        <NativeHostPackageName>Microsoft.NETCore.App.Host</NativeHostPackageName>
+        <NativeHostLibraryName Condition="!$([MSBuild]::IsOsPlatform('Windows'))">native\libnethost.a</NativeHostLibraryName>
+        <NativeHostLibraryName Condition="$([MSBuild]::IsOsPlatform('Windows'))">native\libnethost.lib</NativeHostLibraryName>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(StaticHostLib)' != 'True' And '$(StaticLinkResolver)' == 'True'">
+        <DefineConstants>$(DefineConstants);STATIC_LINK</DefineConstants>
+        <AssemblyName>$(AssemblyName).StaticLink</AssemblyName>
+    </PropertyGroup>
+
     <Import Project="..\Sample.targets"/>
 
     <PropertyGroup Condition="'$(RuntimeIdentifier)' == 'linux-arm' Or '$(RuntimeIdentifier)' == 'win-x86'">
@@ -41,6 +54,12 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\Package\Mxrx.NetHost.Fxr\Mxrx.NetHost.Fxr.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(StaticHostLib)' == 'True' And '$(RuntimeIdentifier)' != ''">
+        <PackageDownload Include="$(NativeHostPackageName).$(RuntimeIdentifier)" Version="[$(BundledNETCoreAppPackageVersion)]"/>
+        <NativeLibrary Include="$(NuGetPackageRoot)\$(NativeHostPackageName).$(RuntimeIdentifier)\$(BundledNETCoreAppPackageVersion)\runtimes\$(RuntimeIdentifier)\$(NativeHostLibraryName)"/>
+        <LinkerArg Include="-lstdc++"/>
     </ItemGroup>
 
     <PropertyGroup Condition="'$(RuntimeIdentifier)' == 'linux-arm' And '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'X64'">

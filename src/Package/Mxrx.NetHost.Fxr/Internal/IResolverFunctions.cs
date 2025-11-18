@@ -10,13 +10,6 @@ namespace Mxrx.NetHost.Internal;
 internal interface IResolverFunctions
 {
 	/// <summary>
-	/// Type of current char.
-	/// </summary>
-#pragma warning disable CA2252
-	static abstract Type CharType { get; }
-#pragma warning restore CA2252
-
-	/// <summary>
 	/// Closes host context.
 	/// </summary>
 	/// <param name="handle">Host context handle.</param>
@@ -48,4 +41,18 @@ internal interface IResolverFunctions
 	/// <param name="funcPtr">Output. Function pointer.</param>
 	/// <returns>Operation result.</returns>
 	unsafe RuntimeCallResult GetFunctionPointer(HostHandle handle, RuntimeDelegateType delegateType, out void* funcPtr);
+	/// <summary>
+	/// Retrieves the number of runtime properties initialized.
+	/// </summary>
+	/// <param name="handle">Host context handle.</param>
+	/// <param name="count">Output. Number of runtime properties.</param>
+	/// <returns>Operation result.</returns>
+	RuntimeCallResult CountProperties(HostHandle handle, out UIntPtr count);
+	/// <summary>
+	/// Type of current char.
+	/// </summary>
+#pragma warning disable CA2252
+	static abstract Int32 SizeOf { get; }
+	static abstract Type CharType { get; }
+#pragma warning restore CA2252
 }

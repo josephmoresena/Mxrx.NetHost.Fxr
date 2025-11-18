@@ -11,6 +11,29 @@ public unsafe partial class FrameworkResolver
 	private protected FrameworkResolver() : this(IntPtr.Zero) { }
 
 	/// <summary>
+	/// Loads assembly for <paramref name="parameters"/>
+	/// </summary>
+	/// <param name="hostContext">A <see cref="HostContext"/> instance.</param>
+	/// <param name="parameters">A <see cref="LoadAssemblyParameters"/> instance.</param>
+	protected internal virtual void LoadAssembly(HostContext hostContext, LoadAssemblyParameters parameters)
+	{
+		delegate* unmanaged[Stdcall]<Byte*, UIntPtr, Byte*, UIntPtr, void*, void*, RuntimeCallResult>
+			loadAssemblyBytes =
+				(delegate* unmanaged[Stdcall]<Byte*, UIntPtr, Byte*, UIntPtr, void*, void*, RuntimeCallResult>)
+				hostContext.LoadAssemblyFromBytesPtr.ToPointer();
+		this._clrInitialized = true;
+
+		fixed (Byte* assemblyPtr = &MemoryMarshal.GetReference(parameters.AssemblyBytes))
+		fixed (Byte* symbolPtr = &MemoryMarshal.GetReference(parameters.SymbolsBytes))
+		{
+			RuntimeCallResult value = loadAssemblyBytes(assemblyPtr, (UIntPtr)parameters.AssemblyBytes.Length,
+			                                            !parameters.SymbolsBytes.IsEmpty ? symbolPtr : default,
+			                                            (UIntPtr)parameters.SymbolsBytes.Length, default, default);
+			FrameworkResolver.ThrowIfInvalidResult(value);
+		}
+	}
+
+	/// <summary>
 	/// Closes given host.
 	/// </summary>
 	/// <param name="hostContext">A <see cref="HostHandle"/> instance.</param>
@@ -38,18 +61,18 @@ public unsafe partial class FrameworkResolver
 	/// </returns>
 	protected internal abstract IntPtr GetFunctionPointer(HostContext hostContext, RuntimeDelegateType delegateType);
 	/// <summary>
-	/// Loads assembly for <paramref name="parameters"/>
-	/// </summary>
-	/// <param name="hostContext">A <see cref="HostContext"/> instance.</param>
-	/// <param name="parameters">A <see cref="LoadAssemblyParameters"/> instance.</param>
-	protected internal abstract void LoadAssembly(HostContext hostContext, LoadAssemblyParameters parameters);
-	/// <summary>
 	/// Retrieves the <see cref="VolatileText"/> from <paramref name="propertyName"/>.
 	/// </summary>
 	/// <param name="hostContext">A <see cref="HostContext"/> instance.</param>
 	/// <param name="propertyName">A <see cref="VolatileText"/> instance.</param>
 	/// <returns>A <see cref="VolatileText"/> instance.</returns>
 	protected internal abstract VolatileText GetProperty(HostContext hostContext, VolatileText propertyName);
+	/// <summary>
+	/// Retrieves number of runtime properties initialized.
+	/// </summary>
+	/// <param name="hostContext">A <see cref="HostContext"/> instance.</param>
+	/// <returns>Number of runtime properties.</returns>
+	protected internal abstract Int32 CountProperties(HostContext hostContext);
 	/// <summary>
 	/// Sets <paramref name="propertyValue"/> as the value of the property named for <paramref name="propertyName"/>.
 	/// </summary>
@@ -64,7 +87,10 @@ public unsafe partial class FrameworkResolver
 	/// <param name="hostContext">A <see cref="HostHandle"/> instance.</param>
 	protected abstract Int32 RunAsApplication(HostContext hostContext);
 	/// <inheritdoc cref="IDisposable.Dispose()"/>
-	protected abstract void Dispose(Boolean disposing);
+	protected virtual void Dispose(Boolean disposing)
+	{
+		// NOP
+	}
 
 	/// <summary>
 	/// Retrieves the length of the host path.

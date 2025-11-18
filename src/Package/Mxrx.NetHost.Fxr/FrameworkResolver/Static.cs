@@ -5,6 +5,18 @@ public abstract partial class FrameworkResolver
 	/// <summary>
 	/// Loads a <see cref="FrameworkResolver"/> from static linked library.
 	/// </summary>
+	/// <typeparam name="TLibrary">A <see cref="IFrameworkResolverLibrary"/> type.</typeparam>
+	/// <returns>A <see cref="FrameworkResolver"/> instance.</returns>
+	public static FrameworkResolver LoadResolver<TLibrary>() where TLibrary : IFrameworkResolverLibrary
+	{
+		FrameworkResolver.ThrowIfNotNativeAot();
+		FrameworkResolver.ThrowIfInitializedHost();
+		FrameworkResolver.loadedResolver = PInvoke<TLibrary>.CreateResolver();
+		return FrameworkResolver.loadedResolver;
+	}
+	/// <summary>
+	/// Loads a <see cref="FrameworkResolver"/> from static linked library.
+	/// </summary>
 	/// <returns>A <see cref="FrameworkResolver"/> instance.</returns>
 	/// <remarks>When this method is used, the .NET Host must be statically linked.</remarks>
 #if !PACKAGE

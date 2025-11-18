@@ -13,6 +13,8 @@ namespace Mxrx.NetHost.Internal;
 internal readonly unsafe struct WindowsFunctions : IResolverFunctions
 {
 	/// <inheritdoc/>
+	public static Int32 SizeOf => sizeof(WindowsFunctions);
+	/// <inheritdoc/>
 	public static Type CharType => typeof(Byte);
 
 	/// <summary>
@@ -49,6 +51,7 @@ internal readonly unsafe struct WindowsFunctions : IResolverFunctions
 	/// </summary>
 	public readonly delegate* unmanaged[Cdecl]<ReadOnlyValPtr<Char>, in InitialParameters, out HostHandle,
 		RuntimeCallResult> InitializeForConfig;
+#if !DISABLE_MAIN_CALLS
 	/// <summary>
 	/// Address of <c>hostfxr_main</c>.
 	/// </summary>
@@ -58,6 +61,7 @@ internal readonly unsafe struct WindowsFunctions : IResolverFunctions
 	/// </summary>
 	public readonly delegate* unmanaged[Cdecl]<Int32, ReadOnlyValPtr<ReadOnlyValPtr<Char>>, ReadOnlyValPtr<Char>,
 		ReadOnlyValPtr<Char>, ReadOnlyValPtr<Char>, RuntimeCallResult> MainStartupInfo;
+#endif
 	/// <summary>
 	/// Address of <c>hostfxr_run_app</c>.
 	/// </summary>
@@ -76,6 +80,11 @@ internal readonly unsafe struct WindowsFunctions : IResolverFunctions
 	RuntimeCallResult IResolverFunctions.GetFunctionPointer(HostHandle handle, RuntimeDelegateType delegateType,
 		out void* funcPtr)
 		=> this.GetDelegate(handle, delegateType, out funcPtr);
+	RuntimeCallResult IResolverFunctions.CountProperties(HostHandle handle, out UIntPtr count)
+	{
+		Unsafe.SkipInit(out count);
+		return this.GetRuntimeProperties(handle, ref count, default, default);
+	}
 
 	/// <summary>
 	/// Initial windows host parameters.
