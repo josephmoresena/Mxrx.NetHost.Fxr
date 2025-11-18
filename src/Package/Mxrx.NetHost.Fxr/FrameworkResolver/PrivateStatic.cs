@@ -57,6 +57,16 @@ public abstract partial class FrameworkResolver
 		return FrameworkResolver.loadedResolver;
 	}
 	/// <summary>
+	/// Creates a <see cref="FrameworkResolver"/> instance from <paramref name="parameters"/>.
+	/// </summary>
+	/// <param name="parameters">Host path parameters.</param>
+	/// <returns>A <see cref="FrameworkResolver"/> instance from <paramref name="parameters"/>.</returns>
+	private static FrameworkResolver CreateResolver(GetHostPathParameters parameters)
+	{
+		FrameworkResolver.loadedResolver = SystemInfo.IsWindows ? Windows.Create(parameters) : Unix.Create(parameters);
+		return FrameworkResolver.loadedResolver;
+	}
+	/// <summary>
 	/// Retrieves address of an exported method.
 	/// </summary>
 	/// <param name="handle">Handle to library.</param>

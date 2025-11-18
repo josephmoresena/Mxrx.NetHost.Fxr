@@ -12,11 +12,11 @@ public abstract partial class FrameworkResolver : IDisposable
 	/// <summary>
 	/// Library handle.
 	/// </summary>
-	public IntPtr Handle => !this._isDisposed ? this.Handle : default;
+	public IntPtr Handle => !this._isDisposed ? this._handle : default;
 	/// <inheritdoc/>
 	public void Dispose()
 	{
-		Boolean disposing = !this._clrInitialized && this._contexts.All(c => c.Closed);
+		Boolean disposing = this._handle != default && !this._clrInitialized && this._contexts.All(c => c.Closed);
 		this.Dispose(!this._isDisposed && disposing);
 		if (disposing) this._isDisposed = true;
 		GC.SuppressFinalize(this);

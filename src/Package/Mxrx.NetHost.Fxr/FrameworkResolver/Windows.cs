@@ -9,18 +9,18 @@ public partial class FrameworkResolver
 	[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS6640,
 	                 Justification = Constants.SecureUnsafeCodeJustification)]
 #endif
-	private sealed class Windows(IntPtr handle) : Generic<WindowsFunctions>(handle)
+	private sealed unsafe class Windows(IntPtr handle) : Generic<WindowsFunctions>(handle)
 	{
 		/// <inheritdoc/>
-		public override unsafe ContextImpl Initialize(InitializationParameters parameters)
+		public override ContextImpl Initialize(InitializationParameters parameters)
 		{
 			if (parameters.InitializeCommand && parameters.IsEmpty)
 				base.Initialize(parameters);
 
 			Span<ArgHandle> handles = stackalloc ArgHandle[FrameworkResolver.GetHandlesCount(parameters.Arguments)];
-			fixed (Char* hostPathPtr = &Windows.GetRef(parameters.HostPath, out Char[]? hostPathArray))
-			fixed (Char* rootPathPtr = &Windows.GetRef(parameters.RootPath, out Char[]? rootPathArray))
-			fixed (Char* configPathPtr = &Windows.GetRef(parameters.ConfigPath, out Char[]? configPathArray))
+			fixed (Char* hostPathPtr = &FrameworkResolver.GetRef(parameters.HostPath, out Char[]? hostPathArray))
+			fixed (Char* rootPathPtr = &FrameworkResolver.GetRef(parameters.RootPath, out Char[]? rootPathArray))
+			fixed (Char* configPathPtr = &FrameworkResolver.GetRef(parameters.ConfigPath, out Char[]? configPathArray))
 			{
 				try
 				{
@@ -42,7 +42,7 @@ public partial class FrameworkResolver
 					{
 						Span<ReadOnlyValPtr<Char>> addresses =
 							stackalloc ReadOnlyValPtr<Char>[parameters.Arguments.Count];
-						Int32 argCount = Windows.LoadArgsAddr(parameters.Arguments, addresses, handles);
+						Int32 argCount = FrameworkResolver.LoadArgsAddr(parameters.Arguments, addresses, handles);
 						callResult = this.Functions.InitializeForCommand(argCount, addresses.GetUnsafeValPtr(),
 						                                                 in param, out hostHandle);
 					}
@@ -57,15 +57,15 @@ public partial class FrameworkResolver
 			}
 		}
 		/// <inheritdoc/>
-		protected internal override unsafe IntPtr GetFunctionPointer(HostContext hostContext, NetFunctionInfo info)
+		protected internal override IntPtr GetFunctionPointer(HostContext hostContext, NetFunctionInfo info)
 		{
 			IntPtr result;
 			RuntimeCallResult value;
-			fixed (Char* assemblyPathPtr = &Windows.GetRef(info.AssemblyPath, out Char[]? assemblyPathArray))
-			fixed (Char* typeNamePtr = &Windows.GetRef(info.TypeName, out Char[]? typeNameArray))
-			fixed (Char* methodNamePtr = &Windows.GetRef(info.MethodName, out Char[]? methodNameArray))
+			fixed (Char* assemblyPathPtr = &FrameworkResolver.GetRef(info.AssemblyPath, out Char[]? assemblyPathArray))
+			fixed (Char* typeNamePtr = &FrameworkResolver.GetRef(info.TypeName, out Char[]? typeNameArray))
+			fixed (Char* methodNamePtr = &FrameworkResolver.GetRef(info.MethodName, out Char[]? methodNameArray))
 			fixed (Char* delegateTypeNamePtr =
-				       &Windows.GetRef(info.DelegateTypeName, out Char[]? delegateTypeNameArray))
+				       &FrameworkResolver.GetRef(info.DelegateTypeName, out Char[]? delegateTypeNameArray))
 			{
 				try
 				{
@@ -92,11 +92,12 @@ public partial class FrameworkResolver
 			return result;
 		}
 		/// <inheritdoc/>
-		protected internal override unsafe void LoadAssembly(HostContext hostContext, LoadAssemblyParameters parameters)
+		protected internal override void LoadAssembly(HostContext hostContext, LoadAssemblyParameters parameters)
 		{
 			if (parameters.AssemblyPath.IsEmpty)
 				base.LoadAssembly(hostContext, parameters);
-			fixed (Char* assemblyPathPtr = &Windows.GetRef(parameters.AssemblyPath, out Char[]? assemblyPathArray))
+			fixed (Char* assemblyPathPtr =
+				       &FrameworkResolver.GetRef(parameters.AssemblyPath, out Char[]? assemblyPathArray))
 			{
 				try
 				{
@@ -114,9 +115,9 @@ public partial class FrameworkResolver
 			}
 		}
 		/// <inheritdoc/>
-		protected internal override unsafe VolatileText GetProperty(HostContext hostContext, VolatileText propertyName)
+		protected internal override VolatileText GetProperty(HostContext hostContext, VolatileText propertyName)
 		{
-			fixed (Char* propertyNamePtr = &Windows.GetRef(propertyName.Text, out Char[]? propertyNameArray))
+			fixed (Char* propertyNamePtr = &FrameworkResolver.GetRef(propertyName.Text, out Char[]? propertyNameArray))
 			{
 				try
 				{
@@ -136,11 +137,12 @@ public partial class FrameworkResolver
 			}
 		}
 		/// <inheritdoc/>
-		protected internal override unsafe void SetProperty(HostContext hostContext, VolatileText propertyName,
+		protected internal override void SetProperty(HostContext hostContext, VolatileText propertyName,
 			VolatileText propertyValue)
 		{
-			fixed (Char* propertyNamePtr = &Windows.GetRef(propertyName.Text, out Char[]? propertyNameArray))
-			fixed (Char* propertyValuePtr = &Windows.GetRef(propertyValue.Text, out Char[]? propertyValueArray))
+			fixed (Char* propertyNamePtr = &FrameworkResolver.GetRef(propertyName.Text, out Char[]? propertyNameArray))
+			fixed (Char* propertyValuePtr =
+				       &FrameworkResolver.GetRef(propertyValue.Text, out Char[]? propertyValueArray))
 			{
 				try
 				{
@@ -157,6 +159,18 @@ public partial class FrameworkResolver
 		}
 
 		/// <summary>
+		/// Creates a <see cref="FrameworkResolver"/> from <see cref="GetHostPathParameters"/> instance.
+		/// </summary>
+		/// <param name="parameters">Host path parameters.</param>
+		/// <returns>A <see cref="FrameworkResolver"/> instance from <paramref name="parameters"/>.</returns>
+		public static FrameworkResolver Create(GetHostPathParameters parameters)
+		{
+			String libraryPath = parameters.IsEmpty ? Windows.GetLibraryPath() : Windows.GetLibraryPath(parameters);
+			IntPtr libHandle = NativeLibrary.Load(libraryPath);
+			return new Windows(libHandle);
+		}
+
+		/// <summary>
 		/// Invokes load_assembly_and_get_function_pointer_fn.
 		/// </summary>
 		/// <param name="funcPtr">A pointer to get_function_pointer_fn.</param>
@@ -166,7 +180,7 @@ public partial class FrameworkResolver
 		/// <param name="delegateTypePtr">Delegate type name pointer.</param>
 		/// <param name="resultPtr">Output. Resulting function pointer.</param>
 		/// <returns>A <see cref="RuntimeCallResult"/> value.</returns>
-		private static unsafe RuntimeCallResult LoadAssemblyAnGetFunctionPointer(void* funcPtr, Char* assemblyPathPtr,
+		private static RuntimeCallResult LoadAssemblyAnGetFunctionPointer(void* funcPtr, Char* assemblyPathPtr,
 			Char* typeNamePtr, Char* methodNamePtr, Char* delegateTypePtr, out IntPtr resultPtr)
 		{
 			delegate* unmanaged[Stdcall]<Char*, Char*, Char*, Char*, void*, out IntPtr, RuntimeCallResult>
@@ -186,8 +200,8 @@ public partial class FrameworkResolver
 		/// <param name="delegateTypePtr">Delegate type name pointer.</param>
 		/// <param name="resultPtr">Output. Resulting function pointer.</param>
 		/// <returns>A <see cref="RuntimeCallResult"/> value.</returns>
-		private static unsafe RuntimeCallResult GetFunctionPointer(void* funcPtr, Char* typeNamePtr,
-			Char* methodNamePtr, Char* delegateTypePtr, out IntPtr resultPtr)
+		private static RuntimeCallResult GetFunctionPointer(void* funcPtr, Char* typeNamePtr, Char* methodNamePtr,
+			Char* delegateTypePtr, out IntPtr resultPtr)
 		{
 			delegate* unmanaged[Stdcall]<Char*, Char*, Char*, void*, void*, out IntPtr, RuntimeCallResult>
 				getFunctionPointerPtr =
@@ -197,108 +211,49 @@ public partial class FrameworkResolver
 			return getFunctionPointerPtr(typeNamePtr, methodNamePtr, delegateTypePtr, default, default, out resultPtr);
 		}
 		/// <summary>
-		/// Retrieves a managed <see cref="Char"/> reference from <paramref name="text"/>.
+		/// Retrieves the default library path.
 		/// </summary>
-		/// <param name="text">A <see cref="TextParameter"/> instance.</param>
-		/// <param name="chars">Output. Created <see cref="Char"/> array.</param>
-		/// <returns>A managed <see cref="Char"/> reference from <paramref name="text"/>.</returns>
-#if !PACKAGE
-		[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3358,
-		                 Justification = Constants.OptimizedJustification)]
-#endif
-		private static ref readonly Char GetRef(TextParameter text, out Char[]? chars)
+		/// <returns>The default host library path.</returns>
+		private static String GetLibraryPath()
 		{
-			chars = null;
-			if (text.IsEmpty)
-				return ref Unsafe.NullRef<Char>();
-			if (!text.IsUtf8 && text.NullTerminated)
-				return ref MemoryMarshal.GetReference(text.Value.AsValues<Byte, Char>());
-
-			Int32 utf16Length = !text.IsUtf8 ?
-				text.Value.Length / sizeof(Char) + 1 :
-				Encoding.UTF8.GetCharCount(text.Value) + (!text.NullTerminated ? 1 : 0);
-			chars = ArrayPool<Char>.Shared.Rent(utf16Length);
-			Span<Char> charSpan = chars.AsSpan()[..utf16Length];
-
-			if (!text.IsUtf8)
-				text.Value.CopyTo(charSpan.AsBytes());
-			else
-				Encoding.UTF8.GetChars(text.Value, charSpan);
-			charSpan[^1] = '\0';
-
-			return ref MemoryMarshal.GetReference(charSpan);
-		}
-		/// <summary>
-		/// Loads addresses to arguments values from <paramref name="args"/> at <paramref name="addr"/>
-		/// </summary>
-		/// <param name="args">A <see cref="ArgumentsParameter"/> instance.</param>
-		/// <param name="addr">Destination addresses span.</param>
-		/// <param name="handles">Destination handles span.</param>
-		private static Int32 LoadArgsAddr(ArgumentsParameter args, Span<ReadOnlyValPtr<Char>> addr,
-			Span<ArgHandle> handles)
-		{
-			if (args.IsEmpty) return 0;
-
-			if (args.Sequence is null) return Windows.LoadFromSpan(args.Values, addr, handles);
-
-			Windows.LoadFromSequence(args.Sequence, addr, handles);
-			return args.Sequence.NonEmptyCount;
-		}
-		/// <summary>
-		/// Loads addresses to arguments values from <paramref name="args"/> at <paramref name="addr"/>
-		/// </summary>
-		/// <param name="args">A <see cref="CStringSequence"/> instance.</param>
-		/// <param name="addr">Destination addresses span.</param>
-		/// <param name="handles">Destination handles span.</param>
-		private static void LoadFromSequence(CStringSequence args, Span<ReadOnlyValPtr<Char>> addr,
-			Span<ArgHandle> handles)
-		{
-			ReadOnlySpan<Byte> utfChars = args.ToString().AsSpan().AsBytes();
-			Int32 charsCount = Encoding.UTF8.GetCharCount(utfChars);
-			Span<Int32> offsets = stackalloc Int32[args.NonEmptyCount];
-			Char[] chars = ArrayPool<Char>.Shared.Rent(charsCount);
-
-			Encoding.UTF8.GetChars(utfChars, chars);
-			chars[charsCount] = '\0';
-			handles[0] = GCHandle.Alloc(chars, GCHandleType.Pinned);
-
-			addr[0] = chars.AsSpan().GetUnsafeValPtr();
-			for (Int32 i = 1; i < offsets.Length; i++)
+			UIntPtr pathLength = FrameworkResolver.GetHostPathLength(in Unsafe.NullRef<HostPathParameters>());
+			Span<Char> chars = stackalloc Char[(Int32)pathLength];
+			fixed (void* charsPtr = &MemoryMarshal.GetReference(chars))
 			{
-				Int32 offset = Encoding.UTF8.GetCharCount(utfChars[offsets[i - 1]..offsets[i]]);
-				addr[i] = addr[i - 1] + offset;
+				RuntimeCallResult callResult =
+					FrameworkResolver.GetHostPath(charsPtr, ref pathLength, in Unsafe.NullRef<HostPathParameters>());
+				FrameworkResolver.ThrowIfInvalidResult(callResult);
 			}
+			return new(chars);
 		}
 		/// <summary>
-		/// Loads addresses to arguments values from <paramref name="args"/> at <paramref name="addr"/>
+		/// Retrieves the library path compatible with <paramref name="parameters"/> instance.
 		/// </summary>
-		/// <param name="args">A <see cref="CStringSequence"/> instance.</param>
-		/// <param name="addr">Destination addresses span.</param>
-		/// <param name="handles">Destination handles span.</param>
-		private static Int32 LoadFromSpan(ReadOnlySpan<Object?> args, Span<ReadOnlyValPtr<Char>> addr,
-			Span<ArgHandle> handles)
+		/// <returns>A host library path.</returns>
+		private static String GetLibraryPath(GetHostPathParameters parameters)
 		{
-			Int32 ixHandle = 0;
-			Int32 ixAddress = 0;
-			for (Int32 i = 0; i < args.Length; i++)
+			fixed (Char* assemblyPathPtr =
+				       &FrameworkResolver.GetRef(parameters.AssemblyPath, out Char[]? assemblyPathArray))
+			fixed (Char* rootPathPtr = &FrameworkResolver.GetRef(parameters.RootPath, out Char[]? rootPathArray))
 			{
-				String? value = args[i] is CString { Length: > 0, } c ? $"{c}\0" : args[i] as String;
-				if (String.IsNullOrWhiteSpace(value))
+				try
 				{
-					addr[ixAddress] = default;
-					ixAddress++;
-					continue;
+					HostPathParameters hostPathParameters = new(assemblyPathPtr, rootPathPtr);
+					UIntPtr pathLength = FrameworkResolver.GetHostPathLength(in hostPathParameters);
+					Span<Char> chars = stackalloc Char[(Int32)pathLength];
+					fixed (void* charsPtr = &MemoryMarshal.GetReference(chars))
+					{
+						RuntimeCallResult callResult =
+							FrameworkResolver.GetHostPath(charsPtr, ref pathLength, in hostPathParameters);
+						FrameworkResolver.ThrowIfInvalidResult(callResult);
+					}
+					return new(chars);
 				}
-
-				if (value.AsSpan()[^1] != '\0')
-					value = $"{value}\0";
-
-				handles[ixHandle] = value;
-				addr[ixAddress] = (ReadOnlyValPtr<Char>)handles[ixHandle].Handle.AddrOfPinnedObject();
-				ixHandle++;
-				ixAddress++;
+				finally
+				{
+					FrameworkResolver.Clean([assemblyPathArray, rootPathArray,]);
+				}
 			}
-			return ixAddress;
 		}
 	}
 }

@@ -3,6 +3,20 @@ namespace Mxrx.NetHost;
 public abstract partial class FrameworkResolver
 {
 	/// <summary>
+	/// Loads a <see cref="FrameworkResolver"/> from static linked library.
+	/// </summary>
+	/// <returns>A <see cref="FrameworkResolver"/> instance.</returns>
+#if !PACKAGE
+	[ExcludeFromCodeCoverage]
+	[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3881, Justification = Constants.OptimizedJustification)]
+#endif
+	public static FrameworkResolver LoadResolver(GetHostPathParameters parameters = default)
+	{
+		FrameworkResolver.ThrowIfNotNativeAot();
+		FrameworkResolver.ThrowIfInitializedHost();
+		return FrameworkResolver.CreateResolver(parameters);
+	}
+	/// <summary>
 	/// Loads a <see cref="FrameworkResolver"/> from current native library.
 	/// </summary>
 	/// <param name="libraryPath">Path to native library.</param>
