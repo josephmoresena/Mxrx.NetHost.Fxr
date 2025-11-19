@@ -19,6 +19,11 @@ public abstract partial class HostContext
 	/// Pointer to <see cref="RuntimeDelegateType.ComUnregister"/> function.
 	/// </summary>
 	private IntPtr? _comUnregister;
+
+	/// <summary>
+	/// Control for pointer invalidation.
+	/// </summary>
+	private IMutableWrapper<Boolean> _control = IMutableWrapper.Create(false);
 	/// <summary>
 	/// Pointer to <see cref="RuntimeDelegateType.GetFunction"/> function.
 	/// </summary>
@@ -52,6 +57,14 @@ public abstract partial class HostContext
 	/// </summary>
 	private WriteUtfErrorDelegate? _writeUtfError;
 
+	/// <summary>
+	/// Invalidates all attached pointers.
+	/// </summary>
+	private void InvalidatePointers()
+	{
+		this._control.Value = true;
+		this._control = IMutableWrapper.Create(false);
+	}
 	/// <summary>
 	/// Throws an exception if current instance is disposed.
 	/// </summary>

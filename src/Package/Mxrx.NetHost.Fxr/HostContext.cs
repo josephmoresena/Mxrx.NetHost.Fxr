@@ -155,6 +155,7 @@ public abstract partial class HostContext : IDisposable
 	public Boolean RunApp(out Int32 exitCode)
 	{
 		this.ThrowIfDisposed();
+		this.InvalidatePointers();
 
 		exitCode = -1;
 		return this.IsCommandLine && FrameworkResolver.Run(this, out exitCode);
@@ -204,6 +205,7 @@ public abstract partial class HostContext : IDisposable
 	public void SetRuntimeProperty(VolatileText propertyName, VolatileText propertyValue)
 	{
 		this.ThrowIfDisposed();
+		this.InvalidatePointers();
 		this.Resolver.SetProperty(this, propertyName, propertyValue);
 	}
 

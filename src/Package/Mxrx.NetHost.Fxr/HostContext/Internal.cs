@@ -117,5 +117,5 @@ public abstract partial class HostContext
 	/// Attaches <paramref name="value"/> to current instance.
 	/// </summary>
 	/// <param name="value">A <see cref="VolatileText"/> value.</param>
-	internal void Attach(ref VolatileText value) => value.IsDisposed = this._isDisposed;
+	internal void Attach(ref VolatileText value) { value.IsDisposed = new(this._isDisposed, this._control); }
 }
