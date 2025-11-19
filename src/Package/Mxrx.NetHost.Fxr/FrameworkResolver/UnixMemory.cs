@@ -80,6 +80,9 @@ public partial class FrameworkResolver
 	/// <param name="args">A <see cref="CStringSequence"/> instance.</param>
 	/// <param name="addr">Destination addresses span.</param>
 	/// <param name="handles">Destination handles span.</param>
+#if !PACKAGE
+	[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3776, Justification = Constants.OptimizedJustification)]
+#endif
 	private static Int32 LoadFromSpan(ReadOnlySpan<Object?> args, Span<ReadOnlyValPtr<Byte>> addr,
 		Span<ArgHandle> handles)
 	{

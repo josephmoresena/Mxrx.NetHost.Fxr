@@ -15,6 +15,9 @@ public partial class FrameworkResolver
 		/// <summary>
 		/// Parameterless constructor.
 		/// </summary>
+#if !PACKAGE
+		[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS1144)]
+#endif
 		protected PInvoke() => this._isDisposed = false; // P/Invoke resolved is unloadable.
 
 		/// <inheritdoc/>
@@ -38,6 +41,9 @@ public partial class FrameworkResolver
 			return TLibrary.RunApp(hostContext.Handle);
 		}
 		/// <inheritdoc/>
+#if !PACKAGE
+		[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3218)]
+#endif
 		protected internal sealed override IntPtr GetFunctionPointer(HostContext hostContext,
 			RuntimeDelegateType delegateType)
 		{
@@ -51,7 +57,7 @@ public partial class FrameworkResolver
 		/// Creates a P/Invoke <see cref="FrameworkResolver"/> instance.
 		/// </summary>
 		/// <returns>A P/Invoke <see cref="FrameworkResolver"/> instance.</returns>
-		public static FrameworkResolver CreateResolver()
+		public static FrameworkResolver CreateStaticResolver()
 			=> SystemInfo.IsWindows ? new WindowsPInvoke() : new UnixPInvoke();
 	}
 }

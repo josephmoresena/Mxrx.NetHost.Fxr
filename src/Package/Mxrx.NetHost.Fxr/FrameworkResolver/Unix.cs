@@ -57,6 +57,9 @@ public partial class FrameworkResolver
 			}
 		}
 		/// <inheritdoc/>
+#if !PACKAGE
+		[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3218)]
+#endif
 		protected internal override IntPtr GetFunctionPointer(HostContext hostContext, NetFunctionInfo info)
 		{
 			IntPtr result;
@@ -163,11 +166,11 @@ public partial class FrameworkResolver
 		/// </summary>
 		/// <param name="parameters">Host path parameters.</param>
 		/// <returns>A <see cref="FrameworkResolver"/> instance from <paramref name="parameters"/>.</returns>
-		public static FrameworkResolver Create(GetHostPathParameters parameters)
+		public static Unix Create(GetHostPathParameters parameters)
 		{
 			String libraryPath = parameters.IsEmpty ? Unix.GetLibraryPath() : Unix.GetLibraryPath(parameters);
 			IntPtr libHandle = NativeLibrary.Load(libraryPath);
-			return new Unix(libHandle);
+			return new(libHandle);
 		}
 
 		/// <summary>

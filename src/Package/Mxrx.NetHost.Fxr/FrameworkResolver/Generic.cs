@@ -84,6 +84,9 @@ public partial class FrameworkResolver
 			return this.Functions.RunApp(hostContext.Handle);
 		}
 		/// <inheritdoc/>
+#if !PACKAGE
+		[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3218)]
+#endif
 		protected internal sealed override unsafe IntPtr GetFunctionPointer(HostContext hostContext,
 			RuntimeDelegateType delegateType)
 		{

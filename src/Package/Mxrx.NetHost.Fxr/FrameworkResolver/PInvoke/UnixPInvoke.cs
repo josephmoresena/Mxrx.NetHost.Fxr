@@ -65,6 +65,9 @@ public partial class FrameworkResolver
 				}
 			}
 			/// <inheritdoc/>
+#if !PACKAGE
+			[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3218)]
+#endif
 			protected internal override IntPtr GetFunctionPointer(HostContext hostContext, NetFunctionInfo info)
 			{
 				IntPtr result;

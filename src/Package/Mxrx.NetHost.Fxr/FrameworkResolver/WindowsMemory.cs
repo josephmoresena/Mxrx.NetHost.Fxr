@@ -12,6 +12,9 @@ public partial class FrameworkResolver
 	/// <param name="text">A <see cref="TextParameter"/> instance.</param>
 	/// <param name="chars">Output. Created <see cref="Char"/> array.</param>
 	/// <returns>A managed <see cref="Char"/> reference from <paramref name="text"/>.</returns>
+#if !PACKAGE
+	[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3358, Justification = Constants.OptimizedJustification)]
+#endif
 	private static ref readonly Char GetRef(TextParameter text, out Char[]? chars)
 	{
 		chars = null;
