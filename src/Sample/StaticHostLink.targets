@@ -4,12 +4,12 @@
         <NativeHostPackageName>Microsoft.NETCore.App.Host</NativeHostPackageName>
         <NativeHostLibraryName Condition="!$([MSBuild]::IsOsPlatform('Windows'))">native\libnethost.a</NativeHostLibraryName>
         <NativeHostLibraryName Condition="$([MSBuild]::IsOsPlatform('Windows'))">native\libnethost.lib</NativeHostLibraryName>
+        <LinkStandardCPlusPlusLibrary>true</LinkStandardCPlusPlusLibrary>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageDownload Include="$(NativeHostPackageName).$(RuntimeIdentifier)" Version="[$(BundledNETCoreAppPackageVersion)]"/>
         <NativeLibrary Include="$(NuGetPackageRoot)\$(NativeHostPackageName.ToLower()).$(RuntimeIdentifier)\$(BundledNETCoreAppPackageVersion)\runtimes\$(RuntimeIdentifier)\$(NativeHostLibraryName)"/>
-        <LinkerArg Condition="'$(RuntimeIdentifier)' != 'linux-arm'" Include="-lstdc++"/>
     </ItemGroup>
 
 </Project>
