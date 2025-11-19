@@ -7,7 +7,7 @@ namespace Mxrx.NetHost.Internal;
 [SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS6640,
                  Justification = Constants.SecureUnsafeCodeJustification)]
 #endif
-internal interface IResolverFunctions
+internal unsafe interface IResolverFunctions
 {
 	/// <summary>
 	/// Closes host context.
@@ -40,14 +40,7 @@ internal interface IResolverFunctions
 	/// <param name="delegateType">Function type.</param>
 	/// <param name="funcPtr">Output. Function pointer.</param>
 	/// <returns>Operation result.</returns>
-	unsafe RuntimeCallResult GetFunctionPointer(HostHandle handle, RuntimeDelegateType delegateType, out void* funcPtr);
-	/// <summary>
-	/// Retrieves the number of runtime properties initialized.
-	/// </summary>
-	/// <param name="handle">Host context handle.</param>
-	/// <param name="count">Output. Number of runtime properties.</param>
-	/// <returns>Operation result.</returns>
-	RuntimeCallResult CountProperties(HostHandle handle, out UIntPtr count);
+	RuntimeCallResult GetFunctionPointer(HostHandle handle, RuntimeDelegateType delegateType, out void* funcPtr);
 	/// <summary>
 	/// Type of current char.
 	/// </summary>

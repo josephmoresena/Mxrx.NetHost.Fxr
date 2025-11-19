@@ -13,7 +13,7 @@
         <DocumentationFile>./$(AssemblyName).xml</DocumentationFile>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <ExcludeXmlAssemblyFiles>false</ExcludeXmlAssemblyFiles>
-        <DefineConstants>$(DefineConstants);DISABLE_MAIN_CALLS</DefineConstants>
+        <DefineConstants>$(DefineConstants);DISABLE_MAIN_CALLS;DISABLE_RUNTIME_PROPERTIES</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Package)' == 'true'">

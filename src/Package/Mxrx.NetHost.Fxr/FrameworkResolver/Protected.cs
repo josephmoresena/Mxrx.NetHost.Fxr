@@ -68,12 +68,6 @@ public unsafe partial class FrameworkResolver
 	/// <returns>A <see cref="VolatileText"/> instance.</returns>
 	protected internal abstract VolatileText GetProperty(HostContext hostContext, VolatileText propertyName);
 	/// <summary>
-	/// Retrieves number of runtime properties initialized.
-	/// </summary>
-	/// <param name="hostContext">A <see cref="HostContext"/> instance.</param>
-	/// <returns>Number of runtime properties.</returns>
-	protected internal abstract Int32 CountProperties(HostContext hostContext);
-	/// <summary>
 	/// Sets <paramref name="propertyValue"/> as the value of the property named for <paramref name="propertyName"/>.
 	/// </summary>
 	/// <param name="hostContext">A <see cref="HostContext"/> instance.</param>

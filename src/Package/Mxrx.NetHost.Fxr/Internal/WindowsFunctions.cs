@@ -26,11 +26,13 @@ internal readonly unsafe struct WindowsFunctions : IResolverFunctions
 	/// </summary>
 	public readonly delegate* unmanaged[Cdecl]<HostHandle, RuntimeDelegateType, out void*, RuntimeCallResult>
 		GetDelegate;
+#if !DISABLE_RUNTIME_PROPERTIES
 	/// <summary>
 	/// Address of <c>hostfxr_get_runtime_properties</c>.
 	/// </summary>
-	public readonly delegate* unmanaged[Cdecl]<HostHandle, ref UIntPtr, ValPtr<ReadOnlyValPtr<Char>>,
-		ValPtr<ReadOnlyValPtr<Char>>, RuntimeCallResult> GetRuntimeProperties;
+	public readonly delegate* unmanaged[Cdecl]<HostHandle, ref UIntPtr, ref ReadOnlyValPtr<ReadOnlyValPtr<Char>>, ref
+		ReadOnlyValPtr<ReadOnlyValPtr<Char>>, RuntimeCallResult> GetRuntimeProperties;
+#endif
 	/// <summary>
 	/// Address of <c>hostfxr_get_runtime_property_value</c>.
 	/// </summary>
@@ -80,11 +82,6 @@ internal readonly unsafe struct WindowsFunctions : IResolverFunctions
 	RuntimeCallResult IResolverFunctions.GetFunctionPointer(HostHandle handle, RuntimeDelegateType delegateType,
 		out void* funcPtr)
 		=> this.GetDelegate(handle, delegateType, out funcPtr);
-	RuntimeCallResult IResolverFunctions.CountProperties(HostHandle handle, out UIntPtr count)
-	{
-		Unsafe.SkipInit(out count);
-		return this.GetRuntimeProperties(handle, ref count, default, default);
-	}
 
 	/// <summary>
 	/// Initial windows host parameters.

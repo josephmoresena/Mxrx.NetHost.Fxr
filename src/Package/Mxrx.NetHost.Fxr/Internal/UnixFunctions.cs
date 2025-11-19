@@ -25,11 +25,13 @@ internal readonly unsafe struct UnixFunctions : IResolverFunctions
 	/// Address of <c>hostfxr_get_runtime_delegate</c>.
 	/// </summary>
 	public readonly delegate* unmanaged<HostHandle, RuntimeDelegateType, out void*, RuntimeCallResult> GetDelegate;
+#if !DISABLE_RUNTIME_PROPERTIES
 	/// <summary>
 	/// Address of <c>hostfxr_get_runtime_properties</c>.
 	/// </summary>
-	public readonly delegate* unmanaged<HostHandle, ref UIntPtr, ValPtr<ReadOnlyValPtr<Byte>>,
-		ValPtr<ReadOnlyValPtr<Byte>>, RuntimeCallResult> GetRuntimeProperties;
+	public readonly delegate* unmanaged<HostHandle, ref UIntPtr, ref ReadOnlyValPtr<ReadOnlyValPtr<Byte>>, ref
+		ReadOnlyValPtr<ReadOnlyValPtr<Byte>>, RuntimeCallResult> GetRuntimeProperties;
+#endif
 	/// <summary>
 	/// Address of <c>hostfxr_get_runtime_property_value</c>.
 	/// </summary>
@@ -79,11 +81,6 @@ internal readonly unsafe struct UnixFunctions : IResolverFunctions
 	RuntimeCallResult IResolverFunctions.GetFunctionPointer(HostHandle handle, RuntimeDelegateType delegateType,
 		out void* funcPtr)
 		=> this.GetDelegate(handle, delegateType, out funcPtr);
-	RuntimeCallResult IResolverFunctions.CountProperties(HostHandle handle, out UIntPtr count)
-	{
-		Unsafe.SkipInit(out count);
-		return this.GetRuntimeProperties(handle, ref count, default, default);
-	}
 
 	/// <summary>
 	/// Initial Unix host parameters.

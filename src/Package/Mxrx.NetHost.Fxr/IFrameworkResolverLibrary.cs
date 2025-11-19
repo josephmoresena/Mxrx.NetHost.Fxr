@@ -13,10 +13,12 @@ public interface IFrameworkResolverLibrary
 	/// Name of <c>hostfxr_get_runtime_delegate</c>.
 	/// </summary>
 	public const String GetDelegateSymbol = "hostfxr_get_runtime_delegate";
+#if !DISABLE_RUNTIME_PROPERTIES
 	/// <summary>
 	/// Name of <c>hostfxr_get_runtime_properties</c>.
 	/// </summary>
 	public const String GetRuntimePropertiesSymbol = "hostfxr_get_runtime_properties";
+#endif
 	/// <summary>
 	/// Name of <c>hostfxr_get_runtime_property_value</c>.
 	/// </summary>
@@ -68,19 +70,6 @@ public interface IFrameworkResolverLibrary
 	static abstract RuntimeCallResult GetFunctionPointer(IntPtr handle, RuntimeDelegateType delegateType,
 		out IntPtr funcPtr);
 	/// <summary>
-	/// Retrieves the runtime properties key/value pairs.
-	/// </summary>
-	/// <param name="handle">Host context handle.</param>
-	/// <param name="count">
-	/// Reference. When input, indicates the size of pairs buffer.
-	/// When output retrieves the total number of runtime properties.
-	/// </param>
-	/// <param name="keysPtr">A pointer to keys buffer.</param>
-	/// <param name="valuesPtr">A pointer to values buffer.</param>
-	/// <returns>Operation result.</returns>
-	static abstract RuntimeCallResult GetRuntimeProperties(IntPtr handle, ref UIntPtr count, ValPtr<IntPtr> keysPtr,
-		ValPtr<IntPtr> valuesPtr);
-	/// <summary>
 	/// Retrieves the runtime property of <paramref name="keyPtr"/> value.
 	/// </summary>
 	/// <param name="handle">Host context handle.</param>
@@ -125,17 +114,4 @@ public interface IFrameworkResolverLibrary
 	/// <param name="handle">Host context handle.</param>
 	/// <param name="writeErrPtr">Write error delegate pointer.</param>
 	static abstract void SetError(IntPtr handle, IntPtr writeErrPtr);
-
-	/// <summary>
-	/// Retrieves the number of runtime properties initialized.
-	/// </summary>
-	/// <param name="handle">Host context handle.</param>
-	/// <param name="count">Output. Number of runtime properties.</param>
-	/// <returns>Operation result.</returns>
-	internal static RuntimeCallResult CountProperties<TLibrary>(IntPtr handle, out UIntPtr count)
-		where TLibrary : IFrameworkResolverLibrary
-	{
-		Unsafe.SkipInit(out count);
-		return TLibrary.GetRuntimeProperties(handle, ref count, default, default);
-	}
 }

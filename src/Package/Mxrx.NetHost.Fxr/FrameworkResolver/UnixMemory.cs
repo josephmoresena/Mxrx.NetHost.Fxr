@@ -1,7 +1,8 @@
 namespace Mxrx.NetHost;
 
 #if !PACKAGE
-[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3776, Justification = Constants.OptimizedJustification)]
+[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS6640,
+                 Justification = Constants.SecureUnsafeCodeJustification)]
 #endif
 public partial class FrameworkResolver
 {

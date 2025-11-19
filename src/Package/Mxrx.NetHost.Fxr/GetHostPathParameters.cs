@@ -23,7 +23,7 @@ public ref partial struct GetHostPathParameters
 	public Boolean IsEmpty => this.AssemblyPath.IsEmpty && this.RootPath.IsEmpty;
 
 	/// <summary>
-	/// Initializes a builder for <see cref="InitializationParameters"/> instance.
+	/// Initializes a builder for <see cref="GetHostPathParameters"/> instance.
 	/// </summary>
 	/// <returns>A <see cref="Builder"/> instance.</returns>
 	public static Builder CreateBuilder() => new();

@@ -10,9 +10,7 @@ public abstract partial class FrameworkResolver
 	public static FrameworkResolver LoadResolver<TLibrary>() where TLibrary : IFrameworkResolverLibrary
 	{
 		FrameworkResolver.ThrowIfNotNativeAot();
-		FrameworkResolver.ThrowIfInitializedHost();
-		FrameworkResolver.loadedResolver = PInvoke<TLibrary>.CreateResolver();
-		return FrameworkResolver.loadedResolver;
+		return FrameworkResolver.loadedResolver ??= PInvoke<TLibrary>.CreateResolver();
 	}
 	/// <summary>
 	/// Loads a <see cref="FrameworkResolver"/> from static linked library.

@@ -31,6 +31,7 @@ public abstract partial class HostContext : IDisposable
 	/// <param name="isCommandLine">Indicates whether current host is for a command line.</param>
 	protected HostContext(FrameworkResolver resolver, Boolean isCommandLine) : this(
 		resolver, HostHandle.Zero, isCommandLine) { }
+
 	/// <inheritdoc/>
 	public void Dispose()
 	{
@@ -205,6 +206,7 @@ public abstract partial class HostContext : IDisposable
 		this.ThrowIfDisposed();
 		this.Resolver.SetProperty(this, propertyName, propertyValue);
 	}
+
 	/// <inheritdoc cref="IDisposable.Dispose()"/>
 	protected abstract void Dispose(Boolean disposing);
 }

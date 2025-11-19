@@ -11,20 +11,18 @@
         <RootNamespace>Mxrxm.NetHost.Sample.Launcher</RootNamespace>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(StaticHostLib)' == 'True'">
+    <PropertyGroup Condition="'$(StaticHostLink)' == 'True'">
         <DefineConstants>$(DefineConstants);STATIC_HOST</DefineConstants>
         <AssemblyName>$(AssemblyName).StaticHost</AssemblyName>
-        <NativeHostPackageName>Microsoft.NETCore.App.Host</NativeHostPackageName>
-        <NativeHostLibraryName Condition="!$([MSBuild]::IsOsPlatform('Windows'))">native\libnethost.a</NativeHostLibraryName>
-        <NativeHostLibraryName Condition="$([MSBuild]::IsOsPlatform('Windows'))">native\libnethost.lib</NativeHostLibraryName>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(StaticHostLib)' != 'True' And '$(StaticLinkResolver)' == 'True'">
+    <PropertyGroup Condition="'$(StaticHostLink)' != 'True' And '$(StaticLinkResolver)' == 'True'">
         <DefineConstants>$(DefineConstants);STATIC_LINK</DefineConstants>
         <AssemblyName>$(AssemblyName).StaticLink</AssemblyName>
     </PropertyGroup>
 
     <Import Project="..\Sample.targets"/>
+    <Import Condition="'$(StaticHostLink)' == 'True'" Project="..\StaticHostLink.targets"/>
 
     <PropertyGroup Condition="'$(RuntimeIdentifier)' == 'linux-arm' Or '$(RuntimeIdentifier)' == 'win-x86'">
         <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
@@ -56,12 +54,6 @@
         <ProjectReference Include="..\..\Package\Mxrx.NetHost.Fxr\Mxrx.NetHost.Fxr.csproj"/>
     </ItemGroup>
 
-    <ItemGroup Condition="'$(StaticHostLib)' == 'True' And '$(RuntimeIdentifier)' != ''">
-        <PackageDownload Include="$(NativeHostPackageName).$(RuntimeIdentifier)" Version="[$(BundledNETCoreAppPackageVersion)]"/>
-        <NativeLibrary Include="$(NuGetPackageRoot)\$(NativeHostPackageName).$(RuntimeIdentifier)\$(BundledNETCoreAppPackageVersion)\runtimes\$(RuntimeIdentifier)\$(NativeHostLibraryName)"/>
-        <LinkerArg Include="-lstdc++"/>
-    </ItemGroup>
-
     <PropertyGroup Condition="'$(RuntimeIdentifier)' == 'linux-arm' And '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'X64'">
         <LinkerFlavor>lld</LinkerFlavor>
         <ObjCopyName>/usr/arm-linux-gnueabihf/bin/objcopy</ObjCopyName>
@@ -72,6 +64,19 @@
     </PropertyGroup>
 
     <Target Name="CopyTarget" Condition="'$(RuntimeIdentifier)' != ''" AfterTargets="Publish">
+        <ItemGroup Condition="'$(IsNativeAotWebAssembly)' != 'true'">
+            <Artifact Include="$(PublishDir)$(AssemblyName)*"/>
+            <Artifact Remove="$(PublishDir)$(AssemblyName)*.pdb"/>
+            <Artifact Remove="$(PublishDir)$(AssemblyName)*.dwarf"/>
+            <Artifact Remove="$(PublishDir)$(AssemblyName)*.dSYM"/>
+        </ItemGroup>
+        <ItemGroup Condition="'$(IsNativeAotWebAssembly)' == 'true'">
+            <Artifact Include="$(NativeOutputPath)$(AssemblyName)*"/>
+            <Artifact Remove="$(NativeOutputPath)$(AssemblyName)*.deps.json"/>
+            <Artifact Remove="$(NativeOutputPath)$(AssemblyName)*.runtimeconfig.json"/>
+            <Artifact Remove="$(NativeOutputPath)$(AssemblyName)*.html"/>
+        </ItemGroup>
+
         <ItemGroup>
             <NativeFiles Condition="$(NativeIntermediateOutputPath) != ''" Include="$(NativeIntermediateOutputPath)*$(AssemblyName)*"/>
             <NativeFiles Condition="$(NativeIntermediateOutputPath) != ''" Remove="$(NativeIntermediateOutputPath)*$(AssemblyName).o"/>
@@ -83,7 +88,8 @@
             <NativeFiles Condition="$(NativeIntermediateOutputPath) != ''" Remove="$(NativeIntermediateOutputPath)*$(AssemblyName).ilc.rsp"/>
         </ItemGroup>
 
-        <Copy Condition="$(NativeIntermediateOutputPath) != ''" SourceFiles="@(NativeFiles)" DestinationFolder="$(PublishDir)\Native" SkipUnchangedFiles="false"/>
+        <Copy SourceFiles="@(Artifact)" DestinationFolder="$(CopyTargetTo)" SkipUnchangedFiles="false"/>
+        <Copy Condition="$(NativeIntermediateOutputPath) != ''" SourceFiles="@(NativeFiles)" DestinationFolder="$(CopyTargetTo)\Native" SkipUnchangedFiles="false"/>
 
         <!-- Remove NativeIntermediateOutput files -->
         <Delete Condition="$(NativeIntermediateOutputPath) != ''" Files="$(NativeIntermediateOutputPath)*$(AssemblyName)*"/>

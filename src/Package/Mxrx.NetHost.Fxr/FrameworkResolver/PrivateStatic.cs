@@ -50,7 +50,7 @@ public abstract partial class FrameworkResolver
 	/// Creates a <see cref="FrameworkResolver"/> instance from <paramref name="libHandle"/>.
 	/// </summary>
 	/// <param name="libHandle">Framework resolver library handle.</param>
-	/// <returns>A <see cref="FrameworkResolver"/> instance for <paramref name="libHandle"/>.</returns>
+	/// <returns>A <see cref="FrameworkResolver"/> instance from <paramref name="libHandle"/>.</returns>
 	private static FrameworkResolver CreateResolver(IntPtr libHandle)
 	{
 		FrameworkResolver.loadedResolver = SystemInfo.IsWindows ? new Windows(libHandle) : new Unix(libHandle);

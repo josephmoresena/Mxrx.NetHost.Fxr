@@ -29,13 +29,6 @@ public partial class FrameworkResolver
 		protected internal sealed override void SetErrorWriter(HostContext hostContext, IntPtr writeErrorPtr)
 			=> TLibrary.SetError(hostContext.Handle, writeErrorPtr);
 		/// <inheritdoc/>
-		protected internal sealed override Int32 CountProperties(HostContext hostContext)
-		{
-			FrameworkResolver.ThrowIfInvalidResult(
-				IFrameworkResolverLibrary.CountProperties<TLibrary>(hostContext.Handle, out UIntPtr count));
-			return (Int32)count;
-		}
-		/// <inheritdoc/>
 		protected sealed override void CloseHandle(HostContext hostContext)
 			=> TLibrary.CloseContext(hostContext.Handle);
 		/// <inheritdoc/>
@@ -58,7 +51,6 @@ public partial class FrameworkResolver
 		/// Creates a P/Invoke <see cref="FrameworkResolver"/> instance.
 		/// </summary>
 		/// <returns>A P/Invoke <see cref="FrameworkResolver"/> instance.</returns>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static FrameworkResolver CreateResolver()
 			=> SystemInfo.IsWindows ? new WindowsPInvoke() : new UnixPInvoke();
 	}

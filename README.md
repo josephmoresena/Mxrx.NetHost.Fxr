@@ -60,6 +60,10 @@ Represents an abstraction over the native `hostfxr` library.
 
 #### Static Methods
 
+* **LoadResolver<TLibrary>()**: Using `TLibrary` as P/Invoke backend for native `hostfxr` native library returns the
+  default `FrameworkResolver` instance.
+* **LoadResolver(GetHostPathParameters)**: Using the `nethost` library static linked loads the default `hostfxr` native
+  library and returns a new `FrameworkResolver` instance.
 * **LoadResolver(String)**: Loads the native `hostfxr` and returns a new `FrameworkResolver` instance.
 * **GetActiveOrLoad(String, out Boolean)**: Returns the current `FrameworkResolver` or loads a new one.
 
@@ -99,6 +103,17 @@ A `ref struct` representing a transient text value for interop with native host 
 * **GetStringValue()**: Converts to `System.String`.
 * **GetCStringValue()**: Converts to `Rxmxnx.PInvoke.CString`.
 * **GetPinnableReference()**: Returns a managed reference to the text data.
+
+### GetHostPathParameters & Builder
+
+Used to define how `nethost` is locating the `hostfxr` native library.
+
+* `GetHostPathParameters.CreateBuilder()` returns a `Builder`.
+
+#### Builder Methods
+
+* **WithAssemblyPath(...)**: Specifies the path to the assembly.
+* **WithRootPath(...)**: Specifies the root application path.
 
 ### LoadAssemblyParameters & Builder
 

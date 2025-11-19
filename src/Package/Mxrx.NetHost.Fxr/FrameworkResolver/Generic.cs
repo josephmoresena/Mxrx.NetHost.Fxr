@@ -26,8 +26,10 @@ public partial class FrameworkResolver
 				Int32 index = 0;
 				FrameworkResolver.GetAddress(handle, functions, IFrameworkResolverLibrary.CloseHandleSymbol, index++);
 				FrameworkResolver.GetAddress(handle, functions, IFrameworkResolverLibrary.GetDelegateSymbol, index++);
+#if !DISABLE_RUNTIME_PROPERTIES
 				FrameworkResolver.GetAddress(handle, functions, IFrameworkResolverLibrary.GetRuntimePropertiesSymbol,
 				                             index++);
+#endif
 				FrameworkResolver.GetAddress(handle, functions, IFrameworkResolverLibrary.GetRuntimePropertyValueSymbol,
 				                             index++);
 				FrameworkResolver.GetAddress(handle, functions, IFrameworkResolverLibrary.SetRuntimePropertyValueSymbol,
@@ -72,13 +74,6 @@ public partial class FrameworkResolver
 		/// <inheritdoc/>
 		protected internal sealed override void SetErrorWriter(HostContext hostContext, IntPtr writeErrorPtr)
 			=> this.Functions.SetError(hostContext.Handle, writeErrorPtr);
-		/// <inheritdoc/>
-		protected internal sealed override Int32 CountProperties(HostContext hostContext)
-		{
-			FrameworkResolver.ThrowIfInvalidResult(
-				this.Functions.CountProperties(hostContext.Handle, out UIntPtr count));
-			return (Int32)count;
-		}
 		/// <inheritdoc/>
 		protected sealed override void CloseHandle(HostContext hostContext)
 			=> this.Functions.CloseContext(hostContext.Handle);

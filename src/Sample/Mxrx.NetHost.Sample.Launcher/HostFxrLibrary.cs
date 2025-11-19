@@ -20,10 +20,6 @@ internal class HostFxrLibrary : IFrameworkResolverLibrary
 	public static extern RuntimeCallResult GetFunctionPointer(IntPtr handle, RuntimeDelegateType delegateType,
 		out IntPtr funcPtr);
 	[DllImport(HostFxrLibrary.libraryName, CallingConvention = CallingConvention.Cdecl,
-	           EntryPoint = IFrameworkResolverLibrary.GetRuntimePropertiesSymbol)]
-	public static extern RuntimeCallResult GetRuntimeProperties(IntPtr handle, ref UIntPtr count,
-		ValPtr<IntPtr> keysPtr, ValPtr<IntPtr> valuesPtr);
-	[DllImport(HostFxrLibrary.libraryName, CallingConvention = CallingConvention.Cdecl,
 	           EntryPoint = IFrameworkResolverLibrary.GetRuntimePropertyValueSymbol)]
 	public static extern RuntimeCallResult GetRuntimePropertyValue(IntPtr handle, IntPtr keyPtr, out IntPtr valuePtr);
 	[DllImport(HostFxrLibrary.libraryName, CallingConvention = CallingConvention.Cdecl,
