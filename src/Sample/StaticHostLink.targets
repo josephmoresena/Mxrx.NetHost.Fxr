@@ -9,7 +9,7 @@
     <ItemGroup>
         <PackageDownload Include="$(NativeHostPackageName).$(RuntimeIdentifier)" Version="[$(BundledNETCoreAppPackageVersion)]"/>
         <NativeLibrary Include="$(NuGetPackageRoot)\$(NativeHostPackageName.ToLower()).$(RuntimeIdentifier)\$(BundledNETCoreAppPackageVersion)\runtimes\$(RuntimeIdentifier)\$(NativeHostLibraryName)"/>
-        <LinkerArg Include="-lstdc++"/>
+        <LinkerArg Condition="'$(RuntimeIdentifier)' != 'linux-arm'" Include="-lstdc++"/>
     </ItemGroup>
 
 </Project>
