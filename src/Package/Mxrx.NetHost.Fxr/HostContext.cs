@@ -29,8 +29,8 @@ public abstract partial class HostContext : IDisposable
 	/// </summary>
 	/// <param name="resolver">A <see cref="FrameworkResolver"/> instance.</param>
 	/// <param name="isCommandLine">Indicates whether current host is for a command line.</param>
-	protected HostContext(FrameworkResolver resolver, Boolean isCommandLine) : this(
-		resolver, HostHandle.Zero, isCommandLine) { }
+	protected HostContext(FrameworkResolver resolver, Boolean isCommandLine) :
+		this(resolver, default, isCommandLine) { }
 
 	/// <inheritdoc/>
 	public void Dispose()

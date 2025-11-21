@@ -7,20 +7,20 @@ namespace Mxrx.NetHost;
 /// <summary>
 /// Property key/value pair collection.
 /// </summary>
-public readonly ref partial struct RuntimePropertyCollection
+public readonly ref struct RuntimePropertyCollection
 {
 	/// <summary>
-	/// A <see cref="HostContext"/> instance.
+	/// Indicates whether current instance is disposed.
 	/// </summary>
-	private readonly HostContext _hostContext;
+	private readonly VolatileText.Invalidator _isDisposed;
 	/// <summary>
 	/// Property keys buffer.
 	/// </summary>
-	private readonly ReadOnlySpan<IntPtr> _keys;
+	private readonly ReadOnlySpan<NativeCharPointer> _keys;
 	/// <summary>
 	/// Property values buffer.
 	/// </summary>
-	private readonly ReadOnlySpan<IntPtr> _values;
+	private readonly ReadOnlySpan<NativeCharPointer> _values;
 
 	/// <summary>
 	/// The number of properties in the current collection.
@@ -32,27 +32,42 @@ public readonly ref partial struct RuntimePropertyCollection
 	/// </summary>
 	/// <param name="index">Property index.</param>
 	public RuntimePropertyPair this[Int32 index]
-		=> new()
-		{
-			Key = RuntimePropertyCollection.getText(this._hostContext, this._keys[index]),
-			Value = RuntimePropertyCollection.getText(this._hostContext, this._values[index]),
-		};
+		=> new() { Key = this.CreateLiteral(this._keys, index), Value = this.CreateLiteral(this._values, index), };
 
 	/// <summary>
 	/// Internal constructor.
 	/// </summary>
-	/// <param name="hostContext">A <see cref="HostContext"/> instance.</param>
+	/// <param name="isDisposed">Indicates whether current instance is disposed.</param>
 	/// <param name="keys">Property keys buffer.</param>
 	/// <param name="values">Property values buffer.</param>
-	internal RuntimePropertyCollection(HostContext hostContext, ReadOnlySpan<IntPtr> keys, ReadOnlySpan<IntPtr> values)
+	internal RuntimePropertyCollection(VolatileText.Invalidator isDisposed, ReadOnlySpan<NativeCharPointer> keys,
+		ReadOnlySpan<NativeCharPointer> values)
 	{
-		this._hostContext = hostContext;
+		this._isDisposed = isDisposed;
 		this._keys = keys;
 		this._values = values;
 	}
 
 	/// <inheritdoc cref="IEnumerable{T}.GetEnumerator"/>
 	public Enumerator GetEnumerator() => new(this);
+
+	/// <summary>
+	/// Creates a literal <see cref="TextParameter"/> instance from the item of <paramref name="index"/> from
+	/// <paramref name="source"/>.
+	/// </summary>
+	/// <param name="source">Source span.</param>
+	/// <param name="index">Index to retrieve.</param>
+	/// <returns>Created <see cref="TextParameter"/> instance.</returns>
+	private VolatileText CreateLiteral(ReadOnlySpan<NativeCharPointer> source, Int32 index)
+	{
+		if (index < 0 || index >= source.Length)
+			throw new ArgumentOutOfRangeException(nameof(index));
+		if (this._isDisposed.Value) return default;
+		NativeCharPointer charPointer = source[index];
+		VolatileText result = TextHelper.Instance.CreateLiteral(charPointer);
+		result.IsDisposed = this._isDisposed;
+		return result;
+	}
 
 	/// <summary>
 	/// Enumerates the <see cref="RuntimePropertyPair"/> instaces within a <see cref="RuntimePropertyCollection"/>.

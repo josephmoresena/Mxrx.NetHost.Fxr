@@ -6,6 +6,11 @@ namespace Mxrx.NetHost;
 public unsafe partial class FrameworkResolver
 {
 	/// <summary>
+	/// Resolver key.
+	/// </summary>
+	private protected virtual Object ResolverKey => this;
+
+	/// <summary>
 	/// Parameterless constructor.
 	/// </summary>
 	private protected FrameworkResolver() : this(IntPtr.Zero) { }

@@ -5,12 +5,16 @@ public abstract partial class FrameworkResolver
 	/// <summary>
 	/// Loads a <see cref="FrameworkResolver"/> from static linked library.
 	/// </summary>
-	/// <typeparam name="TLibrary">A <see cref="IFrameworkResolverLibrary"/> type.</typeparam>
+	/// <typeparam name="TLibrary">A <see cref="IFrameworkResolverLib"/> type.</typeparam>
 	/// <returns>A <see cref="FrameworkResolver"/> instance.</returns>
-	public static FrameworkResolver LoadResolver<TLibrary>() where TLibrary : IFrameworkResolverLibrary
+	public static FrameworkResolver LoadResolver<TLibrary>() where TLibrary : IFrameworkResolverLib.IPInvoke
 	{
 		FrameworkResolver.ThrowIfNotNativeAot();
-		return FrameworkResolver.loadedResolver ??= PInvoke<TLibrary>.CreateStaticResolver();
+		FrameworkResolver.ThrowIfInitializedHost();
+		FrameworkResolver.ThrowIfInitializedHost(typeof(TLibrary));
+		FrameworkResolver.loadedResolver ??=
+			new Impl<PInvokeFunctionSet>(PInvokeFunctionSet.GetFunctionSet<TLibrary>(), typeof(TLibrary));
+		return FrameworkResolver.loadedResolver;
 	}
 	/// <summary>
 	/// Loads a <see cref="FrameworkResolver"/> from static linked library.
@@ -23,9 +27,21 @@ public abstract partial class FrameworkResolver
 #endif
 	public static FrameworkResolver LoadResolver(GetHostPathParameters parameters = default)
 	{
+		String libraryPath = parameters.IsEmpty ?
+			FrameworkResolver.GetLibraryPath() :
+			FrameworkResolver.GetLibraryPath(parameters);
+		return FrameworkResolver.LoadResolver(libraryPath);
+	}
+	/// <summary>
+	/// Loads a <see cref="FrameworkResolver"/> from current native library.
+	/// </summary>
+	/// <param name="libraryHandle">Native library handle.</param>
+	/// <returns>A <see cref="FrameworkResolver"/> instance.</returns>
+	public static FrameworkResolver LoadResolver(IntPtr libraryHandle)
+	{
 		FrameworkResolver.ThrowIfNotNativeAot();
-		FrameworkResolver.ThrowIfInitializedHost();
-		return FrameworkResolver.CreateResolver(parameters);
+		FrameworkResolver.ThrowIfInitializedHost(libraryHandle);
+		return FrameworkResolver.CreateResolver(libraryHandle);
 	}
 	/// <summary>
 	/// Loads a <see cref="FrameworkResolver"/> from current native library.
@@ -35,9 +51,9 @@ public abstract partial class FrameworkResolver
 	public static FrameworkResolver LoadResolver(String libraryPath)
 	{
 		FrameworkResolver.ThrowIfNotNativeAot();
-		FrameworkResolver.ThrowIfInitializedHost();
+		FrameworkResolver.ThrowIfInitializedHost(libraryPath);
 		IntPtr libHandle = NativeLibrary.Load(libraryPath);
-		return FrameworkResolver.CreateResolver(libHandle);
+		return FrameworkResolver.CreateResolver(libHandle, libraryPath);
 	}
 	/// <summary>
 	/// Loads a <see cref="FrameworkResolver"/> from current native library.
@@ -48,9 +64,9 @@ public abstract partial class FrameworkResolver
 	public static FrameworkResolver LoadResolver(String libraryPath, DllImportSearchPath searchPath)
 	{
 		FrameworkResolver.ThrowIfNotNativeAot();
-		FrameworkResolver.ThrowIfInitializedHost();
+		FrameworkResolver.ThrowIfInitializedHost(libraryPath);
 		IntPtr libHandle = NativeLibrary.Load(libraryPath, Assembly.GetExecutingAssembly(), searchPath);
-		return FrameworkResolver.CreateResolver(libHandle);
+		return FrameworkResolver.CreateResolver(libHandle, libraryPath);
 	}
 	/// <summary>
 	/// Retrieves active <see cref="FrameworkResolver"/> instance or loads a new one from native library.

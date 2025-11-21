@@ -47,6 +47,7 @@
         <Using Include="Rxmxnx.PInvoke.Localization"/>
         <Using Include="Mxrx.NetHost.Internal"/>
         <Using Include="Mxrx.NetHost.Internal.Localization"/>
+        <Using Include="Mxrx.NetHost.Native"/>
     </ItemGroup>
 
     <ItemGroup>

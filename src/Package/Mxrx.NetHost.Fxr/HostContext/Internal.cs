@@ -10,6 +10,10 @@ public abstract partial class HostContext
 	/// Host context error delegate.
 	/// </summary>
 	internal Delegate WriteErrorDelegate { get; }
+	/// <summary>
+	/// Retrieves the current <see cref="VolatileText.Invalidator"/> instance.
+	/// </summary>
+	internal VolatileText.Invalidator TextInvalidator => new(this._isDisposed, this._control);
 	/// <inheritdoc cref="HostContext._loadAssemblyAndGetFunctionPointerPtr"/>
 	internal IntPtr LoadAssemblyAndGetFunctionPointerPtr
 	{
@@ -112,10 +116,4 @@ public abstract partial class HostContext
 			(WriteErrorFromPointerDelegate)this.WriteError :
 			(WriteUtfErrorFromPointerDelegate)this.WriteUtfError;
 	}
-
-	/// <summary>
-	/// Attaches <paramref name="value"/> to current instance.
-	/// </summary>
-	/// <param name="value">A <see cref="VolatileText"/> value.</param>
-	internal void Attach(ref VolatileText value) { value.IsDisposed = new(this._isDisposed, this._control); }
 }
