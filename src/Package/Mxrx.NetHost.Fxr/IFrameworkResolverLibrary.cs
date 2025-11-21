@@ -3,7 +3,7 @@ namespace Mxrx.NetHost;
 /// <summary>
 /// <c>Hostfxr</c> library interface.
 /// </summary>
-public interface IFrameworkResolverLib
+public interface IFrameworkResolverLibrary
 {
 	/// <summary>
 	/// Name of <c>hostfxr_close</c>.
@@ -58,9 +58,9 @@ public interface IFrameworkResolverLib
 	/// <summary>
 	/// Function set.
 	/// </summary>
-	public interface IPInvoke : IFrameworkResolverLib
+	public interface IPInvoke : IFrameworkResolverLibrary
 	{
-		static Int32 IFrameworkResolverLib.SizeOf => 0;
+		static Int32 IFrameworkResolverLibrary.SizeOf => 0;
 
 		/// <summary>
 		/// Closes host context.

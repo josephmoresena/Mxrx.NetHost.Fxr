@@ -3,7 +3,7 @@ namespace Mxrx.NetHost;
 /// <summary>
 /// Stores a volatile text parameter.
 /// </summary>
-public ref partial struct VolatileText
+public ref struct VolatileText
 {
 	/// <summary>
 	/// Internal value.
@@ -12,7 +12,7 @@ public ref partial struct VolatileText
 	/// <summary>
 	/// Indicates whether current instance is disposed.
 	/// </summary>
-	internal Invalidator IsDisposed;
+	internal TextInvalidator IsDisposed;
 
 	/// <summary>
 	/// Text value.

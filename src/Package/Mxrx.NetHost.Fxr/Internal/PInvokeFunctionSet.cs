@@ -72,6 +72,6 @@ internal abstract unsafe partial class PInvokeFunctionSet : IFunctionSet
 	/// </summary>
 	/// <typeparam name="TLibrary">A <typeparamref name="TLibrary"/> type.</typeparam>
 	/// <returns>A <see cref="Mxrx.NetHost.Internal.PInvokeFunctionSet"/> instance.</returns>
-	public static PInvokeFunctionSet GetFunctionSet<TLibrary>() where TLibrary : IFrameworkResolverLib.IPInvoke
+	public static PInvokeFunctionSet GetFunctionSet<TLibrary>() where TLibrary : IFrameworkResolverLibrary.IPInvoke
 		=> FunctionSet<TLibrary>.Instance;
 }

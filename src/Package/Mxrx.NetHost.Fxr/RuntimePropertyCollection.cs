@@ -12,7 +12,7 @@ public readonly ref struct RuntimePropertyCollection
 	/// <summary>
 	/// Indicates whether current instance is disposed.
 	/// </summary>
-	private readonly VolatileText.Invalidator _isDisposed;
+	private readonly TextInvalidator _isDisposed;
 	/// <summary>
 	/// Property keys buffer.
 	/// </summary>
@@ -40,7 +40,7 @@ public readonly ref struct RuntimePropertyCollection
 	/// <param name="isDisposed">Indicates whether current instance is disposed.</param>
 	/// <param name="keys">Property keys buffer.</param>
 	/// <param name="values">Property values buffer.</param>
-	internal RuntimePropertyCollection(VolatileText.Invalidator isDisposed, ReadOnlySpan<NativeCharPointer> keys,
+	internal RuntimePropertyCollection(TextInvalidator isDisposed, ReadOnlySpan<NativeCharPointer> keys,
 		ReadOnlySpan<NativeCharPointer> values)
 	{
 		this._isDisposed = isDisposed;

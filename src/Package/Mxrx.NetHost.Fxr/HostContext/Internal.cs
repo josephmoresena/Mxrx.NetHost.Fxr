@@ -11,9 +11,9 @@ public abstract partial class HostContext
 	/// </summary>
 	internal Delegate WriteErrorDelegate { get; }
 	/// <summary>
-	/// Retrieves the current <see cref="VolatileText.Invalidator"/> instance.
+	/// Retrieves the current <see cref="TextInvalidator"/> instance.
 	/// </summary>
-	internal VolatileText.Invalidator TextInvalidator => new(this._isDisposed, this._control);
+	internal TextInvalidator TextInvalidator => new(this._isDisposed, this._control);
 	/// <inheritdoc cref="HostContext._loadAssemblyAndGetFunctionPointerPtr"/>
 	internal IntPtr LoadAssemblyAndGetFunctionPointerPtr
 	{

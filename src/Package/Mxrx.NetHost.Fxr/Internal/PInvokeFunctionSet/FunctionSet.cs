@@ -9,7 +9,7 @@ internal abstract unsafe partial class PInvokeFunctionSet
 	[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS6640,
 	                 Justification = Constants.SecureUnsafeCodeJustification)]
 #endif
-	public sealed class FunctionSet<TLibrary> : PInvokeFunctionSet where TLibrary : IFrameworkResolverLib.IPInvoke
+	public sealed class FunctionSet<TLibrary> : PInvokeFunctionSet where TLibrary : IFrameworkResolverLibrary.IPInvoke
 	{
 		/// <summary>
 		/// Singleton instance.

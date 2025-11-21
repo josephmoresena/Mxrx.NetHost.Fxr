@@ -7,7 +7,7 @@ namespace Mxrx.NetHost.Internal;
 [SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS6640,
                  Justification = Constants.SecureUnsafeCodeJustification)]
 #endif
-internal unsafe interface IFunctionSet : IFrameworkResolverLib
+internal unsafe interface IFunctionSet : IFrameworkResolverLibrary
 {
 	/// <summary>
 	/// Closes host context.

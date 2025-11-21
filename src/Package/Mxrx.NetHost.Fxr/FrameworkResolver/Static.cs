@@ -5,9 +5,9 @@ public abstract partial class FrameworkResolver
 	/// <summary>
 	/// Loads a <see cref="FrameworkResolver"/> from static linked library.
 	/// </summary>
-	/// <typeparam name="TLibrary">A <see cref="IFrameworkResolverLib"/> type.</typeparam>
+	/// <typeparam name="TLibrary">A <see cref="IFrameworkResolverLibrary"/> type.</typeparam>
 	/// <returns>A <see cref="FrameworkResolver"/> instance.</returns>
-	public static FrameworkResolver LoadResolver<TLibrary>() where TLibrary : IFrameworkResolverLib.IPInvoke
+	public static FrameworkResolver LoadResolver<TLibrary>() where TLibrary : IFrameworkResolverLibrary.IPInvoke
 	{
 		FrameworkResolver.ThrowIfNotNativeAot();
 		FrameworkResolver.ThrowIfInitializedHost();

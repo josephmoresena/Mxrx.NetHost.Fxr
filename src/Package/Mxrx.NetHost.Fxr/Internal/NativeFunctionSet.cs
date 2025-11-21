@@ -110,24 +110,25 @@ internal readonly unsafe struct NativeFunctionSet : IFunctionSet
 		Span<IntPtr> functions = MemoryMarshal.CreateSpan(ref functionSet, 1).AsValues<NativeFunctionSet, IntPtr>();
 		Int32 result = 0;
 
-		NativeFunctionSet.GetAddress(libraryHandle, functions, IFrameworkResolverLib.CloseHandleSymbol, result++);
-		NativeFunctionSet.GetAddress(libraryHandle, functions, IFrameworkResolverLib.GetDelegateSymbol, result++);
-		NativeFunctionSet.GetAddress(libraryHandle, functions, IFrameworkResolverLib.GetRuntimePropertiesSymbol,
+		NativeFunctionSet.GetAddress(libraryHandle, functions, IFrameworkResolverLibrary.CloseHandleSymbol, result++);
+		NativeFunctionSet.GetAddress(libraryHandle, functions, IFrameworkResolverLibrary.GetDelegateSymbol, result++);
+		NativeFunctionSet.GetAddress(libraryHandle, functions, IFrameworkResolverLibrary.GetRuntimePropertiesSymbol,
 		                             result++);
-		NativeFunctionSet.GetAddress(libraryHandle, functions, IFrameworkResolverLib.GetRuntimePropertyValueSymbol,
+		NativeFunctionSet.GetAddress(libraryHandle, functions, IFrameworkResolverLibrary.GetRuntimePropertyValueSymbol,
 		                             result++);
-		NativeFunctionSet.GetAddress(libraryHandle, functions, IFrameworkResolverLib.SetRuntimePropertyValueSymbol,
+		NativeFunctionSet.GetAddress(libraryHandle, functions, IFrameworkResolverLibrary.SetRuntimePropertyValueSymbol,
 		                             result++);
-		NativeFunctionSet.GetAddress(libraryHandle, functions, IFrameworkResolverLib.InitializeForCommandSymbol,
+		NativeFunctionSet.GetAddress(libraryHandle, functions, IFrameworkResolverLibrary.InitializeForCommandSymbol,
 		                             result++);
-		NativeFunctionSet.GetAddress(libraryHandle, functions, IFrameworkResolverLib.InitializeForConfigSymbol,
+		NativeFunctionSet.GetAddress(libraryHandle, functions, IFrameworkResolverLibrary.InitializeForConfigSymbol,
 		                             result++);
 #if !DISABLE_MAIN_CALLS
 		NativeFunctionSet.GetAddress(libraryHandle, functions, IFrameworkResolverLib.MainSymbol, result++);
 		NativeFunctionSet.GetAddress(libraryHandle, functions, IFrameworkResolverLib.MainStartupInfoSymbol, result++);
 #endif
-		NativeFunctionSet.GetAddress(libraryHandle, functions, IFrameworkResolverLib.RunAppSymbol, result++);
-		NativeFunctionSet.GetAddress(libraryHandle, functions, IFrameworkResolverLib.SetErrorWriterSymbol, result++);
+		NativeFunctionSet.GetAddress(libraryHandle, functions, IFrameworkResolverLibrary.RunAppSymbol, result++);
+		NativeFunctionSet.GetAddress(libraryHandle, functions, IFrameworkResolverLibrary.SetErrorWriterSymbol,
+		                             result++);
 		return result;
 	}
 

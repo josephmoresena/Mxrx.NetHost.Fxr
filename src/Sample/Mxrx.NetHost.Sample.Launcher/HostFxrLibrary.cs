@@ -9,42 +9,42 @@ using Rxmxnx.PInvoke;
 namespace Mxrxm.NetHost.Sample.Launcher;
 
 #pragma warning disable SYSLIB1054
-internal class HostFxrLibrary : IFrameworkResolverLib.IPInvoke
+internal class HostFxrLibrary : IFrameworkResolverLibrary.IPInvoke
 {
 	private const String libraryName = "hostfxr";
 
 	[DllImport(HostFxrLibrary.libraryName, CallingConvention = CallingConvention.Cdecl,
-	           EntryPoint = IFrameworkResolverLib.CloseHandleSymbol)]
+	           EntryPoint = IFrameworkResolverLibrary.CloseHandleSymbol)]
 	public static extern RuntimeCallResult CloseContext(HostHandle handle);
 	[DllImport(HostFxrLibrary.libraryName, CallingConvention = CallingConvention.Cdecl,
-	           EntryPoint = IFrameworkResolverLib.GetDelegateSymbol)]
+	           EntryPoint = IFrameworkResolverLibrary.GetDelegateSymbol)]
 	public static extern RuntimeCallResult GetFunctionPointer(HostHandle handle, RuntimeDelegateType delegateType,
 		out IntPtr funcPtr);
 	[DllImport(HostFxrLibrary.libraryName, CallingConvention = CallingConvention.Cdecl,
-	           EntryPoint = IFrameworkResolverLib.GetRuntimePropertiesSymbol)]
+	           EntryPoint = IFrameworkResolverLibrary.GetRuntimePropertiesSymbol)]
 	public static extern RuntimeCallResult GetRuntimeProperties(HostHandle handle, ref UIntPtr propCount,
 		ref ReadOnlyValPtr<NativeCharPointer> propKeysPtr, ref ReadOnlyValPtr<NativeCharPointer> propValuesPtr);
 	[DllImport(HostFxrLibrary.libraryName, CallingConvention = CallingConvention.Cdecl,
-	           EntryPoint = IFrameworkResolverLib.GetRuntimePropertyValueSymbol)]
+	           EntryPoint = IFrameworkResolverLibrary.GetRuntimePropertyValueSymbol)]
 	public static extern RuntimeCallResult GetRuntimePropertyValue(HostHandle handle, NativeCharPointer keyPtr,
 		out NativeCharPointer valuePtr);
 	[DllImport(HostFxrLibrary.libraryName, CallingConvention = CallingConvention.Cdecl,
-	           EntryPoint = IFrameworkResolverLib.SetRuntimePropertyValueSymbol)]
+	           EntryPoint = IFrameworkResolverLibrary.SetRuntimePropertyValueSymbol)]
 	public static extern RuntimeCallResult SetRuntimePropertyValue(HostHandle handle, NativeCharPointer keyPtr,
 		NativeCharPointer valuePtr);
 	[DllImport(HostFxrLibrary.libraryName, CallingConvention = CallingConvention.Cdecl,
-	           EntryPoint = IFrameworkResolverLib.InitializeForCommandSymbol)]
+	           EntryPoint = IFrameworkResolverLibrary.InitializeForCommandSymbol)]
 	public static extern RuntimeCallResult InitializeForCommandLine(Int32 argsCount,
 		ReadOnlyValPtr<NativeCharPointer> argsPtr, in InitParameters initParams, out HostHandle handle);
 	[DllImport(HostFxrLibrary.libraryName, CallingConvention = CallingConvention.Cdecl,
-	           EntryPoint = IFrameworkResolverLib.InitializeForConfigSymbol)]
+	           EntryPoint = IFrameworkResolverLibrary.InitializeForConfigSymbol)]
 	public static extern RuntimeCallResult InitializeForConfigFile(NativeCharPointer configPathPtr,
 		in InitParameters initParams, out HostHandle handle);
 	[DllImport(HostFxrLibrary.libraryName, CallingConvention = CallingConvention.Cdecl,
-	           EntryPoint = IFrameworkResolverLib.RunAppSymbol)]
+	           EntryPoint = IFrameworkResolverLibrary.RunAppSymbol)]
 	public static extern Int32 RunApp(HostHandle handle);
 	[DllImport(HostFxrLibrary.libraryName, CallingConvention = CallingConvention.Cdecl,
-	           EntryPoint = IFrameworkResolverLib.SetErrorWriterSymbol)]
+	           EntryPoint = IFrameworkResolverLibrary.SetErrorWriterSymbol)]
 	public static extern IntPtr SetError(HostHandle handle, IntPtr writeErrPtr);
 }
 #pragma warning restore SYSLIB1054
