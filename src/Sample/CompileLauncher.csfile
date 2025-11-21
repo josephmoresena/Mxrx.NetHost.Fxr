@@ -85,9 +85,7 @@ public enum NetVersion : Byte
 {
 	Net80 = 8,
 	Net90 = 9,
-#if NET10_0_OR_GREATER
 	Net100 = 10,
-#endif
 }
 
 public readonly record struct NetPublish

@@ -64,8 +64,10 @@ Represents an abstraction over the native `hostfxr` library.
   default `FrameworkResolver` instance.
 * **LoadResolver(GetHostPathParameters)**: Using the `nethost` library static linked loads the default `hostfxr` native
   library and returns a new `FrameworkResolver` instance.
-* **LoadResolver(String)**: Loads the native `hostfxr` and returns a new `FrameworkResolver` instance.
-* **GetActiveOrLoad(String, out Boolean)**: Returns the current `FrameworkResolver` or loads a new one.
+* **LoadResolver(String)**: Loads the native `hostfxr` native library and returns a new `FrameworkResolver` instance.
+* **LoadResolver(IntPtr)**: Using the `hostfxr` library handle returns a new `FrameworkResolver` instance.
+* **GetActiveOrLoad(String, out Boolean)**: Returns the current `FrameworkResolver` or loads the native `hostfxr` native
+  library and new one.
 
 ### HostContext
 
