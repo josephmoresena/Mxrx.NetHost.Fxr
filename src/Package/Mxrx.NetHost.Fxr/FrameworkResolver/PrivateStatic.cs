@@ -78,20 +78,6 @@ public abstract unsafe partial class FrameworkResolver
 		return FrameworkResolver.loadedResolver;
 	}
 	/// <summary>
-	/// Retrieves address of an exported method.
-	/// </summary>
-	/// <param name="handle">Handle to library.</param>
-	/// <param name="functions">A <see cref="IntPtr"/> span.</param>
-	/// <param name="methodName">Exported symbol name.</param>
-	/// <param name="index">Span index destination.</param>
-	/// <exception cref="ArgumentException">If <paramref name="methodName"/> symbol was not found.</exception>
-	private static void GetAddress(IntPtr handle, Span<IntPtr> functions, String methodName, Int32 index)
-	{
-		if (NativeLibrary.TryGetExport(handle, methodName, out functions[index])) return;
-		IMessageResource resource = IMessageResource.GetInstance();
-		throw new ArgumentException(resource.InvalidLibrary(methodName));
-	}
-	/// <summary>
 	/// Retrieves the number of handles required for <paramref name="args"/> values.
 	/// </summary>
 	/// <param name="args">A <see cref="ArgumentsParameter"/> instance.</param>

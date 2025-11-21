@@ -4,7 +4,6 @@ namespace Mxrx.NetHost.Internal;
 /// Stores a text parameter.
 /// </summary>
 #if !PACKAGE
-[ExcludeFromCodeCoverage]
 [SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS6640,
                  Justification = Constants.SecureUnsafeCodeJustification)]
 #endif

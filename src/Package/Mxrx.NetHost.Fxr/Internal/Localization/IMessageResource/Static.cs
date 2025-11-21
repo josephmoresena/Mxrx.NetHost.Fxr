@@ -6,9 +6,6 @@ internal partial interface IMessageResource
 	/// Retrieves internal resource objects.
 	/// </summary>
 	/// <returns>Resource resource object.</returns>
-#if !PACKAGE
-	[ExcludeFromCodeCoverage]
-#endif
 	public static IMessageResource GetInstance()
 	{
 		IMessageResource result = IMessageResource.GetInstance<DefaultMessageResource>();
@@ -34,8 +31,5 @@ internal partial interface IMessageResource
 	/// </summary>
 	/// <typeparam name="TResource">A <see cref="IMessageResource"/> type.</typeparam>
 	/// <returns>Resource resource object.</returns>
-#if !PACKAGE
-	[ExcludeFromCodeCoverage]
-#endif
 	private static IMessageResource GetInstance<TResource>() where TResource : IMessageResource => TResource.Instance;
 }

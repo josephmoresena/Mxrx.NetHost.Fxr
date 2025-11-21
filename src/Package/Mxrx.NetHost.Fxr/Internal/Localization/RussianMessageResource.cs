@@ -3,9 +3,6 @@ namespace Mxrx.NetHost.Internal.Localization;
 /// <summary>
 /// Russian message resource.
 /// </summary>
-#if !PACKAGE
-[ExcludeFromCodeCoverage]
-#endif
 internal sealed class RussianMessageResource : IMessageResource
 {
 	/// <inheritdoc cref="IMessageResource.Instance"/>

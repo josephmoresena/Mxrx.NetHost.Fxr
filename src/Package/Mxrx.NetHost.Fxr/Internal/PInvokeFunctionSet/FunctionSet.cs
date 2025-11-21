@@ -6,7 +6,6 @@ internal abstract unsafe partial class PInvokeFunctionSet
 	/// Function set.
 	/// </summary>
 #if !PACKAGE
-	[ExcludeFromCodeCoverage]
 	[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS6640,
 	                 Justification = Constants.SecureUnsafeCodeJustification)]
 #endif

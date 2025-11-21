@@ -1,7 +1,8 @@
 namespace Mxrx.NetHost;
 
 #if !PACKAGE
-[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3881, Justification = Constants.OptimizedJustification)]
+[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS6640,
+                 Justification = Constants.SecureUnsafeCodeJustification)]
 #endif
 public unsafe partial class FrameworkResolver
 {
@@ -14,6 +15,23 @@ public unsafe partial class FrameworkResolver
 	/// Parameterless constructor.
 	/// </summary>
 	private protected FrameworkResolver() : this(IntPtr.Zero) { }
+
+	/// <summary>
+	/// Retrieves function pointer delegate for <paramref name="info"/>.
+	/// </summary>
+	/// <param name="hostContext">A <see cref="HostHandle"/> instance.</param>
+	/// <param name="info">A <see cref="NetFunctionInfo"/> instance.</param>
+	/// <returns>Pointer to delegate.</returns>
+	protected internal abstract IntPtr GetFunctionPointer(HostContext hostContext, NetFunctionInfo info);
+	/// <summary>
+	/// Retrieves the function pointer of <paramref name="delegateType"/> for <paramref name="hostContext"/> instance.
+	/// </summary>
+	/// <param name="hostContext">A <see cref="HostContext"/> instance.</param>
+	/// <param name="delegateType">A <see cref="RuntimeDelegateType"/> value.</param>
+	/// <returns>
+	/// Runtime function pointer of <paramref name="delegateType"/> for <paramref name="hostContext"/> instance.
+	/// </returns>
+	protected internal abstract IntPtr GetFunctionPointer(HostContext hostContext, RuntimeDelegateType delegateType);
 
 	/// <summary>
 	/// Loads assembly for <paramref name="parameters"/>
@@ -37,34 +55,6 @@ public unsafe partial class FrameworkResolver
 			FrameworkResolver.ThrowIfInvalidResult(value);
 		}
 	}
-
-	/// <summary>
-	/// Closes given host.
-	/// </summary>
-	/// <param name="hostContext">A <see cref="HostHandle"/> instance.</param>
-	protected abstract void CloseHandle(HostContext hostContext);
-	/// <summary>
-	/// Configures the error writer pointer for <paramref name="hostContext"/>.
-	/// </summary>
-	/// <param name="hostContext">A <see cref="HostHandle"/> instance.</param>
-	/// <param name="writeErrorPtr">Pointer to error writer function.</param>
-	protected internal abstract void SetErrorWriter(HostContext hostContext, IntPtr writeErrorPtr);
-	/// <summary>
-	/// Retrieves function pointer delegate for <paramref name="info"/>.
-	/// </summary>
-	/// <param name="hostContext">A <see cref="HostHandle"/> instance.</param>
-	/// <param name="info">A <see cref="NetFunctionInfo"/> instance.</param>
-	/// <returns>Pointer to delegate.</returns>
-	protected internal abstract IntPtr GetFunctionPointer(HostContext hostContext, NetFunctionInfo info);
-	/// <summary>
-	/// Retrieves the function pointer of <paramref name="delegateType"/> for <paramref name="hostContext"/> instance.
-	/// </summary>
-	/// <param name="hostContext">A <see cref="HostContext"/> instance.</param>
-	/// <param name="delegateType">A <see cref="RuntimeDelegateType"/> value.</param>
-	/// <returns>
-	/// Runtime function pointer of <paramref name="delegateType"/> for <paramref name="hostContext"/> instance.
-	/// </returns>
-	protected internal abstract IntPtr GetFunctionPointer(HostContext hostContext, RuntimeDelegateType delegateType);
 	/// <summary>
 	/// Retrieves the <see cref="VolatileText"/> from <paramref name="propertyName"/>.
 	/// </summary>
@@ -81,15 +71,24 @@ public unsafe partial class FrameworkResolver
 	protected internal abstract void SetProperty(HostContext hostContext, VolatileText propertyName,
 		VolatileText propertyValue);
 	/// <summary>
+	/// Configures the error writer pointer for <paramref name="hostContext"/>.
+	/// </summary>
+	/// <param name="hostContext">A <see cref="HostHandle"/> instance.</param>
+	/// <param name="writeErrorPtr">Pointer to error writer function.</param>
+	protected internal abstract void SetErrorWriter(HostContext hostContext, IntPtr writeErrorPtr);
+
+	/// <inheritdoc cref="IDisposable.Dispose()"/>
+	protected abstract void Dispose(Boolean disposing);
+	/// <summary>
 	/// Runs application from <paramref name="hostContext"/> instance.
 	/// </summary>
 	/// <param name="hostContext">A <see cref="HostHandle"/> instance.</param>
 	protected abstract Int32 RunAsApplication(HostContext hostContext);
-	/// <inheritdoc cref="IDisposable.Dispose()"/>
-	protected virtual void Dispose(Boolean disposing)
-	{
-		// NOP
-	}
+	/// <summary>
+	/// Closes given host.
+	/// </summary>
+	/// <param name="hostContext">A <see cref="HostHandle"/> instance.</param>
+	protected abstract void CloseHandle(HostContext hostContext);
 
 	/// <summary>
 	/// Retrieves the length of the host path.
@@ -102,7 +101,6 @@ public unsafe partial class FrameworkResolver
 		_ = FrameworkResolver.GetHostPath(default, ref result, in parameters);
 		return result;
 	}
-
 #pragma warning disable SYSLIB1054
 	/// <summary>
 	/// Static entry point to <c>get_hostfxr_path</c> method.

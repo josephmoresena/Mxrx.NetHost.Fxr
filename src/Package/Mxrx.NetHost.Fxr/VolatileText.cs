@@ -3,9 +3,6 @@ namespace Mxrx.NetHost;
 /// <summary>
 /// Stores a volatile text parameter.
 /// </summary>
-#if !PACKAGE
-[ExcludeFromCodeCoverage]
-#endif
 public ref partial struct VolatileText
 {
 	/// <summary>

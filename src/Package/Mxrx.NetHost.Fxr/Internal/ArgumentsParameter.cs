@@ -3,9 +3,6 @@ namespace Mxrx.NetHost.Internal;
 /// <summary>
 /// Builder struct for <see cref="InitializationParameters"/> type.
 /// </summary>
-#if !PACKAGE
-[ExcludeFromCodeCoverage]
-#endif
 internal readonly ref struct ArgumentsParameter
 {
 	/// <summary>

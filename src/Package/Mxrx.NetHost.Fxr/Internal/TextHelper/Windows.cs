@@ -1,5 +1,10 @@
 namespace Mxrx.NetHost.Internal;
 
+#if !PACKAGE
+[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS6640,
+                 Justification = Constants.SecureUnsafeCodeJustification)]
+[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3881, Justification = Constants.OptimizedJustification)]
+#endif
 internal abstract unsafe partial class TextHelper
 {
 	/// <summary>
@@ -8,6 +13,10 @@ internal abstract unsafe partial class TextHelper
 	private sealed class Windows : TextHelper
 	{
 		/// <inheritdoc/>
+#if !PACKAGE
+		[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3358,
+		                 Justification = Constants.OptimizedJustification)]
+#endif
 		public override ref NativeChar GetRef(TextParameter text, out Array? chars)
 		{
 			chars = null;
@@ -46,6 +55,11 @@ internal abstract unsafe partial class TextHelper
 			=> VolatileText.CreateLiteral(
 				MemoryMarshal.CreateReadOnlySpanFromNullTerminated((Char*)charPointer.Pointer));
 		/// <inheritdoc/>
+#if !PACKAGE
+		[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3218)]
+		[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3358,
+		                 Justification = Constants.OptimizedJustification)]
+#endif
 		public override void Clean(ReadOnlySpan<Array?> arrays, Span<ArgHandle> handles = default)
 		{
 			ref Char[]? aRef = ref Unsafe.As<Array?, Char[]?>(ref MemoryMarshal.GetReference(arrays));

@@ -4,7 +4,6 @@ namespace Mxrx.NetHost.Internal;
 /// P/Invoke <c>Hostfxr</c> library exported methods.
 /// </summary>
 #if !PACKAGE
-[ExcludeFromCodeCoverage]
 [SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS6640,
                  Justification = Constants.SecureUnsafeCodeJustification)]
 #endif

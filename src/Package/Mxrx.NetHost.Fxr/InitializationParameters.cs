@@ -3,9 +3,6 @@ namespace Mxrx.NetHost;
 /// <summary>
 /// Parameters for runtime context initialization.
 /// </summary>
-#if !PACKAGE
-[ExcludeFromCodeCoverage]
-#endif
 public ref partial struct InitializationParameters
 {
 	/// <summary>

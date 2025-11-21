@@ -54,6 +54,9 @@ internal abstract unsafe partial class TextHelper
 			=> VolatileText.CreateLiteral(
 				MemoryMarshal.CreateReadOnlySpanFromNullTerminated((Byte*)charPointer.Pointer));
 		/// <inheritdoc/>
+#if !PACKAGE
+		[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3218)]
+#endif
 		public override void Clean(ReadOnlySpan<Array?> arrays, Span<ArgHandle> handles = default)
 		{
 			ref Byte[]? aRef = ref Unsafe.As<Array?, Byte[]?>(ref MemoryMarshal.GetReference(arrays));

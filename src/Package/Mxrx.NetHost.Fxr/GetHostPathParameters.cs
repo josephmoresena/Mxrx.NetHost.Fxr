@@ -3,9 +3,6 @@ namespace Mxrx.NetHost;
 /// <summary>
 /// Parameters for get host path.
 /// </summary>
-#if !PACKAGE
-[ExcludeFromCodeCoverage]
-#endif
 public ref partial struct GetHostPathParameters
 {
 	/// <summary>

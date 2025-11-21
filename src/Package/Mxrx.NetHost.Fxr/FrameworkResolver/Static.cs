@@ -21,10 +21,6 @@ public abstract partial class FrameworkResolver
 	/// </summary>
 	/// <returns>A <see cref="FrameworkResolver"/> instance.</returns>
 	/// <remarks>When this method is used, the .NET Host must be statically linked.</remarks>
-#if !PACKAGE
-	[ExcludeFromCodeCoverage]
-	[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3881, Justification = Constants.OptimizedJustification)]
-#endif
 	public static FrameworkResolver LoadResolver(GetHostPathParameters parameters = default)
 	{
 		String libraryPath = parameters.IsEmpty ?

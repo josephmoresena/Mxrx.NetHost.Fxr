@@ -116,6 +116,18 @@ public partial class FrameworkResolver
 #if !PACKAGE
 		[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3218)]
 #endif
+		protected internal override IntPtr GetFunctionPointer(HostContext hostContext, RuntimeDelegateType delegateType)
+		{
+			this._clrInitialized = true;
+			RuntimeCallResult value =
+				this._func.GetFunctionPointer(hostContext.Handle, delegateType, out IntPtr funcPtr);
+			FrameworkResolver.ThrowIfInvalidResult(value);
+			return funcPtr;
+		}
+		/// <inheritdoc/>
+#if !PACKAGE
+		[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3218)]
+#endif
 		protected internal override IntPtr GetFunctionPointer(HostContext hostContext, NetFunctionInfo info)
 		{
 			IntPtr result;
@@ -220,6 +232,9 @@ public partial class FrameworkResolver
 				}
 			}
 		}
+		/// <inheritdoc/>
+		protected internal override void SetErrorWriter(HostContext hostContext, IntPtr writeErrorPtr)
+			=> this._func.SetError(hostContext.Handle, (void*)writeErrorPtr);
 
 		/// <inheritdoc/>
 		protected override void Dispose(Boolean disposing)
@@ -227,12 +242,6 @@ public partial class FrameworkResolver
 			if (disposing)
 				NativeLibrary.Free(this._handle);
 		}
-
-		/// <inheritdoc/>
-		protected internal override void SetErrorWriter(HostContext hostContext, IntPtr writeErrorPtr)
-			=> this._func.SetError(hostContext.Handle, (void*)writeErrorPtr);
-		/// <inheritdoc/>
-		protected override void CloseHandle(HostContext hostContext) => this._func.CloseContext(hostContext.Handle);
 		/// <inheritdoc/>
 		protected override Int32 RunAsApplication(HostContext hostContext)
 		{
@@ -240,16 +249,6 @@ public partial class FrameworkResolver
 			return this._func.RunApp(hostContext.Handle);
 		}
 		/// <inheritdoc/>
-#if !PACKAGE
-		[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3218)]
-#endif
-		protected internal override IntPtr GetFunctionPointer(HostContext hostContext, RuntimeDelegateType delegateType)
-		{
-			this._clrInitialized = true;
-			RuntimeCallResult value =
-				this._func.GetFunctionPointer(hostContext.Handle, delegateType, out IntPtr funcPtr);
-			FrameworkResolver.ThrowIfInvalidResult(value);
-			return funcPtr;
-		}
+		protected override void CloseHandle(HostContext hostContext) => this._func.CloseContext(hostContext.Handle);
 	}
 }

@@ -52,7 +52,7 @@
 
     <ItemGroup>
         <PackageReference Include="Rxmxnx.PInvoke.Extensions" Version="2.7.4"/>
-        <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage"/>
+        <AssemblyAttribute Condition="'$(Package)' != 'true'" Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage"/>
     </ItemGroup>
 
     <!-- Package properties -->
