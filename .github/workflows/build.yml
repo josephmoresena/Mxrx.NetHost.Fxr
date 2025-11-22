@@ -205,8 +205,8 @@ jobs:
       - name: Remove Native Logs
         shell: pwsh
         run: |
-          if (Test-Path ./artifacts/native) {
-              Remove-Item -Recurse -Force ./artifacts/native/*
+          if (Test-Path ./Artifacts/Native/) {
+              Remove-Item -Recurse -Force ./Artifacts/Native/*
           }
 
       - name: Publish Sample application
