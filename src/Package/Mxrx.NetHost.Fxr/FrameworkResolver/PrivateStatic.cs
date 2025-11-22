@@ -174,7 +174,7 @@ public abstract unsafe partial class FrameworkResolver
 				FrameworkResolver.GetHostPath(charsPtr, ref pathLength, in Unsafe.NullRef<HostPathParameters>());
 			FrameworkResolver.ThrowIfInvalidResult(callResult);
 		}
-		return TextHelper.Instance.GetString(chars);
+		return TextHelper.GetString(chars);
 	}
 	/// <summary>
 	/// Retrieves the library path compatible with <paramref name="parameters"/> instance.
@@ -182,9 +182,8 @@ public abstract unsafe partial class FrameworkResolver
 	/// <returns>A host library path.</returns>
 	private static String GetLibraryPath(GetHostPathParameters parameters)
 	{
-		fixed (NativeChar* assemblyPathPtr =
-			       &TextHelper.Instance.GetRef(parameters.AssemblyPath, out Array? assemblyPathArray))
-		fixed (NativeChar* rootPathPtr = &TextHelper.Instance.GetRef(parameters.RootPath, out Array? rootPathArray))
+		fixed (NativeChar* assemblyPathPtr = &TextHelper.GetRef(parameters.AssemblyPath, out Array? assemblyPathArray))
+		fixed (NativeChar* rootPathPtr = &TextHelper.GetRef(parameters.RootPath, out Array? rootPathArray))
 		{
 			try
 			{
@@ -197,11 +196,11 @@ public abstract unsafe partial class FrameworkResolver
 						FrameworkResolver.GetHostPath(charsPtr, ref pathLength, in hostPathParameters);
 					FrameworkResolver.ThrowIfInvalidResult(callResult);
 				}
-				return TextHelper.Instance.GetString(chars);
+				return TextHelper.GetString(chars);
 			}
 			finally
 			{
-				TextHelper.Instance.Clean([assemblyPathArray, rootPathArray,]);
+				TextHelper.Clean([assemblyPathArray, rootPathArray,]);
 			}
 		}
 	}

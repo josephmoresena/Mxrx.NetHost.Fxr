@@ -1,23 +1,23 @@
 namespace Mxrx.NetHost.Internal;
 
-#if !PACKAGE
-[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS6640,
-                 Justification = Constants.SecureUnsafeCodeJustification)]
-[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3881, Justification = Constants.OptimizedJustification)]
-#endif
-internal abstract unsafe partial class TextHelper
+internal abstract partial class TextHelper
 {
 	/// <summary>
 	/// Text helper implementation for Windows OS.
 	/// </summary>
-	private sealed class Windows : TextHelper
+#if !PACKAGE
+	[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS6640,
+	                 Justification = Constants.SecureUnsafeCodeJustification)]
+	[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3881, Justification = Constants.OptimizedJustification)]
+#endif
+	private sealed unsafe class Windows : TextHelper
 	{
 		/// <inheritdoc/>
 #if !PACKAGE
 		[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3358,
 		                 Justification = Constants.OptimizedJustification)]
 #endif
-		public override ref NativeChar GetRef(TextParameter text, out Array? chars)
+		protected override ref NativeChar GetRefImpl(TextParameter text, out Array? chars)
 		{
 			chars = null;
 			if (text.IsEmpty)
@@ -40,7 +40,7 @@ internal abstract unsafe partial class TextHelper
 			return ref MemoryMarshal.GetReference(charSpan.AsValues<Char, NativeChar>());
 		}
 		/// <inheritdoc/>
-		public override Int32 LoadArgsAddr(ArgumentsParameter args, Span<NativeCharPointer> addr,
+		protected override Int32 LoadArgsAddrImpl(ArgumentsParameter args, Span<NativeCharPointer> addr,
 			Span<ArgHandle> handles)
 		{
 			if (args.IsEmpty) return 0;
@@ -51,7 +51,7 @@ internal abstract unsafe partial class TextHelper
 			return args.Sequence.NonEmptyCount;
 		}
 		/// <inheritdoc/>
-		public override VolatileText CreateLiteral(NativeCharPointer charPointer)
+		protected override VolatileText CreateLiteralImpl(NativeCharPointer charPointer)
 			=> VolatileText.CreateLiteral(
 				MemoryMarshal.CreateReadOnlySpanFromNullTerminated((Char*)charPointer.Pointer));
 		/// <inheritdoc/>
@@ -60,13 +60,14 @@ internal abstract unsafe partial class TextHelper
 		[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3358,
 		                 Justification = Constants.OptimizedJustification)]
 #endif
-		public override void Clean(ReadOnlySpan<Array?> arrays, Span<ArgHandle> handles = default)
+		protected override void CleanImpl(ReadOnlySpan<Array?> arrays, Span<ArgHandle> handles = default)
 		{
 			ref Char[]? aRef = ref Unsafe.As<Array?, Char[]?>(ref MemoryMarshal.GetReference(arrays));
 			TextHelper.Clean(MemoryMarshal.CreateReadOnlySpan(ref aRef, arrays.Length), handles);
 		}
 		/// <inheritdoc/>
-		public override String GetString(ReadOnlySpan<NativeChar> chars) => new(chars.AsValues<NativeChar, Char>());
+		protected override String GetStringImpl(ReadOnlySpan<NativeChar> chars)
+			=> new(chars.AsValues<NativeChar, Char>());
 
 		/// <summary>
 		/// Loads addresses to arguments values from <paramref name="args"/> at <paramref name="addr"/>

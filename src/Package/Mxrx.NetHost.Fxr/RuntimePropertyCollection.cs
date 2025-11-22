@@ -66,7 +66,7 @@ public readonly ref struct RuntimePropertyCollection
 			throw new ArgumentOutOfRangeException(nameof(index));
 		if (this._isDisposed.Value) return default;
 		NativeCharPointer charPointer = source[index];
-		VolatileText result = TextHelper.Instance.CreateLiteral(charPointer);
+		VolatileText result = TextHelper.CreateLiteral(charPointer);
 		result.IsDisposed = this._isDisposed;
 		return result;
 	}

@@ -1,14 +1,18 @@
 namespace Mxrx.NetHost.Internal;
 
-internal abstract unsafe partial class TextHelper
+internal abstract partial class TextHelper
 {
 	/// <summary>
 	/// Text helper implementation for Unix-like OS.
 	/// </summary>
-	private sealed class Unix : TextHelper
+#if !PACKAGE
+	[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS6640,
+	                 Justification = Constants.SecureUnsafeCodeJustification)]
+#endif
+	private sealed unsafe class Unix : TextHelper
 	{
 		/// <inheritdoc/>
-		public override ref NativeChar GetRef(TextParameter text, out Array? chars)
+		protected override ref NativeChar GetRefImpl(TextParameter text, out Array? chars)
 		{
 			chars = null;
 			if (text.IsEmpty)
@@ -38,7 +42,7 @@ internal abstract unsafe partial class TextHelper
 			return ref MemoryMarshal.GetReference(((Byte[])chars).AsSpan().AsValues<Byte, NativeChar>());
 		}
 		/// <inheritdoc/>
-		public override Int32 LoadArgsAddr(ArgumentsParameter args, Span<NativeCharPointer> addr,
+		protected override Int32 LoadArgsAddrImpl(ArgumentsParameter args, Span<NativeCharPointer> addr,
 			Span<ArgHandle> handles)
 		{
 			if (args.IsEmpty) return 0;
@@ -50,20 +54,21 @@ internal abstract unsafe partial class TextHelper
 			return args.Sequence.NonEmptyCount;
 		}
 		/// <inheritdoc/>
-		public override VolatileText CreateLiteral(NativeCharPointer charPointer)
+		protected override VolatileText CreateLiteralImpl(NativeCharPointer charPointer)
 			=> VolatileText.CreateLiteral(
 				MemoryMarshal.CreateReadOnlySpanFromNullTerminated((Byte*)charPointer.Pointer));
 		/// <inheritdoc/>
 #if !PACKAGE
 		[SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3218)]
 #endif
-		public override void Clean(ReadOnlySpan<Array?> arrays, Span<ArgHandle> handles = default)
+		protected override void CleanImpl(ReadOnlySpan<Array?> arrays, Span<ArgHandle> handles = default)
 		{
 			ref Byte[]? aRef = ref Unsafe.As<Array?, Byte[]?>(ref MemoryMarshal.GetReference(arrays));
 			TextHelper.Clean(MemoryMarshal.CreateReadOnlySpan(ref aRef, arrays.Length), handles);
 		}
 		/// <inheritdoc/>
-		public override String GetString(ReadOnlySpan<NativeChar> chars) => Encoding.UTF8.GetString(chars.AsBytes());
+		protected override String GetStringImpl(ReadOnlySpan<NativeChar> chars)
+			=> Encoding.UTF8.GetString(chars.AsBytes());
 
 		/// <summary>
 		/// Loads addresses to arguments values from <paramref name="args"/> at <paramref name="addr"/>

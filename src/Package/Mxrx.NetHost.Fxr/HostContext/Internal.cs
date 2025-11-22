@@ -7,10 +7,6 @@ public abstract partial class HostContext
 	/// </summary>
 	internal HostHandle Handle { get; }
 	/// <summary>
-	/// Host context error delegate.
-	/// </summary>
-	internal Delegate WriteErrorDelegate { get; }
-	/// <summary>
 	/// Retrieves the current <see cref="TextInvalidator"/> instance.
 	/// </summary>
 	internal TextInvalidator TextInvalidator => new(this._isDisposed, this._control);
@@ -112,8 +108,5 @@ public abstract partial class HostContext
 		this.Resolver = resolver;
 		this.IsCommandLine = isCommandLine;
 		this.Handle = handle;
-		this.WriteErrorDelegate = SystemInfo.IsWindows ?
-			(WriteErrorFromPointerDelegate)this.WriteError :
-			(WriteUtfErrorFromPointerDelegate)this.WriteUtfError;
 	}
 }

@@ -10,8 +10,7 @@ public abstract partial class FrameworkResolver
 	[UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Aot safe method.")]
 	internal static void ConfigureErrorWriter(HostContext hostContext, Boolean clear)
 	{
-		IntPtr writeErrorPtr =
-			clear ? IntPtr.Zero : Marshal.GetFunctionPointerForDelegate(hostContext.WriteErrorDelegate);
+		IntPtr writeErrorPtr = clear ? IntPtr.Zero : ErrorHelper.WriteErrorPtr;
 		hostContext.Resolver.SetErrorWriter(hostContext, writeErrorPtr);
 	}
 	/// <summary>

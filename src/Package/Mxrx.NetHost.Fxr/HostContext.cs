@@ -50,8 +50,7 @@ public abstract partial class HostContext : IDisposable
 	public void ClearErrorWriter()
 	{
 		this.ThrowIfDisposed();
-		this._writeError = default;
-		this._writeUtfError = default;
+		ErrorHelper.Clear();
 		FrameworkResolver.ConfigureErrorWriter(this, true);
 	}
 	/// <summary>
@@ -61,8 +60,7 @@ public abstract partial class HostContext : IDisposable
 	public void SetErrorWriter(WriteErrorDelegate writeError)
 	{
 		this.ThrowIfDisposed();
-		this._writeError = writeError;
-		this._writeUtfError = default;
+		ErrorHelper.SetErrorWriter(writeError);
 		FrameworkResolver.ConfigureErrorWriter(this, false);
 	}
 	/// <summary>
@@ -72,8 +70,7 @@ public abstract partial class HostContext : IDisposable
 	public void SetErrorWriter(WriteUtfErrorDelegate writeUtfError)
 	{
 		this.ThrowIfDisposed();
-		this._writeError = default;
-		this._writeUtfError = writeUtfError;
+		ErrorHelper.SetErrorWriter(writeUtfError);
 		FrameworkResolver.ConfigureErrorWriter(this, false);
 	}
 	/// <summary>

@@ -71,12 +71,10 @@ public partial class FrameworkResolver
 			else
 			{
 				Span<ArgHandle> handles = stackalloc ArgHandle[FrameworkResolver.GetHandlesCount(parameters.Arguments)];
-				fixed (NativeChar* hostPathPtr =
-					       &TextHelper.Instance.GetRef(parameters.HostPath, out Array? hostPathArray))
-				fixed (NativeChar* rootPathPtr =
-					       &TextHelper.Instance.GetRef(parameters.RootPath, out Array? rootPathArray))
+				fixed (NativeChar* hostPathPtr = &TextHelper.GetRef(parameters.HostPath, out Array? hostPathArray))
+				fixed (NativeChar* rootPathPtr = &TextHelper.GetRef(parameters.RootPath, out Array? rootPathArray))
 				fixed (NativeChar* configPathPtr =
-					       &TextHelper.Instance.GetRef(parameters.ConfigPath, out Array? configPathArray))
+					       &TextHelper.GetRef(parameters.ConfigPath, out Array? configPathArray))
 				{
 					try
 					{
@@ -96,14 +94,14 @@ public partial class FrameworkResolver
 						{
 							Span<NativeCharPointer> addresses =
 								stackalloc NativeCharPointer[parameters.Arguments.Count];
-							Int32 argCount = TextHelper.Instance.LoadArgsAddr(parameters.Arguments, addresses, handles);
+							Int32 argCount = TextHelper.LoadArgsAddr(parameters.Arguments, addresses, handles);
 							callResult = this._func.Initialize(argCount, addresses.GetUnsafeValPtr(),
 							                                   in param, out hostHandle);
 						}
 					}
 					finally
 					{
-						TextHelper.Instance.Clean([hostPathArray, rootPathArray, configPathArray,], handles);
+						TextHelper.Clean([hostPathArray, rootPathArray, configPathArray,], handles);
 					}
 				}
 			}
@@ -135,12 +133,11 @@ public partial class FrameworkResolver
 
 			IntPtr result;
 			RuntimeCallResult value;
-			fixed (NativeChar* assemblyPathPtr =
-				       &TextHelper.Instance.GetRef(info.AssemblyPath, out Array? assemblyPathArray))
-			fixed (NativeChar* typeNamePtr = &TextHelper.Instance.GetRef(info.TypeName, out Array? typeNameArray))
-			fixed (NativeChar* methodNamePtr = &TextHelper.Instance.GetRef(info.MethodName, out Array? methodNameArray))
+			fixed (NativeChar* assemblyPathPtr = &TextHelper.GetRef(info.AssemblyPath, out Array? assemblyPathArray))
+			fixed (NativeChar* typeNamePtr = &TextHelper.GetRef(info.TypeName, out Array? typeNameArray))
+			fixed (NativeChar* methodNamePtr = &TextHelper.GetRef(info.MethodName, out Array? methodNameArray))
 			fixed (NativeChar* delegateTypeNamePtr =
-				       &TextHelper.Instance.GetRef(info.DelegateTypeName, out Array? delegateTypeNameArray))
+				       &TextHelper.GetRef(info.DelegateTypeName, out Array? delegateTypeNameArray))
 			{
 				try
 				{
@@ -157,7 +154,7 @@ public partial class FrameworkResolver
 				}
 				finally
 				{
-					TextHelper.Instance.Clean([
+					TextHelper.Clean([
 						assemblyPathArray, typeNameArray, methodNameArray, delegateTypeNameArray,
 					]);
 				}
@@ -180,13 +177,13 @@ public partial class FrameworkResolver
 					value = FrameworkResolver.LoadAssemblyFromBytes(hostContext.LoadAssemblyFromBytesPtr, parameters);
 				else
 					fixed (NativeChar* assemblyPathPtr =
-						       &TextHelper.Instance.GetRef(parameters.AssemblyPath, out assemblyPathArray))
+						       &TextHelper.GetRef(parameters.AssemblyPath, out assemblyPathArray))
 						value = FrameworkResolver.LoadAssemblyFromPath(hostContext.LoadAssemblyPtr, assemblyPathPtr);
 			}
 			finally
 			{
 				FrameworkResolver.ThrowIfInvalidResult(value);
-				TextHelper.Instance.Clean([assemblyPathArray,]);
+				TextHelper.Clean([assemblyPathArray,]);
 			}
 		}
 		/// <inheritdoc/>
@@ -214,8 +211,7 @@ public partial class FrameworkResolver
 		{
 			this._clrInitialized = true;
 
-			fixed (NativeChar* propertyNamePtr =
-				       &TextHelper.Instance.GetRef(propertyName.Text, out Array? propertyNameArray))
+			fixed (NativeChar* propertyNamePtr = &TextHelper.GetRef(propertyName.Text, out Array? propertyNameArray))
 			{
 				try
 				{
@@ -223,13 +219,13 @@ public partial class FrameworkResolver
 						hostContext.Handle, new() { Pointer = propertyNamePtr, }, out NativeCharPointer value);
 					FrameworkResolver.ThrowIfInvalidResult(callResult);
 
-					VolatileText result = TextHelper.Instance.CreateLiteral(value);
+					VolatileText result = TextHelper.CreateLiteral(value);
 					result.IsDisposed = hostContext.TextInvalidator;
 					return result;
 				}
 				finally
 				{
-					TextHelper.Instance.Clean([propertyNameArray,]);
+					TextHelper.Clean([propertyNameArray,]);
 				}
 			}
 		}
@@ -239,10 +235,8 @@ public partial class FrameworkResolver
 		{
 			this._clrInitialized = true;
 
-			fixed (NativeChar* propertyNamePtr =
-				       &TextHelper.Instance.GetRef(propertyName.Text, out Array? propertyNameArray))
-			fixed (NativeChar* propertyValuePtr =
-				       &TextHelper.Instance.GetRef(propertyValue.Text, out Array? propertyValueArray))
+			fixed (NativeChar* propertyNamePtr = &TextHelper.GetRef(propertyName.Text, out Array? propertyNameArray))
+			fixed (NativeChar* propertyValuePtr = &TextHelper.GetRef(propertyValue.Text, out Array? propertyValueArray))
 			{
 				try
 				{
@@ -253,7 +247,7 @@ public partial class FrameworkResolver
 				}
 				finally
 				{
-					TextHelper.Instance.Clean([propertyNameArray, propertyValueArray,]);
+					TextHelper.Clean([propertyNameArray, propertyValueArray,]);
 				}
 			}
 		}
