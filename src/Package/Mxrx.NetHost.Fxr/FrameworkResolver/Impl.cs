@@ -26,13 +26,14 @@ public partial class FrameworkResolver
 		/// <param name="handle">Native library handle.</param>
 		/// <param name="initializeFromHandle">Delegate for set initialization.</param>
 		/// <param name="path">Native library path.</param>
-		public Impl(IntPtr handle, InitializeFromHandle<TFunctionSet> initializeFromHandle,
-			String? path = default) : base(handle)
+		public Impl(IntPtr handle, InitializeFromHandle<TFunctionSet> initializeFromHandle, String? path = default) :
+			base(path is not null ? handle : IntPtr.Zero)
 		{
 			this.ResolverKey = (Object?)path ?? handle;
 			try
 			{
 				Int32 count = initializeFromHandle(handle, out this._func);
+				this._isDisposed = false;
 				if (count * IntPtr.Size == TFunctionSet.SizeOf) return;
 				// This will never execute.
 				throw new TypeInitializationException($"{typeof(TFunctionSet)}", default);
