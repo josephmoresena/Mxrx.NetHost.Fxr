@@ -18,8 +18,7 @@ internal abstract unsafe class ErrorHelper
 	/// Error write pointer.
 	/// </summary>
 	public static readonly IntPtr WriteErrorPtr =
-		Marshal.GetFunctionPointerForDelegate<WriteNativeErrorDelegate>(static p
-			                                                                => ErrorHelper.instance.WriteErrorImpl(p));
+		(IntPtr)(delegate* unmanaged<NativeCharPointer, void>)&ErrorHelper.NativeWriteError;
 
 	/// <summary>
 	/// Write error delegate.
@@ -64,6 +63,9 @@ internal abstract unsafe class ErrorHelper
 		ErrorHelper.writeError = default;
 		ErrorHelper.writeUtfError = default;
 	}
+
+	[UnmanagedCallersOnly]
+	private static void NativeWriteError(NativeCharPointer error0) => ErrorHelper.instance.WriteErrorImpl(error0);
 
 	/// <summary>
 	/// Error helper implementation for Windows OS.
