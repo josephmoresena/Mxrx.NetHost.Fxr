@@ -16,53 +16,54 @@ internal readonly unsafe struct NativeFunctionSet : IFunctionSet
 	/// <summary>
 	/// Address of <c>hostfxr_close</c>.
 	/// </summary>
-	public readonly delegate* unmanaged<HostHandle, RuntimeCallResult> CloseHandle;
+	public readonly delegate* unmanaged[Cdecl]<HostHandle, RuntimeCallResult> CloseHandle;
 	/// <summary>
 	/// Address of <c>hostfxr_get_runtime_delegate</c>.
 	/// </summary>
-	public readonly delegate* unmanaged<HostHandle, RuntimeDelegateType, out IntPtr, RuntimeCallResult> GetDelegate;
+	public readonly delegate* unmanaged[Cdecl]<HostHandle, RuntimeDelegateType, out IntPtr, RuntimeCallResult>
+		GetDelegate;
 	/// <summary>
 	/// Address of <c>hostfxr_get_runtime_properties</c>.
 	/// </summary>
-	public readonly delegate* unmanaged<HostHandle, ref UIntPtr, ref ReadOnlyValPtr<NativeCharPointer>, ref
+	public readonly delegate* unmanaged[Cdecl]<HostHandle, ref UIntPtr, ref ReadOnlyValPtr<NativeCharPointer>, ref
 		ReadOnlyValPtr<NativeCharPointer>, RuntimeCallResult> GetRuntimeProperties;
 	/// <summary>
 	/// Address of <c>hostfxr_get_runtime_property_value</c>.
 	/// </summary>
-	public readonly delegate* unmanaged<HostHandle, NativeCharPointer, out NativeCharPointer, RuntimeCallResult>
+	public readonly delegate* unmanaged[Cdecl]<HostHandle, NativeCharPointer, out NativeCharPointer, RuntimeCallResult>
 		GetRuntimePropertyValue;
 	/// <summary>
 	/// Address of <c>hostfxr_set_runtime_property_value</c>.
 	/// </summary>
-	public readonly delegate* unmanaged<HostHandle, NativeCharPointer, NativeCharPointer, RuntimeCallResult>
+	public readonly delegate* unmanaged[Cdecl]<HostHandle, NativeCharPointer, NativeCharPointer, RuntimeCallResult>
 		SetRuntimePropertyValue;
 	/// <summary>
 	/// Address of <c>hostfxr_initialize_for_dotnet_command_line</c>.
 	/// </summary>
-	public readonly delegate* unmanaged<Int32, NativeCharPointer*, in InitParameters, out HostHandle, RuntimeCallResult>
-		InitializeForCommand;
+	public readonly delegate* unmanaged[Cdecl]<Int32, NativeCharPointer*, in InitParameters, out HostHandle,
+		RuntimeCallResult> InitializeForCommand;
 	/// <summary>
 	/// Address of <c>hostfxr_initialize_for_runtime_config</c>.
 	/// </summary>
-	public readonly delegate* unmanaged<NativeCharPointer, in InitParameters, out HostHandle, RuntimeCallResult>
+	public readonly delegate* unmanaged[Cdecl]<NativeCharPointer, in InitParameters, out HostHandle, RuntimeCallResult>
 		InitializeForConfig;
 	/// <summary>
 	/// Address of <c>hostfxr_run_app</c>.
 	/// </summary>
-	public readonly delegate* unmanaged<HostHandle, Int32> RunApp;
+	public readonly delegate* unmanaged[Cdecl]<HostHandle, Int32> RunApp;
 	/// <summary>
 	/// Address of <c>hostfxr_set_error_writer</c>.
 	/// </summary>
-	public readonly delegate* unmanaged<HostHandle, void*, void*> SetErrorWriter;
+	public readonly delegate* unmanaged[Cdecl]<HostHandle, void*, void*> SetErrorWriter;
 #if !DISABLE_MAIN_CALLS
 	/// <summary>
 	/// Address of <c>hostfxr_main</c>.
 	/// </summary>
-	public readonly delegate* unmanaged<Int32, IntPtr*, RuntimeCallResult> Main;
+	public readonly delegate* unmanaged[Cdecl]<Int32, IntPtr*, RuntimeCallResult> Main;
 	/// <summary>
 	/// Address of <c>hostfxr_main_startupinfo</c>.
 	/// </summary>
-	public readonly delegate* unmanaged<Int32, IntPtr*, IntPtr, IntPtr, IntPtr, RuntimeCallResult> MainStartupInfo;
+	public readonly delegate* unmanaged[Cdecl]<Int32, IntPtr*, IntPtr, IntPtr, IntPtr, RuntimeCallResult> MainStartupInfo;
 #endif
 
 	RuntimeCallResult IFunctionSet.CloseContext(HostHandle handle) => this.CloseHandle(handle);
@@ -122,13 +123,13 @@ internal readonly unsafe struct NativeFunctionSet : IFunctionSet
 		                             result++);
 		NativeFunctionSet.GetAddress(libraryHandle, functions, IFrameworkResolverLibrary.InitializeForConfigSymbol,
 		                             result++);
+		NativeFunctionSet.GetAddress(libraryHandle, functions, IFrameworkResolverLibrary.RunAppSymbol, result++);
+		NativeFunctionSet.GetAddress(libraryHandle, functions, IFrameworkResolverLibrary.SetErrorWriterSymbol,
+		                             result++);
 #if !DISABLE_MAIN_CALLS
 		NativeFunctionSet.GetAddress(libraryHandle, functions, IFrameworkResolverLib.MainSymbol, result++);
 		NativeFunctionSet.GetAddress(libraryHandle, functions, IFrameworkResolverLib.MainStartupInfoSymbol, result++);
 #endif
-		NativeFunctionSet.GetAddress(libraryHandle, functions, IFrameworkResolverLibrary.RunAppSymbol, result++);
-		NativeFunctionSet.GetAddress(libraryHandle, functions, IFrameworkResolverLibrary.SetErrorWriterSymbol,
-		                             result++);
 		return result;
 	}
 
