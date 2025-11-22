@@ -86,7 +86,7 @@ public interface IFrameworkResolverLibrary
 		/// <param name="propValuesPtr">Output. Pointer to properties values buffer.</param>
 		/// <returns>Operation result.</returns>
 		static abstract RuntimeCallResult GetRuntimeProperties(HostHandle handle, ref UIntPtr propCount,
-			ref ReadOnlyValPtr<NativeCharPointer> propKeysPtr, ref ReadOnlyValPtr<NativeCharPointer> propValuesPtr);
+			ValPtr<NativeCharPointer> propKeysPtr, ValPtr<NativeCharPointer> propValuesPtr);
 		/// <summary>
 		/// Retrieves the runtime property of <paramref name="keyPtr"/> value.
 		/// </summary>

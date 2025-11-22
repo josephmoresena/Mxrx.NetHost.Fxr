@@ -55,6 +55,7 @@ return;
 static async Task RunApplication(FrameworkResolver fxr, String assemblyPath, Boolean useUftString)
 {
 	using HostContext context = fxr.Initialize(CreateApplicationInitParams(assemblyPath));
+	PrintContextInfo(context);
 	IsWaitingDelegate isWaitingPtr = context.GetFunctionPointer<IsWaitingDelegate>(GetIsWaitingFunctionInfo()).Invoke;
 	IntPtr helloPtr = context.GetFunctionPointer(GetHelloAppFunctionInfo());
 
@@ -74,6 +75,7 @@ static void UseLibrary(FrameworkResolver fxr, String assemblyPath, Boolean useUf
 		                                                              assemblyPath.Replace(
 			                                                              ".dll", ".runtimeconfig.json")).Build();
 	using HostContext context = fxr.Initialize(initParams);
+	PrintContextInfo(context);
 	DefaultDelegate hello = context.GetFunctionPointer<DefaultDelegate>(GetHelloLibFunctionInfo(assemblyPath)).Invoke;
 	IntPtr customUnmanagedHelloPtr = context.GetFunctionPointer(GetCustomHelloLibUnmanagedFunctionInfo(assemblyPath));
 	IntPtr customHelloPtr = context.GetFunctionPointer(GetCustomHelloLibFunctionInfo(assemblyPath));
@@ -192,6 +194,30 @@ static void PrintMissingArguments()
 #if !STATIC_HOST && !STATIC_LINK
 	Console.WriteLine("2: Native hostfxr library path.");
 #endif
+}
+static void PrintContextInfo(HostContext hostContext)
+{
+	const StringSplitOptions splitOptions = StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries;
+	Char[] separators = [Path.PathSeparator, ';',];
+
+	Console.WriteLine("===== Context Information =====");
+	RuntimePropertyCollection props = hostContext.GetRuntimeProperties();
+	Console.WriteLine($"Total Properties: {props.Count}");
+	Int32 i = 0;
+	foreach (RuntimePropertyPair prop in hostContext.GetRuntimeProperties())
+	{
+		String[] values = prop.Value.GetStringValue().Split(separators, splitOptions);
+		Console.Write($"{i++} -> {prop.Key.GetStringValue()}: ");
+		if (values.Length != 1)
+		{
+			Console.WriteLine();
+			for (Int32 j = 0; j < values.Length; j++)
+				Console.WriteLine($"\t{j} -> {values[j]}: ");
+			continue;
+		}
+		Console.WriteLine(values[0]);
+	}
+	Console.WriteLine("===== Context Information =====");
 }
 
 internal delegate void HelloDelegate(ReadOnlyValPtr<Char> message, Byte utf8);

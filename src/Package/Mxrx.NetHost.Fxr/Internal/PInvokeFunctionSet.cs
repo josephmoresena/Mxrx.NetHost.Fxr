@@ -16,9 +16,9 @@ internal abstract unsafe partial class PInvokeFunctionSet : IFunctionSet
 	RuntimeCallResult IFunctionSet.GetFunctionPointer(HostHandle handle, RuntimeDelegateType delegateType,
 		out IntPtr funcPtr)
 		=> this.GetFunctionPointerImpl(handle, delegateType, out funcPtr);
-	RuntimeCallResult IFunctionSet.GetRuntimeProperties(HostHandle handle, ref UIntPtr propCount,
-		out ReadOnlyValPtr<NativeCharPointer> propKeysPtr, out ReadOnlyValPtr<NativeCharPointer> propValuesPtr)
-		=> this.GetRuntimePropertiesImpl(handle, ref propCount, out propKeysPtr, out propValuesPtr);
+	RuntimeCallResult IFunctionSet.GetRuntimeProperties(HostHandle handle, UIntPtr propCount,
+		NativeCharPointer* propKeysPtr, NativeCharPointer* propValuesPtr)
+		=> this.GetRuntimePropertiesImpl(handle, ref propCount, propKeysPtr, propValuesPtr);
 	RuntimeCallResult IFunctionSet.CountRuntimeProperties(HostHandle handle, out UIntPtr propCount)
 		=> this.CountRuntimePropertiesImpl(handle, out propCount);
 	RuntimeCallResult IFunctionSet.GetRuntimePropertyValue(HostHandle handle, NativeCharPointer keyPtr,
@@ -42,9 +42,9 @@ internal abstract unsafe partial class PInvokeFunctionSet : IFunctionSet
 	private protected abstract RuntimeCallResult GetFunctionPointerImpl(HostHandle handle,
 		RuntimeDelegateType delegateType, out IntPtr funcPtr);
 	/// <inheritdoc
-	///     cref="IFunctionSet.GetRuntimeProperties(HostHandle, ref UIntPtr, out ReadOnlyValPtr{NativeCharPointer}, out ReadOnlyValPtr{NativeCharPointer})"/>
+	///     cref="IFunctionSet.GetRuntimeProperties(HostHandle, UIntPtr, NativeCharPointer*, NativeCharPointer*)"/>
 	private protected abstract RuntimeCallResult GetRuntimePropertiesImpl(HostHandle handle, ref UIntPtr propCount,
-		out ReadOnlyValPtr<NativeCharPointer> propKeysPtr, out ReadOnlyValPtr<NativeCharPointer> propValuesPtr);
+		NativeCharPointer* propKeysPtr, NativeCharPointer* propValuesPtr);
 	/// <inheritdoc cref="IFunctionSet.CountRuntimeProperties(HostHandle, out UIntPtr)"/>
 	private protected abstract RuntimeCallResult CountRuntimePropertiesImpl(HostHandle handle, out UIntPtr propCount);
 	/// <inheritdoc

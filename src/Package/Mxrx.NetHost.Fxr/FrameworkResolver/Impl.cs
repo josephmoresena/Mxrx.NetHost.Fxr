@@ -119,6 +119,7 @@ public partial class FrameworkResolver
 		protected internal override IntPtr GetFunctionPointer(HostContext hostContext, RuntimeDelegateType delegateType)
 		{
 			this._clrInitialized = true;
+
 			RuntimeCallResult value =
 				this._func.GetFunctionPointer(hostContext.Handle, delegateType, out IntPtr funcPtr);
 			FrameworkResolver.ThrowIfInvalidResult(value);
@@ -130,6 +131,8 @@ public partial class FrameworkResolver
 #endif
 		protected internal override IntPtr GetFunctionPointer(HostContext hostContext, NetFunctionInfo info)
 		{
+			this._clrInitialized = true;
+
 			IntPtr result;
 			RuntimeCallResult value;
 			fixed (NativeChar* assemblyPathPtr =
@@ -173,7 +176,6 @@ public partial class FrameworkResolver
 			Array? assemblyPathArray = default;
 			try
 			{
-				this._clrInitialized = true;
 				if (parameters.AssemblyPath.IsEmpty)
 					value = FrameworkResolver.LoadAssemblyFromBytes(hostContext.LoadAssemblyFromBytesPtr, parameters);
 				else
@@ -183,13 +185,35 @@ public partial class FrameworkResolver
 			}
 			finally
 			{
-				TextHelper.Instance.Clean([assemblyPathArray,]);
 				FrameworkResolver.ThrowIfInvalidResult(value);
+				TextHelper.Instance.Clean([assemblyPathArray,]);
 			}
+		}
+		/// <inheritdoc/>
+		protected internal override RuntimePropertyCollection GetRuntimeProperties(HostContext hostContext)
+		{
+			this._clrInitialized = true;
+
+			RuntimeCallResult callResult = this._func.CountRuntimeProperties(hostContext.Handle, out UIntPtr count);
+
+			if (callResult is not RuntimeCallResult.HostApiBufferTooSmall)
+				FrameworkResolver.ThrowIfInvalidResult(callResult);
+			else if (count == default)
+				return default;
+
+			PropertiesBuffer buffer = new(count);
+			fixed (NativeCharPointer* keysPtr = buffer.Keys)
+			fixed (NativeCharPointer* valuesPtr = buffer.Values)
+				callResult = this._func.GetRuntimeProperties(hostContext.Handle, count, keysPtr, valuesPtr);
+
+			FrameworkResolver.ThrowIfInvalidResult(callResult);
+			return new(hostContext.TextInvalidator, buffer);
 		}
 		/// <inheritdoc/>
 		protected internal override VolatileText GetProperty(HostContext hostContext, VolatileText propertyName)
 		{
+			this._clrInitialized = true;
+
 			fixed (NativeChar* propertyNamePtr =
 				       &TextHelper.Instance.GetRef(propertyName.Text, out Array? propertyNameArray))
 			{
@@ -197,8 +221,8 @@ public partial class FrameworkResolver
 				{
 					RuntimeCallResult callResult = this._func.GetRuntimePropertyValue(
 						hostContext.Handle, new() { Pointer = propertyNamePtr, }, out NativeCharPointer value);
-					this._clrInitialized = true;
 					FrameworkResolver.ThrowIfInvalidResult(callResult);
+
 					VolatileText result = TextHelper.Instance.CreateLiteral(value);
 					result.IsDisposed = hostContext.TextInvalidator;
 					return result;
@@ -213,6 +237,8 @@ public partial class FrameworkResolver
 		protected internal override void SetProperty(HostContext hostContext, VolatileText propertyName,
 			VolatileText propertyValue)
 		{
+			this._clrInitialized = true;
+
 			fixed (NativeChar* propertyNamePtr =
 				       &TextHelper.Instance.GetRef(propertyName.Text, out Array? propertyNameArray))
 			fixed (NativeChar* propertyValuePtr =
@@ -223,7 +249,6 @@ public partial class FrameworkResolver
 					RuntimeCallResult callResult = this._func.SetRuntimePropertyValue(
 						hostContext.Handle, new() { Pointer = propertyNamePtr, },
 						new() { Pointer = propertyValuePtr, });
-					this._clrInitialized = true;
 					FrameworkResolver.ThrowIfInvalidResult(callResult);
 				}
 				finally

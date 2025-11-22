@@ -23,7 +23,7 @@ internal class HostFxrLibrary : IFrameworkResolverLibrary.IPInvoke
 	[DllImport(HostFxrLibrary.libraryName, CallingConvention = CallingConvention.Cdecl,
 	           EntryPoint = IFrameworkResolverLibrary.GetRuntimePropertiesSymbol)]
 	public static extern RuntimeCallResult GetRuntimeProperties(HostHandle handle, ref UIntPtr propCount,
-		ref ReadOnlyValPtr<NativeCharPointer> propKeysPtr, ref ReadOnlyValPtr<NativeCharPointer> propValuesPtr);
+		ValPtr<NativeCharPointer> propKeysPtr, ValPtr<NativeCharPointer> propValuesPtr);
 	[DllImport(HostFxrLibrary.libraryName, CallingConvention = CallingConvention.Cdecl,
 	           EntryPoint = IFrameworkResolverLibrary.GetRuntimePropertyValueSymbol)]
 	public static extern RuntimeCallResult GetRuntimePropertyValue(HostHandle handle, NativeCharPointer keyPtr,

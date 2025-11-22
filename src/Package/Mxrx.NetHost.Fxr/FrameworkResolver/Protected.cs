@@ -56,6 +56,12 @@ public unsafe partial class FrameworkResolver
 		}
 	}
 	/// <summary>
+	/// Retrieves the collection of runtime properties.
+	/// </summary>
+	/// <param name="hostContext">A <see cref="HostContext"/> instance.</param>
+	/// <returns>A <see cref="RuntimePropertyCollection"/> instance.</returns>
+	protected internal abstract RuntimePropertyCollection GetRuntimeProperties(HostContext hostContext);
+	/// <summary>
 	/// Retrieves the <see cref="VolatileText"/> from <paramref name="propertyName"/>.
 	/// </summary>
 	/// <param name="hostContext">A <see cref="HostContext"/> instance.</param>

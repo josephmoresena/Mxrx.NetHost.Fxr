@@ -31,8 +31,8 @@ internal unsafe interface IFunctionSet : IFrameworkResolverLibrary
 	/// <param name="propKeysPtr">Output. Pointer to properties keys buffer.</param>
 	/// <param name="propValuesPtr">Output. Pointer to properties values buffer.</param>
 	/// <returns>Operation result.</returns>
-	RuntimeCallResult GetRuntimeProperties(HostHandle handle, ref UIntPtr propCount,
-		out ReadOnlyValPtr<NativeCharPointer> propKeysPtr, out ReadOnlyValPtr<NativeCharPointer> propValuesPtr);
+	RuntimeCallResult GetRuntimeProperties(HostHandle handle, UIntPtr propCount, NativeCharPointer* propKeysPtr,
+		NativeCharPointer* propValuesPtr);
 	/// <summary>
 	/// Retrieves the runtime properties count.
 	/// </summary>

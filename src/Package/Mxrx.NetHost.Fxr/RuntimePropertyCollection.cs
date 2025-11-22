@@ -21,12 +21,15 @@ public readonly ref struct RuntimePropertyCollection
 	/// Property values buffer.
 	/// </summary>
 	private readonly ReadOnlySpan<NativeCharPointer> _values;
+	/// <summary>
+	/// Finalizer object.
+	/// </summary>
+	private readonly PropertiesBuffer? _buffer;
 
 	/// <summary>
-	/// The number of properties in the current collection.
+	/// Number of properties in the current instance.
 	/// </summary>
-	public Int32 Count => this._keys.Length;
-
+	public Int32 Count => this._buffer?.Count ?? default;
 	/// <summary>
 	/// The <see cref="RuntimePropertyPair"/> for <paramref name="index"/>.
 	/// </summary>
@@ -38,14 +41,13 @@ public readonly ref struct RuntimePropertyCollection
 	/// Internal constructor.
 	/// </summary>
 	/// <param name="isDisposed">Indicates whether current instance is disposed.</param>
-	/// <param name="keys">Property keys buffer.</param>
-	/// <param name="values">Property values buffer.</param>
-	internal RuntimePropertyCollection(TextInvalidator isDisposed, ReadOnlySpan<NativeCharPointer> keys,
-		ReadOnlySpan<NativeCharPointer> values)
+	/// <param name="buffer">Properties buffer.</param>
+	internal RuntimePropertyCollection(TextInvalidator isDisposed, PropertiesBuffer buffer)
 	{
 		this._isDisposed = isDisposed;
-		this._keys = keys;
-		this._values = values;
+		this._buffer = buffer;
+		this._keys = buffer.Keys;
+		this._values = buffer.Values;
 	}
 
 	/// <inheritdoc cref="IEnumerable{T}.GetEnumerator"/>
@@ -116,9 +118,8 @@ public readonly ref struct RuntimePropertyCollection
 		/// </returns>
 		public Boolean MoveNext()
 		{
-			if (this._index >= this._instance.Count) return false;
 			this._index++;
-			return true;
+			return this._index < this._instance._buffer?.Count;
 		}
 		/// <summary>
 		/// Resets the enumerator to the beginning of the enumeration, starting over.

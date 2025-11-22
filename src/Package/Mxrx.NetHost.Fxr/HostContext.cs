@@ -187,6 +187,15 @@ public abstract partial class HostContext : IDisposable
 		this.Resolver.LoadAssembly(this, parameters);
 	}
 	/// <summary>
+	/// Retrieves the collection of initialized runtime properties.
+	/// </summary>
+	/// <returns></returns>
+	public RuntimePropertyCollection GetRuntimeProperties()
+	{
+		this.ThrowIfDisposed();
+		return this.Resolver.GetRuntimeProperties(this);
+	}
+	/// <summary>
 	/// Retrieves the value of the property named for <paramref name="propertyName"/>.
 	/// </summary>
 	/// <param name="propertyName">A <see cref="VolatileText"/> instance.</param>

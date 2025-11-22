@@ -25,8 +25,8 @@ internal readonly unsafe struct NativeFunctionSet : IFunctionSet
 	/// <summary>
 	/// Address of <c>hostfxr_get_runtime_properties</c>.
 	/// </summary>
-	public readonly delegate* unmanaged[Cdecl]<HostHandle, ref UIntPtr, ref ReadOnlyValPtr<NativeCharPointer>, ref
-		ReadOnlyValPtr<NativeCharPointer>, RuntimeCallResult> GetRuntimeProperties;
+	public readonly delegate* unmanaged[Cdecl]<HostHandle, ref UIntPtr, NativeCharPointer*, NativeCharPointer*,
+		RuntimeCallResult> GetRuntimeProperties;
 	/// <summary>
 	/// Address of <c>hostfxr_get_runtime_property_value</c>.
 	/// </summary>
@@ -70,18 +70,13 @@ internal readonly unsafe struct NativeFunctionSet : IFunctionSet
 	RuntimeCallResult IFunctionSet.GetFunctionPointer(HostHandle handle, RuntimeDelegateType delegateType,
 		out IntPtr funcPtr)
 		=> this.GetDelegate(handle, delegateType, out funcPtr);
-	RuntimeCallResult IFunctionSet.GetRuntimeProperties(HostHandle handle, ref UIntPtr propCount,
-		out ReadOnlyValPtr<NativeCharPointer> propKeysPtr, out ReadOnlyValPtr<NativeCharPointer> propValuesPtr)
-	{
-		Unsafe.SkipInit(out propKeysPtr);
-		Unsafe.SkipInit(out propValuesPtr);
-		return this.GetRuntimeProperties(handle, ref propCount, ref propKeysPtr, ref propValuesPtr);
-	}
+	RuntimeCallResult IFunctionSet.GetRuntimeProperties(HostHandle handle, UIntPtr propCount,
+		NativeCharPointer* propKeysPtr, NativeCharPointer* propValuesPtr)
+		=> this.GetRuntimeProperties(handle, ref propCount, propKeysPtr, propValuesPtr);
 	RuntimeCallResult IFunctionSet.CountRuntimeProperties(HostHandle handle, out UIntPtr propCount)
 	{
 		Unsafe.SkipInit(out propCount);
-		ref ReadOnlyValPtr<NativeCharPointer> nullRef = ref Unsafe.NullRef<ReadOnlyValPtr<NativeCharPointer>>();
-		return this.GetRuntimeProperties(handle, ref propCount, ref nullRef, ref nullRef);
+		return this.GetRuntimeProperties(handle, ref propCount, default, default);
 	}
 	RuntimeCallResult IFunctionSet.GetRuntimePropertyValue(HostHandle handle, NativeCharPointer keyPtr,
 		out NativeCharPointer valuePtr)

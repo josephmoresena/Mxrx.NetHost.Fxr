@@ -30,19 +30,14 @@ internal abstract unsafe partial class PInvokeFunctionSet
 			=> TLibrary.GetFunctionPointer(handle, delegateType, out funcPtr);
 		/// <inheritdoc/>
 		private protected override RuntimeCallResult GetRuntimePropertiesImpl(HostHandle handle, ref UIntPtr propCount,
-			out ReadOnlyValPtr<NativeCharPointer> propKeysPtr, out ReadOnlyValPtr<NativeCharPointer> propValuesPtr)
-		{
-			Unsafe.SkipInit(out propKeysPtr);
-			Unsafe.SkipInit(out propValuesPtr);
-			return TLibrary.GetRuntimeProperties(handle, ref propCount, ref propKeysPtr, ref propValuesPtr);
-		}
+			NativeCharPointer* propKeysPtr, NativeCharPointer* propValuesPtr)
+			=> TLibrary.GetRuntimeProperties(handle, ref propCount, propKeysPtr, propValuesPtr);
 		/// <inheritdoc/>
 		private protected override RuntimeCallResult CountRuntimePropertiesImpl(HostHandle handle,
 			out UIntPtr propCount)
 		{
 			Unsafe.SkipInit(out propCount);
-			ref ReadOnlyValPtr<NativeCharPointer> nullRef = ref Unsafe.NullRef<ReadOnlyValPtr<NativeCharPointer>>();
-			return TLibrary.GetRuntimeProperties(handle, ref propCount, ref nullRef, ref nullRef);
+			return TLibrary.GetRuntimeProperties(handle, ref propCount, default, default);
 		}
 		/// <inheritdoc/>
 		private protected override RuntimeCallResult GetRuntimePropertyValueImpl(HostHandle handle,
