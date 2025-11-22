@@ -212,7 +212,7 @@ static void PrintContextInfo(HostContext hostContext)
 		{
 			Console.WriteLine();
 			for (Int32 j = 0; j < values.Length; j++)
-				Console.WriteLine($"\t{j} -> {values[j]}: ");
+				Console.WriteLine($"\t{j} -> {values[j]}");
 			continue;
 		}
 		Console.WriteLine(values[0]);
