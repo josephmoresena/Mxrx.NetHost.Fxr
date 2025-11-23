@@ -1,4 +1,4 @@
-#if STATIC_LINK
+#if COMPILE_TIME_LINK
 using System.Runtime.InteropServices;
 
 using Mxrx.NetHost;
