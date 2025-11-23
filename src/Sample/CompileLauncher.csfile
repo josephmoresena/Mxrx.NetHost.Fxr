@@ -44,7 +44,7 @@ foreach(var p in publishes.OrderBy(p => p.IlcDisableReflection))
     info.ArgumentList.Add(p.RuntimeIdentifier);
     info.ArgumentList.Add($"/p:TargetFramework={p.TargetFramework}");
     info.ArgumentList.Add($"/p:IlcDisableReflection={p.IlcDisableReflection}");
-    info.ArgumentList.Add($"/p:StaticHostLink={p.StaticHostLink}");
+    info.ArgumentList.Add($"/p:StaticNetHostLink={p.StaticNetHostLink}");
     info.ArgumentList.Add($"/p:CompileTimeResolverLink={p.CompileTimeResolverLink}");
 
     info.WorkingDirectory = Path.Combine(Environment.CurrentDirectory, "Mxrx.NetHost.Sample.Launcher");
@@ -93,6 +93,6 @@ public readonly record struct NetPublish
     public String RuntimeIdentifier { get; init; }
     public String TargetFramework { get; init; }
     public Boolean IlcDisableReflection { get; init; }
-    public Boolean StaticHostLink { get; init; }
+    public Boolean StaticNetHostLink { get; init; }
     public Boolean CompileTimeResolverLink { get; init; }
 }
