@@ -4,7 +4,6 @@ namespace Mxrx.NetHost;
 /// CLR host context.
 /// </summary>
 #if !PACKAGE
-[ExcludeFromCodeCoverage]
 [SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS6640,
                  Justification = Constants.SecureUnsafeCodeJustification)]
 [SuppressMessage(Constants.CSharpSquid, Constants.CheckIdS3881, Justification = Constants.OptimizedJustification)]
@@ -29,8 +28,9 @@ public abstract partial class HostContext : IDisposable
 	/// </summary>
 	/// <param name="resolver">A <see cref="FrameworkResolver"/> instance.</param>
 	/// <param name="isCommandLine">Indicates whether current host is for a command line.</param>
-	protected HostContext(FrameworkResolver resolver, Boolean isCommandLine) : this(
-		resolver, HostHandle.Zero, isCommandLine) { }
+	protected HostContext(FrameworkResolver resolver, Boolean isCommandLine) :
+		this(resolver, default, isCommandLine) { }
+
 	/// <inheritdoc/>
 	public void Dispose()
 	{
@@ -50,8 +50,7 @@ public abstract partial class HostContext : IDisposable
 	public void ClearErrorWriter()
 	{
 		this.ThrowIfDisposed();
-		this._writeError = default;
-		this._writeUtfError = default;
+		ErrorHelper.Clear();
 		FrameworkResolver.ConfigureErrorWriter(this, true);
 	}
 	/// <summary>
@@ -61,8 +60,7 @@ public abstract partial class HostContext : IDisposable
 	public void SetErrorWriter(WriteErrorDelegate writeError)
 	{
 		this.ThrowIfDisposed();
-		this._writeError = writeError;
-		this._writeUtfError = default;
+		ErrorHelper.SetErrorWriter(writeError);
 		FrameworkResolver.ConfigureErrorWriter(this, false);
 	}
 	/// <summary>
@@ -72,8 +70,7 @@ public abstract partial class HostContext : IDisposable
 	public void SetErrorWriter(WriteUtfErrorDelegate writeUtfError)
 	{
 		this.ThrowIfDisposed();
-		this._writeError = default;
-		this._writeUtfError = writeUtfError;
+		ErrorHelper.SetErrorWriter(writeUtfError);
 		FrameworkResolver.ConfigureErrorWriter(this, false);
 	}
 	/// <summary>
@@ -154,6 +151,7 @@ public abstract partial class HostContext : IDisposable
 	public Boolean RunApp(out Int32 exitCode)
 	{
 		this.ThrowIfDisposed();
+		this.InvalidatePointers();
 
 		exitCode = -1;
 		return this.IsCommandLine && FrameworkResolver.Run(this, out exitCode);
@@ -186,6 +184,15 @@ public abstract partial class HostContext : IDisposable
 		this.Resolver.LoadAssembly(this, parameters);
 	}
 	/// <summary>
+	/// Retrieves the collection of initialized runtime properties.
+	/// </summary>
+	/// <returns></returns>
+	public RuntimePropertyCollection GetRuntimeProperties()
+	{
+		this.ThrowIfDisposed();
+		return this.Resolver.GetRuntimeProperties(this);
+	}
+	/// <summary>
 	/// Retrieves the value of the property named for <paramref name="propertyName"/>.
 	/// </summary>
 	/// <param name="propertyName">A <see cref="VolatileText"/> instance.</param>
@@ -203,8 +210,10 @@ public abstract partial class HostContext : IDisposable
 	public void SetRuntimeProperty(VolatileText propertyName, VolatileText propertyValue)
 	{
 		this.ThrowIfDisposed();
+		this.InvalidatePointers();
 		this.Resolver.SetProperty(this, propertyName, propertyValue);
 	}
+
 	/// <inheritdoc cref="IDisposable.Dispose()"/>
 	protected abstract void Dispose(Boolean disposing);
 }

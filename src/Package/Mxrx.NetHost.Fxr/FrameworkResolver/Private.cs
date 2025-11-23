@@ -26,6 +26,6 @@ public partial class FrameworkResolver
 	private FrameworkResolver(IntPtr handle)
 	{
 		this._handle = handle;
-		this._isDisposed = handle != default;
+		this._isDisposed = handle == default;
 	}
 }

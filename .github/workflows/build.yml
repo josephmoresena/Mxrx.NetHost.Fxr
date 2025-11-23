@@ -62,7 +62,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: pwsh
         run: |
-          ./.sonar/scanner/dotnet-sonarscanner begin /k:"josephmoresena_Mxrx.NetHost.Fxr" /o:"josephmoresena" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.scanner.scanAll=false /d:sonar.coverage.exclusions="**Test.cs,**Tests.cs,**test.cs,**tests.cs,**/SourceGenerator/**/*.cs,**/ApplicationTest/**/*,**/Test/**/*.cs,**/Localization/**MessageResource.cs" /d:sonar.cpd.exclusions="**Test.cs,**Tests.cs,**test.cs,**tests.cs,**/SourceGenerator/**/*.cs,**/ApplicationTest/**/*,**/Test/**/*.cs,**/Localization/**MessageResource.cs" /d:sonar.cs.vstest.reportsPaths=TestResults/*.trx /d:sonar.cs.opencover.reportsPaths=TestResults/*/coverage.opencover.xml 
+          ./.sonar/scanner/dotnet-sonarscanner begin /k:"josephmoresena_Mxrx.NetHost.Fxr" /o:"josephmoresena" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.scanner.scanAll=false /d:sonar.coverage.exclusions="**.cs" /d:sonar.cpd.exclusions="**Parameters.cs" /d:sonar.cs.vstest.reportsPaths=TestResults/*.trx /d:sonar.cs.opencover.reportsPaths=TestResults/*/coverage.opencover.xml 
           dotnet build-server shutdown
           dotnet restore src
           dotnet build src /p:MultipleFrameworkTest=true --no-restore --configuration Release --disable-build-servers /nr:false /maxcpucount:1
@@ -157,7 +157,7 @@ jobs:
           sudo apt upgrade --assume-yes
           sudo apt-get install coreutils clang llvm zlib1g-dev libkrb5-dev libssl-dev \
             qemu-user qemu-user-static binfmt-support libicu74:arm64 libicu74:armhf \
-            libstdc++-14-dev:arm64 libstdc++-14-dev:arm64 \
+            libstdc++-14-dev:armhf libstdc++-14-dev:arm64 \
             binutils-aarch64-linux-gnu gcc-aarch64-linux-gnu zlib1g-dev:arm64 libssl-dev:arm64 \
             binutils-arm-linux-gnueabihf gcc-arm-linux-gnueabihf zlib1g-dev:armhf libssl-dev:armhf \
             --assume-yes
@@ -205,8 +205,8 @@ jobs:
       - name: Remove Native Logs
         shell: pwsh
         run: |
-          if (Test-Path ./artifacts/native) {
-              Remove-Item -Recurse -Force ./artifacts/native/*
+          if (Test-Path ./Artifacts/Native/) {
+              Remove-Item -Recurse -Force ./Artifacts/Native/*
           }
 
       - name: Publish Sample application

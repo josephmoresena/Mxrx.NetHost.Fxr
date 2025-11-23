@@ -7,7 +7,7 @@
         <EnableDynamicLoading Condition="'$(IsLauncher)' != 'true'">true</EnableDynamicLoading>
         <GenerateRuntimeConfigDevFile Condition="'$(IsLauncher)' != 'true'">false</GenerateRuntimeConfigDevFile>
         <CheckEolTargetFramework>false</CheckEolTargetFramework>
-        <PublishDir Condition="'$(IsLauncher)' == 'true' And '$(PublishDir)' == ''">..\..\..\Artifacts\</PublishDir>
+        <CopyTargetTo Condition="'$(IsLauncher)' == 'true' And '$(CopyTargetTo)' == ''">..\..\..\Artifacts\</CopyTargetTo>
         <OutputPath Condition="'$(IsLauncher)' != 'true' And '$(OutputPath)' == ''">..\..\..\Artifacts\</OutputPath>
     </PropertyGroup>
 

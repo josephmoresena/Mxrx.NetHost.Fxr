@@ -13,6 +13,7 @@
         <DocumentationFile>./$(AssemblyName).xml</DocumentationFile>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <ExcludeXmlAssemblyFiles>false</ExcludeXmlAssemblyFiles>
+        <DefineConstants>$(DefineConstants);DISABLE_MAIN_CALLS;DISABLE_RUNTIME_PROPERTIES</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Package)' == 'true'">
@@ -46,10 +47,12 @@
         <Using Include="Rxmxnx.PInvoke.Localization"/>
         <Using Include="Mxrx.NetHost.Internal"/>
         <Using Include="Mxrx.NetHost.Internal.Localization"/>
+        <Using Include="Mxrx.NetHost.Native"/>
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Rxmxnx.PInvoke.Extensions" Version="2.7.4"/>
+        <AssemblyAttribute Condition="'$(Package)' != 'true'" Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage"/>
     </ItemGroup>
 
     <!-- Package properties -->

@@ -3,9 +3,6 @@ namespace Mxrx.NetHost.Internal.Localization;
 /// <summary>
 /// Spanish message resource.
 /// </summary>
-#if !PACKAGE
-[ExcludeFromCodeCoverage]
-#endif
 internal sealed class SpanishMessageResource : IMessageResource
 {
 	/// <summary>

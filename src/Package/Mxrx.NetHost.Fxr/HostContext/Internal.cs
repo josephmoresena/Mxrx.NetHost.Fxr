@@ -7,9 +7,9 @@ public abstract partial class HostContext
 	/// </summary>
 	internal HostHandle Handle { get; }
 	/// <summary>
-	/// Host context error delegate.
+	/// Retrieves the current <see cref="TextInvalidator"/> instance.
 	/// </summary>
-	internal Delegate WriteErrorDelegate { get; }
+	internal TextInvalidator TextInvalidator => new(this._isDisposed, this._control);
 	/// <inheritdoc cref="HostContext._loadAssemblyAndGetFunctionPointerPtr"/>
 	internal IntPtr LoadAssemblyAndGetFunctionPointerPtr
 	{
@@ -108,14 +108,5 @@ public abstract partial class HostContext
 		this.Resolver = resolver;
 		this.IsCommandLine = isCommandLine;
 		this.Handle = handle;
-		this.WriteErrorDelegate = SystemInfo.IsWindows ?
-			(WriteErrorFromPointerDelegate)this.WriteError :
-			(WriteUtfErrorFromPointerDelegate)this.WriteUtfError;
 	}
-
-	/// <summary>
-	/// Attaches <paramref name="value"/> to current instance.
-	/// </summary>
-	/// <param name="value">A <see cref="VolatileText"/> value.</param>
-	internal void Attach(ref VolatileText value) => value.IsDisposed = this._isDisposed;
 }

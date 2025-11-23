@@ -3,9 +3,6 @@ namespace Mxrx.NetHost.Internal.Localization;
 /// <summary>
 /// Italian message resource.
 /// </summary>
-#if !PACKAGE
-[ExcludeFromCodeCoverage]
-#endif
 internal sealed class ItalianMessageResource : IMessageResource
 {
 	/// <inheritdoc cref="IMessageResource.Instance"/>

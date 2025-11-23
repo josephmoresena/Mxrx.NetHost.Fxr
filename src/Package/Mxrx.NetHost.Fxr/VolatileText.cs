@@ -3,9 +3,6 @@ namespace Mxrx.NetHost;
 /// <summary>
 /// Stores a volatile text parameter.
 /// </summary>
-#if !PACKAGE
-[ExcludeFromCodeCoverage]
-#endif
 public ref struct VolatileText
 {
 	/// <summary>
@@ -15,12 +12,12 @@ public ref struct VolatileText
 	/// <summary>
 	/// Indicates whether current instance is disposed.
 	/// </summary>
-	internal IWrapper<Boolean>? IsDisposed;
+	internal TextInvalidator IsDisposed;
 
 	/// <summary>
 	/// Text value.
 	/// </summary>
-	internal ReadOnlySpan<Byte> Value
+	private ReadOnlySpan<Byte> Value
 	{
 		get
 		{
@@ -49,7 +46,7 @@ public ref struct VolatileText
 	/// <summary>
 	/// Indicates whether the current text is valid.
 	/// </summary>
-	public Boolean IsValid => this.IsDisposed is null || !this.IsDisposed.Value;
+	public Boolean IsValid => !this.IsDisposed.Value;
 
 	/// <summary>
 	/// Inmutable UTF-16 property value.

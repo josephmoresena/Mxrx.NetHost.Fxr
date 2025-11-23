@@ -1,0 +1,15 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <PropertyGroup>
+        <NativeHostPackageName>Microsoft.NETCore.App.Host</NativeHostPackageName>
+        <NativeHostLibraryName Condition="!$([MSBuild]::IsOsPlatform('Windows'))">native\libnethost.a</NativeHostLibraryName>
+        <NativeHostLibraryName Condition="$([MSBuild]::IsOsPlatform('Windows'))">native\libnethost.lib</NativeHostLibraryName>
+        <LinkStandardCPlusPlusLibrary>true</LinkStandardCPlusPlusLibrary>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageDownload Include="$(NativeHostPackageName).$(RuntimeIdentifier)" Version="[$(BundledNETCoreAppPackageVersion)]"/>
+        <NativeLibrary Include="$(NuGetPackageRoot)\$(NativeHostPackageName.ToLower()).$(RuntimeIdentifier)\$(BundledNETCoreAppPackageVersion)\runtimes\$(RuntimeIdentifier)\$(NativeHostLibraryName)"/>
+    </ItemGroup>
+
+</Project>

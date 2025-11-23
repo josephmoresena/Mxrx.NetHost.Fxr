@@ -5,7 +5,7 @@ String? ridPrefix = OperatingSystem.IsWindows() ? "win" : OperatingSystem.IsMacO
 
 if (String.IsNullOrEmpty(ridPrefix))
 {
-    Console.WriteLine("Unsuported platform.");
+    Console.WriteLine("Unsupported platform.");
     return;
 }
 
@@ -20,32 +20,43 @@ foreach(NetVersion version in Enum.GetValues<NetVersion>())
             RuntimeIdentifier = $"{ridPrefix}-{arch}".ToLower(),
             TargetFramework = tf,
             IlcDisableReflection = false,
+            StaticNetHostLink = false,
+            CompileTimeResolverLink = false,
         };
-        publishes.Add(publish);
-        if (IsReflectionFreeModeSupported(version))
-            publishes.Add(publish with { IlcDisableReflection = true, });
+        AppendPublish(publishes, version, publish); 
+        AppendPublish(publishes, version, publish with { StaticNetHostLink = true, });
+        AppendPublish(publishes, version, publish with { CompileTimeResolverLink = true, });
     }
 }
 
 Boolean rfm = false;
 foreach(var p in publishes.OrderBy(p => p.IlcDisableReflection))
 {
-    CleanUp(p.IlcDisableReflection, ref rfm);
     ProcessStartInfo info = new("dotnet")
     {
         RedirectStandardError = false, 
         RedirectStandardOutput = false, 
         CreateNoWindow = true,
     };
+
     info.ArgumentList.Add("publish");
     info.ArgumentList.Add("-r");
     info.ArgumentList.Add(p.RuntimeIdentifier);
     info.ArgumentList.Add($"/p:TargetFramework={p.TargetFramework}");
     info.ArgumentList.Add($"/p:IlcDisableReflection={p.IlcDisableReflection}");
+    info.ArgumentList.Add($"/p:StaticNetHostLink={p.StaticNetHostLink}");
+    info.ArgumentList.Add($"/p:CompileTimeResolverLink={p.CompileTimeResolverLink}");
+
     info.WorkingDirectory = Path.Combine(Environment.CurrentDirectory, "Mxrx.NetHost.Sample.Launcher");
     using Process prog = Process.Start(info)!;
     await prog.WaitForExitAsync();
     rfm = p.IlcDisableReflection;
+}
+
+static void AppendPublish(List<NetPublish> publishes, NetVersion version, NetPublish publish) {
+    publishes.Add(publish);
+    if (IsReflectionFreeModeSupported(version))
+        publishes.Add(publish with { IlcDisableReflection = true, });
 }
 
 static Boolean IsNativeAotSupported(Architecture arch, NetVersion netVersion)
@@ -58,20 +69,6 @@ static Boolean IsNativeAotSupported(Architecture arch, NetVersion netVersion)
         _ => false,
     };
 static Boolean IsReflectionFreeModeSupported(NetVersion netVersion) => netVersion <= NetVersion.Net90;
-
-static void CleanUp(Boolean ilcDisableReflection, ref Boolean rfm) 
-{
-    if (rfm == ilcDisableReflection) return;
-    rfm = ilcDisableReflection;
-    String binPath = Path.Combine(Environment.CurrentDirectory, "Mxrx.NetHost.Sample.Launcher", "bin");
-    String objPath = Path.Combine(Environment.CurrentDirectory, "Mxrx.NetHost.Sample.Launcher", "obj");
-    
-    if (Directory.Exists(binPath))
-        Directory.Delete(binPath, true);
-        
-    if (Directory.Exists(objPath))
-        Directory.Delete(objPath, true);
-}
 
 static class NetVersionExtensions
 {
@@ -88,9 +85,7 @@ public enum NetVersion : Byte
 {
 	Net80 = 8,
 	Net90 = 9,
-#if NET10_0_OR_GREATER
 	Net100 = 10,
-#endif
 }
 
 public readonly record struct NetPublish
@@ -98,4 +93,6 @@ public readonly record struct NetPublish
     public String RuntimeIdentifier { get; init; }
     public String TargetFramework { get; init; }
     public Boolean IlcDisableReflection { get; init; }
+    public Boolean StaticNetHostLink { get; init; }
+    public Boolean CompileTimeResolverLink { get; init; }
 }

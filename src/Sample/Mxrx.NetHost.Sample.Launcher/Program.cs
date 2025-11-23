@@ -4,31 +4,50 @@ using Mxrx.NetHost;
 
 using Rxmxnx.PInvoke;
 
-if (args.Length < 2)
+#if NET_HOST_LINK
+if (args.Length < 1)
 {
-	Console.WriteLine("Missing arguments.");
-	Console.WriteLine("0: Native hostfxr library path.");
-	Console.WriteLine("1: .NET assembly path. (Library or Application)");
-	Console.WriteLine("2 (Optional): Use UTF-8 encoding.");
+	PrintMissingArguments();
 	return;
 }
 
-using FrameworkResolver fxr = FrameworkResolver.LoadResolver(args[0]);
-Boolean useUftString = args.Length > 2 && args[2].ToLower() switch
-{
-	"1" => true,
-	"true" => true,
-	_ => false,
-};
+using FrameworkResolver fxr = FrameworkResolver.LoadResolver();
+#elif COMPILE_TIME_LINK
+using Mxrxm.NetHost.Sample.Launcher;
 
-if (args[1].Contains("Application"))
+if (args.Length < 1)
 {
-	await RunApplication(fxr, args[1], useUftString);
+	PrintMissingArguments();
+	return;
+}
+
+using FrameworkResolver fxr = FrameworkResolver.LoadResolver<HostFxrLibrary>();
+#else
+if (args.Length < 2)
+{
+	PrintMissingArguments();
+	return;
+}
+
+using FrameworkResolver fxr = FrameworkResolver.LoadResolver(args[1]);
+#endif
+
+Boolean useUtf8 = Environment.GetEnvironmentVariable("USE_UTF8_ENCODING") is { } useUftString &&
+	useUftString.ToLower() switch
+	{
+		"1" => true,
+		"true" => true,
+		_ => false,
+	};
+
+if (args[0].Contains("Application"))
+{
+	await RunApplication(fxr, args[0], useUtf8);
 }
 else
 {
 	await Task.Yield();
-	UseLibrary(fxr, args[1], useUftString);
+	UseLibrary(fxr, args[0], useUtf8);
 }
 
 return;
@@ -36,6 +55,7 @@ return;
 static async Task RunApplication(FrameworkResolver fxr, String assemblyPath, Boolean useUftString)
 {
 	using HostContext context = fxr.Initialize(CreateApplicationInitParams(assemblyPath));
+	PrintContextInfo(context);
 	IsWaitingDelegate isWaitingPtr = context.GetFunctionPointer<IsWaitingDelegate>(GetIsWaitingFunctionInfo()).Invoke;
 	IntPtr helloPtr = context.GetFunctionPointer(GetHelloAppFunctionInfo());
 
@@ -55,6 +75,7 @@ static void UseLibrary(FrameworkResolver fxr, String assemblyPath, Boolean useUf
 		                                                              assemblyPath.Replace(
 			                                                              ".dll", ".runtimeconfig.json")).Build();
 	using HostContext context = fxr.Initialize(initParams);
+	PrintContextInfo(context);
 	DefaultDelegate hello = context.GetFunctionPointer<DefaultDelegate>(GetHelloLibFunctionInfo(assemblyPath)).Invoke;
 	IntPtr customUnmanagedHelloPtr = context.GetFunctionPointer(GetCustomHelloLibUnmanagedFunctionInfo(assemblyPath));
 	IntPtr customHelloPtr = context.GetFunctionPointer(GetCustomHelloLibFunctionInfo(assemblyPath));
@@ -164,6 +185,39 @@ static void CustomLibHello<TChar>(Action<LibArgs<TChar>> hello, ref LibArgs<TCha
 {
 	libArgs.Number = -1;
 	hello(libArgs);
+}
+static void PrintMissingArguments()
+{
+	Console.WriteLine("Missing arguments.");
+	Console.WriteLine("Environment USE_UTF8_ENCODING: Use UTF-8 encoding.");
+	Console.WriteLine("1: .NET assembly path. (Library or Application)");
+#if !STATIC_HOST && !STATIC_LINK
+	Console.WriteLine("2: Native hostfxr library path.");
+#endif
+}
+static void PrintContextInfo(HostContext hostContext)
+{
+	const StringSplitOptions splitOptions = StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries;
+	Char[] separators = [Path.PathSeparator, ';',];
+
+	Console.WriteLine("===== Context Information =====");
+	RuntimePropertyCollection props = hostContext.GetRuntimeProperties();
+	Console.WriteLine($"Total Properties: {props.Count}");
+	Int32 i = 0;
+	foreach (RuntimePropertyPair prop in hostContext.GetRuntimeProperties())
+	{
+		String[] values = prop.Value.GetStringValue().Split(separators, splitOptions);
+		Console.Write($"{i++} -> {prop.Key.GetStringValue()}: ");
+		if (values.Length != 1)
+		{
+			Console.WriteLine();
+			for (Int32 j = 0; j < values.Length; j++)
+				Console.WriteLine($"\t{j} -> {values[j]}");
+			continue;
+		}
+		Console.WriteLine(values[0]);
+	}
+	Console.WriteLine("===== Context Information =====");
 }
 
 internal delegate void HelloDelegate(ReadOnlyValPtr<Char> message, Byte utf8);
