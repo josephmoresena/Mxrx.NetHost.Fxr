@@ -17,7 +17,9 @@ public abstract partial class FrameworkResolver : IDisposable
 	{
 		Boolean disposing = this._handle != default && !this._clrInitialized && this._contexts.All(c => c.Closed);
 		this.Dispose(!this._isDisposed && disposing);
-		if (disposing) this._isDisposed = true;
+		if (!disposing) return;
+
+		this._isDisposed = true;
 		GC.SuppressFinalize(this);
 	}
 

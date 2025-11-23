@@ -11,6 +11,9 @@ public static class VbCompat
 	/// <inheritdoc cref="InitializationParameters.CreateBuilder()"/>
 	public static InitializationParameters.Builder CreateInitializationParametersBuilder()
 		=> InitializationParameters.CreateBuilder();
+	/// <inheritdoc cref="GetHostPathParameters.CreateBuilder()"/>
+	public static GetHostPathParameters.Builder CreateGetHostPathParametersBuilder()
+		=> GetHostPathParameters.CreateBuilder();
 	/// <inheritdoc cref="NetFunctionInfo.CreateBuilder()"/>
 	public static NetFunctionInfo.Builder CreateNetFunctionInfoBuilder() => NetFunctionInfo.CreateBuilder();
 	/// <inheritdoc cref="VolatileText.Create(String?)"/>

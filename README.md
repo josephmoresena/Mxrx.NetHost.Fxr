@@ -29,7 +29,7 @@ dotnet add package Mxrx.NetHost.Fxr
 
 **Supported Frameworks:**
 
-* .NET 8 and later
+* .NET 8.0 and later
 
 Ensure your project targets a compatible version.
 
@@ -64,8 +64,20 @@ Represents an abstraction over the native `hostfxr` library.
   default `FrameworkResolver` instance.
 * **LoadResolver(GetHostPathParameters)**: Using the `nethost` library static linked loads the default `hostfxr` native
   library and returns a new `FrameworkResolver` instance.
-* **LoadResolver(String)**: Loads the native `hostfxr` native library and returns a new `FrameworkResolver` instance.
 * **LoadResolver(IntPtr)**: Using the `hostfxr` library handle returns a new `FrameworkResolver` instance.
+* **LoadResolver(String)**: Loads the native `hostfxr` native library and returns a new `FrameworkResolver` instance.
+* **LoadResolver(String, DllImportSearchPath)**: Loads the native `hostfxr` native library and returns a new
+  `FrameworkResolver` instance.
+* **GetActiveOrLoad<TLibrary>(out Boolean)**: Returns the current `FrameworkResolver` or loads a new one using
+  `TLibrary` as
+  P/Invoke backend.
+* **GetActiveOrLoad(out Boolean)**: Returns the current `FrameworkResolver` or loads the default `hostfxr` native
+  library and new one.
+* **GetActiveOrLoad(GetHostPathParameters, out Boolean)**: Returns the current `FrameworkResolver` or loads the default
+  `hostfxr` native library and new one.
+* **GetActiveOrLoad(IntPtr, out Boolean)**: Returns the current `FrameworkResolver` or loads a new one.
+* **GetActiveOrLoad(String, out Boolean)**: Returns the current `FrameworkResolver` or loads the native `hostfxr` native
+  library and new one.
 * **GetActiveOrLoad(String, out Boolean)**: Returns the current `FrameworkResolver` or loads the native `hostfxr` native
   library and new one.
 
@@ -87,6 +99,7 @@ Represents a .NET runtime host context.
 * **GetFunctionPointer(...)**: Retrieves a pointer to a .NET function.
 * **LoadAssembly(...)**: Loads an assembly into the context.
 * **GetRuntimeProperty(...) / SetRuntimeProperty(...)**: Gets or sets runtime properties.
+* **GetRuntimeProperties()**: Retrieves a collection of runtime properties.
 * **Dispose()**: Closes the current context.
 
 ### VolatileText
@@ -105,6 +118,34 @@ A `ref struct` representing a transient text value for interop with native host 
 * **GetStringValue()**: Converts to `System.String`.
 * **GetCStringValue()**: Converts to `Rxmxnx.PInvoke.CString`.
 * **GetPinnableReference()**: Returns a managed reference to the text data.
+
+### RuntimePropertyPair
+
+A `ref struct` representing a transient runtime property key/value pair from native host.
+
+#### Properties
+
+* **Key**: Property name (key) volatile text.
+* **Value**: Property value volatile text.
+* **IsValid**: Indicates if the key/value pair is valid.
+
+#### Methods
+
+* **ToString()**: Retrieves a `System.String` using `GetStringValue()` from both `Key` and `Value`.
+
+### RuntimePropertyCollection
+
+A `ref struct` representing a transient runtime property key/value pair collection from native host.
+
+#### Properties
+
+* **Count**: Number of properties in the current collection.
+* **this[Int32]**: Retrieves the property key/value for given index.
+* **IsValid**: Indicates if the collection is valid.
+
+#### Methods
+
+* **GetEnumerator()**: Retrieves a `RuntimePropertyCollection.Enumerator` from current instance.
 
 ### GetHostPathParameters & Builder
 

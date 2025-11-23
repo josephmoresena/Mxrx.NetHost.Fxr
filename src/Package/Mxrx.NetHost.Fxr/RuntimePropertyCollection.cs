@@ -36,6 +36,10 @@ public readonly ref struct RuntimePropertyCollection
 	/// <param name="index">Property index.</param>
 	public RuntimePropertyPair this[Int32 index]
 		=> new() { Key = this.CreateLiteral(this._keys, index), Value = this.CreateLiteral(this._values, index), };
+	/// <summary>
+	/// Indicates whether the current collection is valid.
+	/// </summary>
+	public Boolean IsValid => !this._isDisposed.Value;
 
 	/// <summary>
 	/// Internal constructor.
