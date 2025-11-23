@@ -12,6 +12,9 @@
 # Description
 
 `Mxrx.NetHost.Fxr` provides a flexible and powerful API for building custom .NET hosts using Native AOT technology.
+This library encapsulates the functionality
+of [native hosting](https://github.com/dotnet/runtime/blob/main/docs/design/features/native-hosting.md) to make it
+friendly for .NET code.
 
 ## Features
 
@@ -40,6 +43,8 @@ Ensure your project targets a compatible version.
 3. Initialize and configure the host using the provided APIs.
 4. Load assemblies and invoke desired functions.
 5. Compile your host using Native AOT.
+
+For more information, visit the [Sample](src/Sample/README.md) where you can find a custom .NET host using this package.
 
 ---
 

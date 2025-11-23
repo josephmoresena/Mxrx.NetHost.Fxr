@@ -11,18 +11,18 @@
         <RootNamespace>Mxrxm.NetHost.Sample.Launcher</RootNamespace>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(StaticHostLink)' == 'True'">
-        <DefineConstants>$(DefineConstants);STATIC_HOST</DefineConstants>
+    <PropertyGroup Condition="'$(StaticNetHostLink)' == 'True'">
+        <DefineConstants>$(DefineConstants);NET_HOST_LINK</DefineConstants>
         <AssemblyName>$(AssemblyName).StaticHost</AssemblyName>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(StaticHostLink)' != 'True' And '$(StaticLinkResolver)' == 'True'">
-        <DefineConstants>$(DefineConstants);STATIC_LINK</DefineConstants>
-        <AssemblyName>$(AssemblyName).StaticLink</AssemblyName>
+    <PropertyGroup Condition="'$(StaticNetHostLink)' != 'True' And '$(CompileTimeResolverLink)' == 'True'">
+        <DefineConstants>$(DefineConstants);COMPILE_TIME_LINK</DefineConstants>
+        <AssemblyName>$(AssemblyName).CompileTimeLink</AssemblyName>
     </PropertyGroup>
 
     <Import Project="..\Sample.targets"/>
-    <Import Condition="'$(StaticHostLink)' == 'True'" Project="..\StaticHostLink.targets"/>
+    <Import Condition="'$(StaticNetHostLink)' == 'True'" Project="..\StaticNetHostLink.targets"/>
 
     <PropertyGroup Condition="'$(RuntimeIdentifier)' == 'linux-arm' Or '$(RuntimeIdentifier)' == 'win-x86'">
         <TargetFrameworks>net9.0;net10.0</TargetFrameworks>

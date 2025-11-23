@@ -10,11 +10,12 @@
         <Project Path="Package\Mxrx.NetHost.Fxr\Mxrx.NetHost.Fxr.csproj"/>
     </Folder>
     <Folder Name="/Sample/">
-        <File Path="Sample\StaticHostLink.targets"/>
+        <File Path="Sample\StaticNetHostLink.targets"/>
         <Project Path="Sample\Mxrx.NetHost.Sample.Application\Mxrx.NetHost.Sample.Application.csproj"/>
         <Project Path="Sample\Mxrx.NetHost.Sample.Launcher\Mxrx.NetHost.Sample.Launcher.csproj"/>
         <Project Path="Sample\Mxrx.NetHost.Sample.Library\Mxrx.NetHost.Sample.Library.csproj"/>
         <File Path="Sample\CompileLauncher.csfile"/>
+        <File Path="Sample\README.md"/>
         <File Path="Sample\Sample.targets"/>
     </Folder>
 </Solution>

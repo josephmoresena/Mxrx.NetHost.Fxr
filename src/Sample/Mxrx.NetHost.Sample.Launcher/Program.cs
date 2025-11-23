@@ -4,7 +4,7 @@ using Mxrx.NetHost;
 
 using Rxmxnx.PInvoke;
 
-#if STATIC_HOST
+#if NET_HOST_LINK
 if (args.Length < 1)
 {
 	PrintMissingArguments();
@@ -12,7 +12,7 @@ if (args.Length < 1)
 }
 
 using FrameworkResolver fxr = FrameworkResolver.LoadResolver();
-#elif STATIC_LINK
+#elif COMPILE_TIME_LINK
 using Mxrxm.NetHost.Sample.Launcher;
 
 if (args.Length < 1)
