@@ -20,12 +20,12 @@ foreach(NetVersion version in Enum.GetValues<NetVersion>())
             RuntimeIdentifier = $"{ridPrefix}-{arch}".ToLower(),
             TargetFramework = tf,
             IlcDisableReflection = false,
-            StaticHostLink = false,
-            StaticLinkResolver = false,
+            StaticNetHostLink = false,
+            CompileTimeResolverLink = false,
         };
         AppendPublish(publishes, version, publish); 
-        AppendPublish(publishes, version, publish with { StaticHostLink = true, });
-        AppendPublish(publishes, version, publish with { StaticLinkResolver = true, });
+        AppendPublish(publishes, version, publish with { StaticNetHostLink = true, });
+        AppendPublish(publishes, version, publish with { CompileTimeResolverLink = true, });
     }
 }
 
