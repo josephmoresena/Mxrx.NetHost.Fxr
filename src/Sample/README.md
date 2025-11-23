@@ -6,11 +6,12 @@ of some of the concepts, please refer to the official documentation:
 * [Write a custom .NET host to control the .NET runtime from your native code](https://learn.microsoft.com/en-us/dotnet/core/tutorials/netcore-hosting)
 * [DllImportAttribute Class](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.dllimportattribute)
 * [NativeLibrary loading](https://learn.microsoft.com/en-us/dotnet/standard/native-interop/native-library-loading)
+* [.NET distribution packaging](https://learn.microsoft.com/en-us/dotnet/core/distribution-packaging)
 * [Unmanaged calling conventions](https://learn.microsoft.com/en-us/dotnet/standard/native-interop/calling-conventions)
 * [Native code interop with Native AOT](https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/interop)
 * [UnmanagedCallersOnlyAttribute Class](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.unmanagedcallersonlyattribute)
 
-The examples implemented here are heavily based on
+The sample implemented here are heavily based on
 the [official sample](https://github.com/dotnet/samples/blob/main/core/hosting/readme.md).
 
 ## Loading `FrameworkResolver`
@@ -133,35 +134,6 @@ InitializationParameters init = InitializationParameters.CreateBuilder()
 Note that both options are mutually exclusive. `WithArguments` and `WithRuntimeConfigPath` accept different data types
 to optimize interop performance depending on the operating system.
 
-## Loading Assemblies via `HostContext`
-
-`Mxrx.NetHost.Fxr` allows loading .NET assemblies into the initialized context via their physical location or binary
-data.
-This is done using the `LoadAssemblyParameters` structure:
-
-### `LoadAssemblyParameters` Structure:
-
-* **Physical location:**
-
-```csharp
-LoadAssemblyParameters load = LoadAssemblyParameters.CreateBuilder()
-                                    .WithAssemblyPathPath(ASSEMBLY_DLL_PATH)
-                                    .Build();
-host.LoadAssembly(load);
-```
-
-* **Binary data:**
-
-```csharp
-LoadAssemblyParameters load = LoadAssemblyParameters.CreateBuilder()
-                                    .WithAssemblyPathPath(ASSEMBLY_DLL_BYTES)
-                                    .Build();
-host.LoadAssembly(load);
-```
-
-Both options are mutually exclusive. `WithAssemblyPathPath` may receive additional PDB binary data to enable debugging
-in the initialized context.
-
 ## Calling Managed Code through `HostContext`
 
 To invoke/execute managed .NET code using `Mxrx.NetHost.Fxr`, the following options are available:
@@ -251,6 +223,35 @@ IntPtr funcPtr = host.GetFunctionPointer(funcInfo);
 All these options are mutually exclusive.
 You may also use `WithAssemblyPathPath(ASSEMBLY_DLL_PATH)` to load a .NET assembly when requesting the managed function
 pointer.
+
+## Loading Assemblies via `HostContext`
+
+`Mxrx.NetHost.Fxr` allows loading .NET assemblies into the initialized context via their physical location or binary
+data.
+This is done using the `LoadAssemblyParameters` structure:
+
+### `LoadAssemblyParameters` Structure:
+
+* **Physical location:**
+
+```csharp
+LoadAssemblyParameters load = LoadAssemblyParameters.CreateBuilder()
+                                    .WithAssemblyPathPath(ASSEMBLY_DLL_PATH)
+                                    .Build();
+host.LoadAssembly(load);
+```
+
+* **Binary data:**
+
+```csharp
+LoadAssemblyParameters load = LoadAssemblyParameters.CreateBuilder()
+                                    .WithAssemblyPathPath(ASSEMBLY_DLL_BYTES)
+                                    .Build();
+host.LoadAssembly(load);
+```
+
+Both options are mutually exclusive. `WithAssemblyPathPath` may receive additional PDB binary data to enable debugging
+in the initialized context.
 
 ## Runtime Properties
 
